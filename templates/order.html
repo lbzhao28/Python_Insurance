@@ -1,14 +1,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>
-    投保单
+        投保单
     </title>
     <script type="text/javascript">
     </script>
 </head>
-<body>
 
+<body>
 <table id="tblConInfo" style="padding:1px;">
 <tr>
 <td valign="top">
@@ -20,18 +21,24 @@
         <tr>
             <td colspan="6">
                 <%!
-                    import OrderClient
+                import OrderClient
+                import json
                 %>
-
-
+                <%doc>
+                ## this is a comment.test for lookup.
                 <% x = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 0 ]%>
                 % for elem in x:
-                     element: ${elem}
+                element: ${elem}
                 % endfor
+                </%doc>
 
                 与被保人关系
-                <%call OrderClient.getOrderInfo%>
-                <input name="txtPolicyRelation" type="text" id="PolicyInformation1_txtPolicyRelation" />
+                <%
+                localOrderInfo = OrderClient.getOrderInfo(contactid)
+                print localOrderInfo["CRUSR"]
+                crusr = localOrderInfo["CRUSR"]
+                %>
+                <input name="txtPolicyRelation" type="text" id="PolicyInformation1_txtPolicyRelation" value="${crusr}"/>
             </td>
         </tr>
         <tr>
@@ -39,20 +46,20 @@
                 姓名
             </td>
             <td style="width: 100px">
-                <input id="txtName" type="text" />
+                <input id="txtName" type="text"/>
             </td>
             <td style="width: 125px">
                 性别
             </td>
             <td style="width: 100px">
-                <input id="rbtMan" name="rbtSex" checked="checked" type="radio" />男
-                <input id="rbtWoman" name="rbtSex" type="radio" />女
+                <input id="rbtMan" name="rbtSex" checked="checked" type="radio"/>男
+                <input id="rbtWoman" name="rbtSex" type="radio"/>女
             </td>
             <td style="width: 125px">
                 出生日期
             </td>
             <td style="width: 100px">
-                <input id="txtBirthday" type="text" />
+                <input id="txtBirthday" type="text"/>
             </td>
         </tr>
         <tr>
@@ -60,19 +67,19 @@
                 年龄
             </td>
             <td>
-                <input id="txtOldYears" type="text" />
+                <input id="txtOldYears" type="text"/>
             </td>
             <td>
                 职业
             </td>
             <td>
-                <input name="txtProfessional" type="text" id="PolicyInformation1_txtProfessional" pid="profession_t" />
+                <input name="txtProfessional" type="text" id="PolicyInformation1_txtProfessional" pid="profession_t"/>
             </td>
             <td>
                 联系电话
             </td>
             <td>
-                <input id="txtPhoneNumber" type="text" />
+                <input id="txtPhoneNumber" type="text"/>
             </td>
         </tr>
         <tr>
@@ -89,7 +96,7 @@
                 证件号码
             </td>
             <td>
-                <input id="txtCardNumber" type="text" />
+                <input id="txtCardNumber" type="text"/>
             </td>
             <td>
             </td>
@@ -100,7 +107,7 @@
     <div style="border: solid 1px #ccc">
     </div>
 </div>
-<div >被保人信息>></div>
+<div>被保人信息>></div>
 <div id="div_BePolicyHolderInfor">
     <table style="width: 720px">
         <tr>
@@ -108,20 +115,20 @@
                 姓名<span id="MainContent_UC_PolicyInformation1_Label1" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="txtNameO" type="text" />
+                <input id="txtNameO" type="text"/>
             </td>
             <td style="width: 125px">
                 性别<span id="MainContent_UC_PolicyInformation1_Label2" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="rbtManO" name="rbtBeSex" checked="checked" type="radio" />男
-                <input id="rbtWomanO" name="rbtBeSex" type="radio" />女
+                <input id="rbtManO" name="rbtBeSex" checked="checked" type="radio"/>男
+                <input id="rbtWomanO" name="rbtBeSex" type="radio"/>女
             </td>
             <td style="width: 125px">
                 出生日期<span id="MainContent_UC_PolicyInformation1_Label3" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="txtBirthdayO" type="text" />
+                <input id="txtBirthdayO" type="text"/>
             </td>
         </tr>
         <tr>
@@ -129,19 +136,19 @@
                 年龄<span id="MainContent_UC_PolicyInformation1_Label4" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtOldYearsO" type="text" />
+                <input id="txtOldYearsO" type="text"/>
             </td>
             <td>
                 职业<span id="MainContent_UC_PolicyInformation1_Label5" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtProfessionalO" type="text" />
+                <input id="txtProfessionalO" type="text"/>
             </td>
             <td>
                 联系电话<span id="MainContent_UC_PolicyInformation1_Label6" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtPhoneNumberO" type="text" />
+                <input id="txtPhoneNumberO" type="text"/>
             </td>
         </tr>
         <tr>
@@ -158,7 +165,7 @@
                 证件号码<span id="MainContent_UC_PolicyInformation1_Label8" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtCardNumberO" type="text" />
+                <input id="txtCardNumberO" type="text"/>
             </td>
             <td>
             </td>
@@ -171,10 +178,10 @@
 </div>
 <div>受益人>></div>
 <div id="div_Beneficiary">
-    <input id="rbtMode1" name="rbtBeneficiary" value="1" onclick="Beneficiary(1);" type="radio" />法定
-    <input id="rbtMode2" name="rbtBeneficiary" value="2" onclick="Beneficiary(2);" type="radio" />均分
-    <input id="rbtMode3" name="rbtBeneficiary" value="3" onclick="Beneficiary(3);" type="radio" />按填写顺位
-    <input id="rbtMode4" name="rbtBeneficiary" value="4" onclick="Beneficiary(4);" type="radio" />按比例<br />
+    <input id="rbtMode1" name="rbtBeneficiary" value="1" onclick="Beneficiary(1);" type="radio"/>法定
+    <input id="rbtMode2" name="rbtBeneficiary" value="2" onclick="Beneficiary(2);" type="radio"/>均分
+    <input id="rbtMode3" name="rbtBeneficiary" value="3" onclick="Beneficiary(3);" type="radio"/>按填写顺位
+    <input id="rbtMode4" name="rbtBeneficiary" value="4" onclick="Beneficiary(4);" type="radio"/>按比例<br/>
     <table id="listBeneficiary">
         <tr>
             <td align="center" style="width: 50px">
@@ -195,7 +202,7 @@
             <td align="center" style="width: 150px" id="Scale0">
                 比例
             </td>
-            <td><img src="../images/Pic_addNew.jpg" title="新增受益人" style=" width:15px; height:15px;" /></td>
+            <td><img src="../images/Pic_addNew.jpg" title="新增受益人" style=" width:15px; height:15px;"/></td>
             <td>
                 &nbsp;
             </td>
@@ -212,13 +219,13 @@
                 首期支付方式<span id="MainContent_UC_PolicyInformation1_Label10" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPayMode" type="text" id="PolicyInformation1_txtPayMode" />
+                <input name="txtPayMode" type="text" id="PolicyInformation1_txtPayMode"/>
             </td>
             <td>
                 续期支付方式<span id="MainContent_UC_PolicyInformation1_Label11" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPayContinuationPayMode" type="text" id="PolicyInformation1_txtPayContinuationPayMode" />
+                <input name="txtPayContinuationPayMode" type="text" id="PolicyInformation1_txtPayContinuationPayMode"/>
             </td>
             <td>
             </td>
@@ -230,20 +237,20 @@
                 中支公司<span id="MainContent_UC_PolicyInformation1_Label12" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPayCompany" type="text" id="PolicyInformation1_txtPayCompany" />
+                <input name="txtPayCompany" type="text" id="PolicyInformation1_txtPayCompany"/>
             </td>
             <td>
                 开户银行<span id="MainContent_UC_PolicyInformation1_Label13" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPayBank" type="text" id="PolicyInformation1_txtPayBank" />
+                <input name="txtPayBank" type="text" id="PolicyInformation1_txtPayBank"/>
             </td>
             <td>
                 帐号<span id="MainContent_UC_PolicyInformation1_Label14" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtBankCardNum" type="text" />
-                <input id="btnCheckBank" type="button" value="校验" />
+                <input id="txtBankCardNum" type="text"/>
+                <input id="btnCheckBank" type="button" value="校验"/>
                 <span id="MainContent_UC_PolicyInformation1_lblvalidteBankCardNum" style="color:Red;"></span>
             </td>
         </tr>
@@ -252,19 +259,19 @@
                 购买份数<span id="MainContent_UC_PolicyInformation1_Label15" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtNum" type="text" />
+                <input id="txtNum" type="text"/>
             </td>
             <td>
                 续费年限<span id="MainContent_UC_PolicyInformation1_Label16" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtContinuationYears" type="text" id="PolicyInformation1_txtContinuationYears" />
+                <input name="txtContinuationYears" type="text" id="PolicyInformation1_txtContinuationYears"/>
             </td>
             <td>
                 缴费方式<span id="MainContent_UC_PolicyInformation1_Label17" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPayType" type="text" id="PolicyInformation1_txtPayType" />
+                <input name="txtPayType" type="text" id="PolicyInformation1_txtPayType"/>
             </td>
         </tr>
         <tr>
@@ -272,7 +279,7 @@
                 保险期间<span id="MainContent_UC_PolicyInformation1_Label18" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="txtPolicyDates" type="text" id="PolicyInformation1_txtPolicyDates" />
+                <input name="txtPolicyDates" type="text" id="PolicyInformation1_txtPolicyDates"/>
             </td>
             <td>
             </td>
@@ -312,20 +319,21 @@
     <div style="border: solid 1px #ccc">
     </div>
 </div>
-<div >保单配送>></div>
+<div>保单配送>></div>
 <div id="div_PolicyDistribution">
-    <input id="rbtDistribution" type="radio" name="PolicyDistribution" />配送地址1<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;南平松溪 邮编：<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;收件人：     联系电话：               <br />
-    <input id="rbtDistributionOther" type="radio" name="PolicyDistribution" />其它<br />
+    <input id="rbtDistribution" type="radio" name="PolicyDistribution"/>配送地址1<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;南平松溪 邮编：<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;收件人： 联系电话： <br/>
+    <input id="rbtDistributionOther" type="radio" name="PolicyDistribution"/>其它<br/>
     配送备注：
-    <textarea id="TextArea4" cols="20" style=" width:70%" rows="2"></textarea><br /><br />
+    <textarea id="TextArea4" cols="20" style=" width:70%" rows="2"></textarea><br/><br/>
+
     <div style="border: solid 1px #ccc">
     </div>
 </div>
 <div style="text-align: center">
-    <input id="btnSubmitWhile" type="button" value="暂存" />
-    <input id="btnSubmit" type="button" value="提交" /></div>
+    <input id="btnSubmitWhile" type="button" value="暂存"/>
+    <input id="btnSubmit" type="button" value="提交"/></div>
 </div>
 </div>
 </td>

@@ -16,7 +16,8 @@ import base64
 import json
 
 urls = (
-        '/order/(.*)','order'
+        '/order/(.*)','order',
+        '/orderList/(.*)','orderList'
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -35,38 +36,13 @@ render = render_mako(
         output_encoding = 'utf-8',
         )
 
-class order:
+# according the contactid ,to show the orderlist.
+class orderList:
+    #TODO:  always show all the order for the contactid?
     def GET(self,contactid):
         try:
             logger = getLogger()
-            logger.debug("start Order GET response")
-
-            globalDefine.globalOrderInfoErrorlog = "No Error"
-
-            auth = web.ctx.env.get('HTTP_AUTHORIZATION')
-            authreq = False
-            if auth is None:
-                authreq = True
-            else:
-                auth = re.sub('^Basic ','',auth)
-                username,password = base64.decodestring(auth).split(':')
-                if (username,password) in allowed:
-                    logger.debug("has right HTTP_AUTHORIZATION")
-                    pass
-                else:
-                    authreq = True
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
-
-            if not contactid:
-                return render.error(error = 'no contactid')
-            else:
-                # call service to get orderinfo
-                #return render.order(contactid = contactid)
-                return render.order()
+            logger.debug("start OrderList Page GET response")
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -80,6 +56,63 @@ class order:
         finally:
             pass
 
+#according the orderid to get the order info.
+#if no orderid,show a blank file.
+class order:
+    def GET(self,contactid):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Page GET response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            localCtx = web.ctx
+
+            authreq = checkUserAuth(web)
+
+            if authreq:
+                web.header('WWW-Authenticate','Basic realm="Auth example"')
+                web.ctx.status = '401 Unauthorized'
+                logger.debug("no right HTTP_AUTHORIZATION")
+                return render.error(error = web.ctx.status)
+
+            if not contactid:
+                return render.error(error = 'no contactid')
+            else:
+                # to query the orderinfo according the contactid.
+                # if find, show a list;
+                # else, show a blank page.
+                # or split two html?
+                # call Mako to get orderinfo
+                return render.order(contactid = contactid)
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+def checkUserAuth(inWeb):
+    logger = getLogger()
+    auth = inWeb.ctx.env.get('HTTP_AUTHORIZATION')
+    authreq = False
+    if auth is None:
+        authreq = True
+    else:
+        auth = re.sub('^Basic ','',auth)
+        username,password = base64.decodestring(auth).split(':')
+        if (username,password) in allowed:
+            logger.debug("has right HTTP_AUTHORIZATION")
+            pass
+        else:
+            authreq = True
+    return authreq
 
 if __name__ == "__main__":
     app.run()

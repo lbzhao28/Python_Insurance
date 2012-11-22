@@ -5,11 +5,20 @@ import pycurl
 import cStringIO
 import json
 
-def getOrderInfo(inOrderid):
+import globalDefine
+import traceback
+import configData
+from configData import getConfig
+from logHelper import getLogger
+
+def getOrderInfo(inContactid):
     try:
+        logger = getLogger()
+        logger.debug("start GET Order Info according contact id.")
+
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inOrderid
+        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inContactid
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
         c.setopt(c.WRITEFUNCTION,buf.write)
@@ -21,9 +30,24 @@ def getOrderInfo(inOrderid):
         localOrderInfo = json.loads(buf.getvalue())
         buf.close()
 
+        logger.debug("get localOrderInfo success.")
+
         return localOrderInfo
     except pycurl.error, error:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+
         errno, errstr = error
         print 'An error occurred: ', errstr
+    else:
+        pass
+    finally:
+        pass
 
 
