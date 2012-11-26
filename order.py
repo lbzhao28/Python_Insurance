@@ -38,7 +38,7 @@ render = render_mako(
 
 # according the contactid ,to show the orderlist.
 class orderList:
-    #TODO:  always show all the order for the contactid?
+    #TODO:  always show all the order according the contactid?
     def GET(self,contactid):
         try:
             logger = getLogger()
