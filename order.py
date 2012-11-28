@@ -59,14 +59,44 @@ class orderList:
             pass
 
 class order:
-    #must have contactid, otherwise,the data will be wrong.
+    def POST(self,contactid):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Page POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            authreq = checkUserAuth(web)
+
+            if authreq:
+                web.header('WWW-Authenticate','Basic realm="Auth example"')
+                web.ctx.status = '401 Unauthorized'
+                logger.debug("no right HTTP_AUTHORIZATION")
+                return render.error(error = web.ctx.status)
+
+            #get POST form data.
+            data = web.input()
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
     def GET(self,contactid):
+    #must have contactid, otherwise,the data will be wrong.
         try:
             logger = getLogger()
             logger.debug("start Order Page GET response")
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
-
 
             authreq = checkUserAuth(web)
 
@@ -79,17 +109,18 @@ class order:
             if not contactid:
                 return render.error(error = 'no contactid')
             else:
-                parsed_url = urlparse.urlparse(web.ctx.fullpath)
-                #query_dict = dict(urlparse.parse_qsl(parsed_url.query))
-                #query_dict = dict(urlparse.parse_qsl(web.ctx.query))
                 #if has orderid according the orderid to get the order info.
-                query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
-                if (query_dict['orderid'] is not None):
+                #query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
+                parsed_url = urlparse.urlparse(web.ctx.fullpath)
+                query_url = parsed_url.query
+                if (query_url != ''):
+                    query_dict = dict(urlparse.parse_qsl(query_url))
                     orderid = query_dict['orderid']
                     return render.order(contactid = contactid,orderid = orderid)
                 else:
                     #if no orderid,show a blank file.
-                    return render.order(contactid = contactid)
+                    orderid = None
+                    return render.order(contactid = contactid,orderid = orderid)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.

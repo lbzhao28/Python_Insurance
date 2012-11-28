@@ -11,14 +11,17 @@ import configData
 from configData import getConfig
 from logHelper import getLogger
 
-def getOrderInfoOrder(inContactid,inOrderid):
+def getOrderInfoOrder(inOrderid):
     try:
         logger = getLogger()
         logger.debug("start GET Order Info according order id.")
 
+        if inOrderid is None:
+            return None
+
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inContactid
+        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inOrderid
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
         c.setopt(c.WRITEFUNCTION,buf.write)

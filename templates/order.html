@@ -7,10 +7,45 @@
     </title>
     <script type="text/javascript">
     </script>
+    <%doc>
+    ##test code.
+    ## this is a comment.test for lookup.
+    <% x = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 0 ]%>
+    % for elem in x:
+    element: ${elem}
+    % endfor
+</%doc>
+
+##prepare the order info
+##if has orderid ,show the data.
+##if no orderid, show a blank file.
+<%!
+import OrderClient
+import json
+%>
+<%
+if orderid is not None:
+    localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
+    beneficiarierelationdsc = localOrderInfo["BENEFICIARIERELATIONDSC"]
+    deliveryaddress = localOrderInfo["DELIVERYADDRESS"]
+    crusr = localOrderInfo["CRUSR"]
+    insurant_usr_age = localOrderInfo["INSURANT_USR"]["AGE"]
+    insurant_usr_name = localOrderInfo["INSURANT_USR"]["NAME"]
+else:
+    print 'none orderid'
+    beneficiarierelationdsc = ''
+    deliveryaddress = ''
+    crusr = ''
+    insurant_usr_age = ''
+    insurant_usr_name = ''
+%>
 </head>
 
+
 <body>
-<table id="tblConInfo" style="padding:1px;">
+
+<form action="${contactid}" method="POST">
+ <table id="tblConInfo" style="padding:1px;">
 <tr>
 <td valign="top">
 <div id="tabs" style="height:100%">
@@ -20,25 +55,8 @@
     <table style="width: 720px">
         <tr>
             <td colspan="6">
-                <%!
-                import OrderClient
-                import json
-                %>
-                <%doc>
-                ## this is a comment.test for lookup.
-                <% x = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 0 ]%>
-                % for elem in x:
-                element: ${elem}
-                % endfor
-                </%doc>
-
                 与被保人关系
-                <%
-                localOrderInfo = OrderClient.getOrderInfoOrder(contactid,orderid)
-                print localOrderInfo["CRUSR"]
-                crusr = localOrderInfo["CRUSR"]
-                %>
-                <input name="txtPolicyRelation" type="text" id="PolicyInformation1_txtPolicyRelation" value="${crusr}"/>
+               <input name="txtPolicyRelation" type="text" id="PolicyInformation1_txtPolicyRelation"/>
             </td>
         </tr>
         <tr>
@@ -46,7 +64,7 @@
                 姓名
             </td>
             <td style="width: 100px">
-                <input id="txtName" type="text"/>
+                <input id="txtName" type="text" value="${insurant_usr_name}"/>
             </td>
             <td style="width: 125px">
                 性别
@@ -333,12 +351,12 @@
 </div>
 <div style="text-align: center">
     <input id="btnSubmitWhile" type="button" value="暂存"/>
-    <input id="btnSubmit" type="button" value="提交"/></div>
+    <input id="btnSubmit" type="submit" value="提交"/></div>
 </div>
 </div>
 </td>
 </tr>
 </table>
-
+</form>
 </body>
 </html>
