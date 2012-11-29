@@ -64,20 +64,20 @@ else:
                 姓名
             </td>
             <td style="width: 100px">
-                <input id="txtName" type="text" value="${insurant_usr_name}"/>
+                <input name="txtHolderName" id="PolicyInformation1_txtName" type="text" value="${insurant_usr_name}"/>
             </td>
             <td style="width: 125px">
                 性别
             </td>
             <td style="width: 100px">
-                <input id="rbtMan" name="rbtSex" checked="checked" type="radio"/>男
-                <input id="rbtWoman" name="rbtSex" type="radio"/>女
+                <input name="rbtHolderMan" id="PolicyInformation1_rbtMan" checked="checked" type="radio"/>男
+                <input name="rbtHolderWoman" id="PolicyInformation1_rbtWoman" type="radio"/>女
             </td>
             <td style="width: 125px">
                 出生日期
             </td>
             <td style="width: 100px">
-                <input id="txtBirthday" type="text"/>
+                <input name="txtHolderBirthday" id="PolicyInformation1_txtBirthday" type="text"/>
             </td>
         </tr>
         <tr>
@@ -85,19 +85,19 @@ else:
                 年龄
             </td>
             <td>
-                <input id="txtOldYears" type="text"/>
+                <input name="txtHolderOldYears" id="PolicyInformation1_txtHolderOldYears" type="text"/>
             </td>
             <td>
                 职业
             </td>
             <td>
-                <input name="txtProfessional" type="text" id="PolicyInformation1_txtProfessional" pid="profession_t"/>
+                <input name="txtHolderProfessional" type="text" id="PolicyInformation1_txtProfessional" pid="profession_t"/>
             </td>
             <td>
                 联系电话
             </td>
             <td>
-                <input id="txtPhoneNumber" type="text"/>
+                <input name="txtHolderPhoneNumber" id="PolicyInformation1_txtHolderPhoneNumber"   type="text"/>
             </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@ else:
                 证件类型
             </td>
             <td>
-                <select id="sCardType" style="width: 155px">
+                <select name="sHolderCardType" id="PolicyInformation1_sHolderCardType" style="width: 155px">
                     <option value="1" selected="selected">身份证</option>
                     <option value="2">军官证</option>
                 </select>
@@ -114,7 +114,7 @@ else:
                 证件号码
             </td>
             <td>
-                <input id="txtCardNumber" type="text"/>
+                <input name="txtHolderCardNumber" id="PolicyInformation1_txtHolderCardNumber" type="text"/>
             </td>
             <td>
             </td>
@@ -133,20 +133,20 @@ else:
                 姓名<span id="MainContent_UC_PolicyInformation1_Label1" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="txtNameO" type="text"/>
+                <input name="txtBeHolderName" id="BePolicyHolder_txtBeHolderName" type="text"/>
             </td>
             <td style="width: 125px">
                 性别<span id="MainContent_UC_PolicyInformation1_Label2" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="rbtManO" name="rbtBeSex" checked="checked" type="radio"/>男
-                <input id="rbtWomanO" name="rbtBeSex" type="radio"/>女
+                <input name="rbtBeHolderSexMan" id="BePolicyHolder_rbtBeHolderSexMan" checked="checked" type="radio"/>男
+                <input name="rbtBeHolderSexWoman" id="BePolicyHolder_rbtBeHolderSexWoman" type="radio"/>女
             </td>
             <td style="width: 125px">
                 出生日期<span id="MainContent_UC_PolicyInformation1_Label3" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input id="txtBirthdayO" type="text"/>
+                <input name="txtBeHolderBirthday" id="BePolicyHolder_txtBeHolderBirthday" type="text"/>
             </td>
         </tr>
         <tr>
@@ -154,19 +154,19 @@ else:
                 年龄<span id="MainContent_UC_PolicyInformation1_Label4" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtOldYearsO" type="text"/>
+                <input name="txtBeHolderOldYears" id="BePolicyHolder_txtBeHolderOldYears" type="text"/>
             </td>
             <td>
                 职业<span id="MainContent_UC_PolicyInformation1_Label5" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtProfessionalO" type="text"/>
+                <input name="txtBeHolderProfessional" id="BePolicyHolder_txtBeHolderProfessional" type="text"/>
             </td>
             <td>
                 联系电话<span id="MainContent_UC_PolicyInformation1_Label6" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtPhoneNumberO" type="text"/>
+                <input name="txtBeHolderPhoneNumber" id="BePolicyHolder_txtBeHolderPhoneNumber" type="text"/>
             </td>
         </tr>
         <tr>
@@ -174,7 +174,7 @@ else:
                 证件类型<span id="MainContent_UC_PolicyInformation1_Label7" style="color:Red;">*</span>
             </td>
             <td>
-                <select id="selectCardType" style="width: 155px">
+                <select name="selectBeHolderCardType" id="BePolicyHolder_selectBeHolderCardType" style="width: 155px">
                     <option value="1" selected="selected">身份证</option>
                     <option value="2">军官证</option>
                 </select>
@@ -183,7 +183,7 @@ else:
                 证件号码<span id="MainContent_UC_PolicyInformation1_Label8" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtCardNumberO" type="text"/>
+                <input name="txtBeHolderCardNumber" id="BePolicyHolder_txtBeHolderCardNumber" type="text"/>
             </td>
             <td>
             </td>
@@ -196,10 +196,10 @@ else:
 </div>
 <div>受益人>></div>
 <div id="div_Beneficiary">
-    <input id="rbtMode1" name="rbtBeneficiary" value="1" onclick="Beneficiary(1);" type="radio"/>法定
-    <input id="rbtMode2" name="rbtBeneficiary" value="2" onclick="Beneficiary(2);" type="radio"/>均分
-    <input id="rbtMode3" name="rbtBeneficiary" value="3" onclick="Beneficiary(3);" type="radio"/>按填写顺位
-    <input id="rbtMode4" name="rbtBeneficiary" value="4" onclick="Beneficiary(4);" type="radio"/>按比例<br/>
+    <input id="rbtBeneficiaryLaw" name="rbtBeneficiaryLaw" value="1" type="radio"/>法定
+    <input id="rbtBeneficiaryEqual" name="rbtBeneficiaryEqual" value="2" type="radio"/>均分
+    <input id="rbtBeneficiaryWrite" name="rbtBeneficiaryWrite" value="3" type="radio"/>按填写顺位
+    <input id="rbtBeneficiaryRatio" name="rbtBeneficiaryRatio" value="4" type="radio"/>按比例<br/>
     <table id="listBeneficiary">
         <tr>
             <td align="center" style="width: 50px">
@@ -267,7 +267,7 @@ else:
                 帐号<span id="MainContent_UC_PolicyInformation1_Label14" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtBankCardNum" type="text"/>
+                <input name="txtBankCardNum" id="PolicyInformation1_txtBankCardNum" type="text"/>
                 <input id="btnCheckBank" type="button" value="校验"/>
                 <span id="MainContent_UC_PolicyInformation1_lblvalidteBankCardNum" style="color:Red;"></span>
             </td>
@@ -277,7 +277,7 @@ else:
                 购买份数<span id="MainContent_UC_PolicyInformation1_Label15" style="color:Red;">*</span>
             </td>
             <td>
-                <input id="txtNum" type="text"/>
+                <input name="txtNum" id="PolicyInformation1_txtNum" type="text"/>
             </td>
             <td>
                 续费年限<span id="MainContent_UC_PolicyInformation1_Label16" style="color:Red;">*</span>
@@ -339,10 +339,10 @@ else:
 </div>
 <div>保单配送>></div>
 <div id="div_PolicyDistribution">
-    <input id="rbtDistribution" type="radio" name="PolicyDistribution"/>配送地址1<br/>
+    <input id="PolicyDistribution_txtDistribution" type="radio" name="txtPolicyDistribution"/>配送地址1<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;南平松溪 邮编：<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;收件人： 联系电话： <br/>
-    <input id="rbtDistributionOther" type="radio" name="PolicyDistribution"/>其它<br/>
+    <input id="PolicyDistribution_txtDistributionOther" type="radio" name="txtPolicyDistribution"/>其它<br/>
     配送备注：
     <textarea id="TextArea4" cols="20" style=" width:70%" rows="2"></textarea><br/><br/>
 

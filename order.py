@@ -16,6 +16,7 @@ import base64
 import json
 
 import urlparse
+import OrderClient
 
 urls = (
         '/order/(.*)','order',
@@ -60,6 +61,9 @@ class orderList:
 
 class order:
     def POST(self,contactid):
+        """
+
+        """
         try:
             logger = getLogger()
             logger.debug("start Order Page POST response")
@@ -74,8 +78,17 @@ class order:
                 logger.debug("no right HTTP_AUTHORIZATION")
                 return render.error(error = web.ctx.status)
 
-            #get POST form data.
-            data = web.input()
+            if not contactid:
+                return render.error(error = 'no contactid')
+            else:
+                #get POST form data.
+                data = web.input()
+
+                data = web.data()
+                result = urlparse.parse_qs(data)
+                #call REST save data
+                #TODO: can not call this func?
+                OrderClient.postOrderInfoContact(contactid)
 
         except :
             logger.error("exception occur, see the traceback.log")
