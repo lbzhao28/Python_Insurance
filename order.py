@@ -16,7 +16,7 @@ import base64
 import json
 
 import urlparse
-import OrderClient
+import OrderDomainHandler
 
 urls = (
         '/order/(.*)','order',
@@ -81,14 +81,14 @@ class order:
             if not contactid:
                 return render.error(error = 'no contactid')
             else:
-                #get POST form data.
                 data = web.input()
 
-                data = web.data()
-                result = urlparse.parse_qs(data)
+                #get POST form data.
+                #data = web.data()
+                #result = urlparse.parse_qs(data)
+
                 #call REST save data
-                #TODO: can not call this func?
-                OrderClient.postOrderInfoContact(contactid)
+                OrderDomainHandler.postOrderInfoContact(contactid,data)
 
         except :
             logger.error("exception occur, see the traceback.log")
