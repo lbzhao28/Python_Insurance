@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>
+        投保单列表
+    </title>
+    <script type="text/javascript">
+        function showOrder(inContactid,inOrderid){
+            actionUrl ="http://localhost:8080/order/"+inContactid+'?orderid='+inOrderid;
+            window.location.href=actionUrl;
+        }
+    </script>
+##prepare the order info
+##if has contactid ,show the data.
+<%!
+import OrderClient
+import json
+%>
+</head>
+<body>
+<style type="text/css">
+    .myTable,.myTable td {
+        border:1px solid #cccccc;
+        border-collapse:collapse;
+    }
+    .myNewTable,.myNewTable
+    table {
+        border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;
+    }
+    th,td {
+        border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;
+    }
+    th {
+        font-weight:bold;background:#ccc;
+    }
+</style>
+<form id="formOrderList">
+<%
+if contactid is not None:
+    localOrderInfoLst = OrderClient.getOrderInfoLstContact(contactid)
+else:
+    print 'none contactid'
+%>
+<%def name="layoutdata(inOrderInfoLst)">
+    <table style="padding:1px;" border="1" class="myNewTable">
+        % if inOrderInfoLst is not None:
+        <tr>
+            <th>操作</th>
+            <th>保单编号</th>
+            <th>创建人</th>
+            <th>创建日期</th>
+            <th>保单状态</th>
+        </tr>
+            % for item in inOrderInfoLst:
+                <tr>
+                    <td>
+                        <% orderid = item['ORDERID'] %>
+                        <input id="btnSubmit" type="button" value="转到" onclick="showOrder(${contactid},${orderid})"/>
+                    </td>
+                    ${caller.body(item=item)}
+                </tr>
+            % endfor
+        % endif
+    </table>
+</%def>
+<%call expr="layoutdata(localOrderInfoLst)" args="item">
+    <td>${item["ORDERID"]}</td>
+    <td>${item["CRUSR"]}</td>
+    <td>${item["CRDT"]}</td>
+    <td>${item["STATUS"]}</td>
+</%call>
+</form>
+</body>
+</html>

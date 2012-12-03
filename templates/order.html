@@ -6,6 +6,36 @@
         投保单
     </title>
     <script type="text/javascript">
+        function postOrder(inContactid){
+            if (check_submit())
+            {
+                document.getElementById("formOrder").action = "http://localhost:8080/order/"+inContactid;
+                document.getElementById("formOrder").method = "POST";
+                document.getElementById("formOrder").submit();
+            }
+        }
+
+        function putOrder(inContactid){
+            if (check_submit())
+            {
+                inOrderid = $("lblOrderid").title;
+                document.getElementById("formOrder").action = "http://localhost:8080/orderUpdate/"+inContactid+"/"+inOrderid;
+                document.getElementById("formOrder").method = "POST";
+                document.getElementById("formOrder").submit();
+            }
+        }
+
+        function putFixOrder(inContactid){
+            if (check_submit())
+            {
+                inOrderid = $("lblOrderid").title;
+                // '3' status means fix order.
+                document.getElementById("formOrder").action = "http://localhost:8080/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
+                document.getElementById("formOrder").method = "POST";
+                document.getElementById("formOrder").submit();
+            }
+        }
+
         function $(str){
             return (document.getElementById(str));
         }
@@ -39,6 +69,16 @@
                 alert("购买份数不能为空!");
                 return false;
             }
+            return true;
+        }
+
+        function showDiv(divId){
+            document.getElementById(divId).style.display="";
+            //alert(document.getElementById("div").style.display)
+        }
+        function hiddenDiv(divId){
+            document.getElementById(divId).style.display="none";
+            //alert(document.getElementById("div").style.display)
         }
     </script>
     <%doc>
@@ -65,6 +105,14 @@ if orderid is not None:
     crusr = localOrderInfo["CRUSR"]
     insurant_usr_age = localOrderInfo["INSURANT_USR"]["AGE"]
     insurant_usr_name = localOrderInfo["INSURANT_USR"]["NAME"]
+    insurant_usr_idcardno = localOrderInfo["INSURANT_USR"]["IDCARDNO"]
+    policyholder_usr_age = localOrderInfo["POLICYHOLDER_USR"]["AGE"]
+    policyholder_usr_name = localOrderInfo["POLICYHOLDER_USR"]["NAME"]
+    policyholder_usr_idcardno = localOrderInfo["POLICYHOLDER_USR"]["IDCARDNO"]
+    purchasecount = localOrderInfo["PURCHASECOUNT"]
+    paymentstatus = localOrderInfo["PAYMENTSTATUS"]
+    insuranceid = localOrderInfo["INSURANCEID"]
+    status = localOrderInfo["STATUS"]
 else:
     print 'none orderid'
     beneficiarierelationdsc = ''
@@ -72,13 +120,53 @@ else:
     crusr = ''
     insurant_usr_age = ''
     insurant_usr_name = ''
+    insurant_usr_idcardno = ''
+    policyholder_usr_age = ''
+    policyholder_usr_name = ''
+    policyholder_usr_idcardno = ''
+    purchasecount = ''
+    paymentstatus = ''
+    insuranceid = ''
 %>
 </head>
 
 
 <body>
 
-<form action="${contactid}" method="POST" onsubmit="return check_submit()">
+<form id="formOrder">
+<div>保单操作>></div>
+<div>
+<table>
+    <tr>
+        <td>
+            <input id="btnSubmit" type="button" value="提交" onclick="postOrder('${contactid}')"/>
+        </td>
+        <td>
+            <input id="btnUpdate" type="button" value="修改" onclick="putOrder('${contactid}')"/>
+        </td>
+    </tr>
+</table>
+</div>
+<div style="border: solid 1px #ccc">
+</div>
+<div>
+    <table>
+        % if orderid is not None:
+        <tr>
+            <td>
+                <div style="color:Red; font-weight:bold">保单编号: <label id='lblOrderid' title="${orderid}">${orderid}</label></div>
+            </td>
+            % if status is not None:
+            <td>
+                <div style="color:Red; font-weight:bold">保单状态: <label id='lblOrderStatus' title="${status}">${status}</label></div>
+            </td>
+            %endif
+        </tr>
+        %endif
+    </table>
+</div>
+<div style="border: solid 1px #ccc">
+</div>
  <table id="tblConInfo" style="padding:1px;">
 <tr>
 <td valign="top">
@@ -87,12 +175,7 @@ else:
 <div>投保人信息>></div>
 <div id="div_PolicyHolderInfor">
     <table style="width: 720px">
-        <tr>
-            <td colspan="6">
-                与被保人关系
-               <input name="CARDID" type="text" id="PolicyInformation1_txtPolicyRelation"/>
-            </td>
-        </tr>
+
         <tr>
             <td style="width: 140px">
                 姓名<span id="MainContent_UC_PolicyInformation1_Label11" style="color:Red;">*</span>
@@ -119,13 +202,16 @@ else:
                 年龄
             </td>
             <td>
-                <input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text"/>
+                <input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text" value="${insurant_usr_age}"/>
             </td>
             <td>
                 职业
             </td>
             <td>
-                <input name="INSURANT_USR_PROFESSION" type="text" id="PolicyInformation1_txtProfessional" pid="profession_t"/>
+                <SELECT name="INSURANT_USR_PROFESSION" id="PolicyInformation1_ddlProfessional">
+                    <OPTION value="0">工程师</OPTION>
+                    <OPTION value="1" selected>公务员</OPTION>
+                </SELECT>
             </td>
             <td>
                 联系电话
@@ -149,7 +235,7 @@ else:
 
             </td>
             <td>
-                <input name="INSURANT_USR_IDCARDNO" id="PolicyInformation1_txtHolderCardNumber" type="text"/>
+                <input name="INSURANT_USR_IDCARDNO" id="PolicyInformation1_txtHolderCardNumber" type="text" value="${insurant_usr_idcardno}"/>
             </td>
             <td>
             </td>
@@ -164,11 +250,17 @@ else:
 <div id="div_POLICYHOLDER_USR">
     <table style="width: 720px">
         <tr>
+            <td colspan="6">
+                与投保人关系
+                <input name="CARDID" type="text" id="PolicyInformation1_txtPolicyRelation"/>
+            </td>
+        </tr>
+        <tr>
             <td style="width: 140px">
                 姓名<span id="MainContent_UC_PolicyInformation1_Label1" style="color:Red;">*</span>
             </td>
             <td style="width: 100px">
-                <input name="POLICYHOLDER_USR_NAME" id="BePolicyHolder_txtBeHolderName" type="text"/>
+                <input name="POLICYHOLDER_USR_NAME" id="BePolicyHolder_txtBeHolderName" type="text" value="${policyholder_usr_name}"/>
             </td>
             <td style="width: 125px">
                 性别
@@ -189,13 +281,16 @@ else:
                 年龄
             </td>
             <td>
-                <input name="POLICYHOLDER_USR_AGE" id="BePolicyHolder_txtBeHolderOldYears" type="text"/>
+                <input name="POLICYHOLDER_USR_AGE" id="BePolicyHolder_txtBeHolderOldYears" type="text" value="${policyholder_usr_age}"/>
             </td>
             <td>
                 职业
             </td>
             <td>
-                <input name="POLICYHOLDER_USR_PROFESSION" id="BePolicyHolder_txtBeHolderProfessional" type="text"/>
+                <SELECT name="POLICYHOLDER_USR_PROFESSION" id="BePolicyHolder_ddlBeHolderProfessional">
+                    <OPTION value="0">工程师</OPTION>
+                    <OPTION value="1" selected>公务员</OPTION>
+                </SELECT>
             </td>
             <td>
                 联系电话
@@ -218,7 +313,7 @@ else:
                 证件号码<span id="MainContent_UC_PolicyInformation1_Label8" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="POLICYHOLDER_USR_IDCARDNO" id="BePolicyHolder_txtBeHolderCardNumber" type="text"/>
+                <input name="POLICYHOLDER_USR_IDCARDNO" id="BePolicyHolder_txtBeHolderCardNumber" type="text" value="${policyholder_usr_idcardno}"/>
             </td>
             <td>
             </td>
@@ -231,10 +326,11 @@ else:
 </div>
 <div>受益人>></div>
 <div id="div_Lstbeneficiaries">
-    <input id="rbtBeneficiaryLaw" name="rbtBeneficiaryLaw" value="1" type="radio"/>法定
-    <input id="rbtBeneficiaryEqual" name="rbtBeneficiaryEqual" value="2" type="radio"/>均分
-    <input id="rbtBeneficiaryWrite" name="rbtBeneficiaryWrite" value="3" type="radio"/>按填写顺位
-    <input id="rbtBeneficiaryRatio" name="rbtBeneficiaryRatio" value="4" type="radio"/>按比例<br/>
+    <input id="rbtBeneficiaryLaw" name="rbtBeneficiaryLaw" value="1" type="radio" checked="checked" onclick="document.getElementById('rbtBeneficiaryEqual').checked = '';document.getElementById('rbtBeneficiaryWrite').checked = '';document.getElementById('rbtBeneficiaryRatio').checked = '';hiddenDiv('div_Lstbeneficiaries_Det');"/>法定
+    <input id="rbtBeneficiaryEqual" name="rbtBeneficiaryEqual" value="2" type="radio" onclick="document.getElementById('rbtBeneficiaryLaw').checked = '';document.getElementById('rbtBeneficiaryWrite').checked = '';document.getElementById('rbtBeneficiaryRatio').checked = '';showDiv('div_Lstbeneficiaries_Det');"/>均分
+    <input id="rbtBeneficiaryWrite" name="rbtBeneficiaryWrite" value="3" type="radio" onclick="document.getElementById('rbtBeneficiaryEqual').checked = '';document.getElementById('rbtBeneficiaryLaw').checked = '';document.getElementById('rbtBeneficiaryRatio').checked = ''; showDiv('div_Lstbeneficiaries_Det');"/>按填写顺位
+    <input id="rbtBeneficiaryRatio" name="rbtBeneficiaryRatio" value="4" type="radio" onclick="document.getElementById('rbtBeneficiaryEqual').checked = '';document.getElementById('rbtBeneficiaryLaw').checked = '';document.getElementById('rbtBeneficiaryWrite').checked = ''; showDiv('div_Lstbeneficiaries_Det');"/>按比例<br/>
+    <div id="div_Lstbeneficiaries_Det" style="display: none" >
     <table id="listBeneficiary">
         <tr>
             <td style="width: 140px">
@@ -247,8 +343,8 @@ else:
                 性别
             </td>
             <td style="width: 100px">
-                <input name="rbtBeHolderSexMan" id="Lstbeneficiaries_rbtBeHolderSexMan" checked="checked" type="radio"/>男
-                <input name="rbtBeHolderSexWoman" id="Lstbeneficiaries_rbtBeHolderSexWoman" type="radio"/>女
+                <input name="rbtBeneficiarySexMan" id="Lstbeneficiaries_rbtBeHolderSexMan" checked="checked" type="radio"/>男
+                <input name="rbtBeneficiarySexWoman" id="Lstbeneficiaries_rbtBeHolderSexWoman" type="radio"/>女
             </td>
             <td style="width: 125px">
                 出生日期
@@ -268,7 +364,10 @@ else:
                 职业
             </td>
             <td>
-                <input name="Lstbeneficiaries_PROFESSIONAL" id="Lstbeneficiaries_txtBeHolderProfessional" type="text"/>
+                <SELECT name="Lstbeneficiaries_PROFESSIONAL" id="Lstbeneficiaries_ddlBeHolderProfessional">
+                    <OPTION value="0">工程师</OPTION>
+                    <OPTION value="1" selected>公务员</OPTION>
+                </SELECT>
             </td>
             <td>
                 联系电话
@@ -299,10 +398,26 @@ else:
             </td>
         </tr>
     </table>
+    </div>
     <div style="border: solid 1px #ccc">
     </div>
 </div>
 <div>保险计划>></div>
+<div id="div_InsuranceProduct">
+    <table>
+        <tr>
+            <td>
+                保单产品
+            </td>
+            <td>
+                <SELECT id="ddlProduct" name="ddlProduct">
+                    <OPTION value="0">如意通</OPTION>
+                    <OPTION value="1" selected>通通通</OPTION>
+                </SELECT>
+            </td>
+        </tr>
+    </table>
+</div>
 <div id="div_InsurancePlan">
     <table>
         <tr>
@@ -310,7 +425,7 @@ else:
                 首期支付方式<span id="MainContent_UC_PolicyInformation1_Label10" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="PAYMENTSTATUS" type="text" id="PolicyInformation1_txtPayMode"/>
+                <input name="PAYMENTSTATUS" type="text" id="PolicyInformation1_txtPayMode" value="${paymentstatus}"/>
             </td>
             <td>
                 续期支付方式
@@ -341,7 +456,6 @@ else:
             </td>
             <td>
                 <input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text"/>
-                <input id="btnCheckBank" type="button" value="校验"/>
             </td>
         </tr>
         <tr>
@@ -349,7 +463,7 @@ else:
                 购买份数<span id="MainContent_UC_PolicyInformation1_Label15" style="color:Red;">*</span>
             </td>
             <td>
-                <input name="PURCHASECOUNT" id="PolicyInformation1_txtNum" type="text"/>
+                <input name="PURCHASECOUNT" id="PolicyInformation1_txtNum" type="text" value="${purchasecount}"/>
             </td>
             <td>
                 续费年限
@@ -411,18 +525,98 @@ else:
 </div>
 <div>保单配送>></div>
 <div id="div_PolicyDistribution">
-    <input id="PolicyDistribution_txtDistribution" type="radio" name="txtPolicyDistribution"/>配送地址1<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp;南平松溪 邮编：<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp;收件人： 联系电话： <br/>
-    <input id="PolicyDistribution_txtDistributionOther" type="radio" name="txtPolicyDistribution"/>其它<br/>
-    配送备注：
-    <textarea id="TextArea4" cols="20" style=" width:70%" rows="2"></textarea><br/><br/>
-
+    <input id="btnDelivery" type="button" value="保存配送地址"/>
+    <table>
+        <tr>
+            <td>
+                <input id="PolicyDistribution_txtDistribution" type="radio" name="txtPolicyDistribution"/>配送地址1
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="PolicyDistribution_txtDistributionOther" type="radio" name="txtPolicyDistribution"/>其它
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="TextArea4" cols="20" style=" width:70%" rows="2"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                配送时间
+            </td>
+            <td>
+                <input id="PolicyDistribution_txtDistributionTime" type="text" name="txtPolicyDistributionTime"/>
+            </td>
+        </tr>
+    </table>
     <div style="border: solid 1px #ccc">
     </div>
 </div>
-<div style="text-align: center">
-    <input id="btnSubmit" type="submit" value="提交"/></div>
+<div>保单后续>></div>
+<div>
+    <table>
+        <tr>
+            <td>
+                <input id="btnFix" type="button" value="保单承保" onclick="putFixOrder('${contactid}')"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                承保单号:
+            </td>
+            <td>
+                <input id="aaa" name="INSURANCEID" type="text" value="${insuranceid}">
+            </td>
+        </tr>
+     </table>
+    <table>
+        <tr>
+            <td>
+                <input id="btnQA" type="button" value="保单质检"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                录音编号:
+            </td>
+            <td>
+                <input id="aaab" name="bbbb" type="text">
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <input id="btnGetMoney" type="button" value="保单收款"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                收款信息:
+            </td>
+            <td>
+                <input id="aaac" name="bbbc" type="text">
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <input id="btnClose" type="button" value="保单退保"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                退保原因:
+            </td>
+            <td>
+                <input id="aaad" name="bbbd" type="text">
+            </td>
+        </tr>
+    </table>
+</div>
 </div>
 </div>
 </td>

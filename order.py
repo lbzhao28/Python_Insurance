@@ -20,6 +20,8 @@ import OrderDomainHandler
 
 urls = (
         '/order/(.*)','order',
+        '/orderUpdate/(.*)/(.*)','orderUpdate',
+        '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
         '/orderList/(.*)','orderList'
         )
 
@@ -46,6 +48,111 @@ class orderList:
         try:
             logger = getLogger()
             logger.debug("start OrderList Page GET response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            authreq = checkUserAuth(web)
+
+            if authreq:
+                web.header('WWW-Authenticate','Basic realm="Auth example"')
+                web.ctx.status = '401 Unauthorized'
+                logger.debug("no right HTTP_AUTHORIZATION")
+                return render.error(error = web.ctx.status)
+
+            if not contactid:
+                return render.error(error = 'no contactid')
+            else:
+                return render.orderList(contactid = contactid)
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+#in JS, can not use put directly, so we use POST　to simulate it.
+class orderUpdate:
+    def POST(self,contactid,orderid):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Update POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            authreq = checkUserAuth(web)
+
+            if authreq:
+                web.header('WWW-Authenticate','Basic realm="Auth example"')
+                web.ctx.status = '401 Unauthorized'
+                logger.debug("no right HTTP_AUTHORIZATION")
+                return render.error(error = web.ctx.status)
+
+            if not orderid:
+                return render.error(error = 'no orderid')
+            else:
+                #get POST form data
+                data = web.input()
+                #call REST post data
+                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data)
+
+                #according the response
+                retDict = json.loads(retStr)
+                if (retDict["RETURNFLAG"] == True):
+                    return render.order(contactid = contactid,orderid = orderid)
+                else:
+                    return render.error(error = 'update failure!')
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+#in JS, can not use put directly, so we use POST　to simulate it.
+class orderStatusUpdate:
+    def POST(self,contactid,orderid,status):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Status Update POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            authreq = checkUserAuth(web)
+
+            if authreq:
+                web.header('WWW-Authenticate','Basic realm="Auth example"')
+                web.ctx.status = '401 Unauthorized'
+                logger.debug("no right HTTP_AUTHORIZATION")
+                return render.error(error = web.ctx.status)
+
+            if not orderid:
+                return render.error(error = 'no orderid')
+            else:
+                #get POST form data
+                data = web.input()
+                #call REST post data
+                retStr = OrderDomainHandler.putOrderStatusInfoContact(orderid,status,data)
+
+                #according the response
+                retDict = json.loads(retStr)
+                if (retDict["RETURNFLAG"] == True):
+                    return render.order(contactid = contactid,orderid = orderid)
+                else:
+                    return render.error(error = 'update failure!')
+
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -61,9 +168,6 @@ class orderList:
 
 class order:
     def POST(self,contactid):
-        """
-
-        """
         try:
             logger = getLogger()
             logger.debug("start Order Page POST response")
@@ -81,14 +185,19 @@ class order:
             if not contactid:
                 return render.error(error = 'no contactid')
             else:
+                #get POST form data
                 data = web.input()
+                #call REST post data
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data)
 
-                #get POST form data.
-                #data = web.data()
-                #result = urlparse.parse_qs(data)
-
-                #call REST save data
-                OrderDomainHandler.postOrderInfoContact(contactid,data)
+                #according the response
+                retDict = json.loads(retStr)
+                if (retDict["RETURNFLAG"] == True):
+                    #refresh the order.
+                    orderidStr = retDict["OrderID"]
+                    return render.order(contactid = contactid,orderid = orderidStr)
+                else:
+                    return render.error(error = 'add failure.')
 
         except :
             logger.error("exception occur, see the traceback.log")

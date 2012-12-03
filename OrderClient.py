@@ -53,14 +53,14 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
-def getOrderInfoContact(inContactid):
+def getOrderInfoLstContact(inContactid):
     try:
         logger = getLogger()
         logger.debug("start GET Order Info according contact id.")
 
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderInfoOrderidUrl','str')+inContactid
+        localURL = getConfig('RESTService','orderInfoContactidUrl','str')+inContactid
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
         c.setopt(c.WRITEFUNCTION,buf.write)
@@ -69,12 +69,12 @@ def getOrderInfoContact(inContactid):
         c.perform()
 
         #get the data from json.
-        localOrderInfo = json.loads(buf.getvalue())
+        localOrderInfoLst = json.loads(buf.getvalue())
         buf.close()
 
-        logger.debug("get localOrderInfo success.")
+        logger.debug("get localOrderInfo List success.")
 
-        return localOrderInfo
+        return localOrderInfoLst
     except pycurl.error, error:
         logger.error("exception occur, see the traceback.log")
 
