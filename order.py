@@ -19,6 +19,7 @@ import urlparse
 import OrderDomainHandler
 
 urls = (
+        '/login/(.*)/(.*)/(.*)','login',
         '/order/(.*)','order',
         '/orderUpdate/(.*)/(.*)','orderUpdate',
         '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
@@ -152,6 +153,57 @@ class orderStatusUpdate:
                     return render.order(contactid = contactid,orderid = orderid)
                 else:
                     return render.error(error = 'update failure!')
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+class login:
+    def POST(self):
+        try:
+            logger = getLogger()
+            logger.debug("start login POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+    def GET(self,page,usrid,pwd):
+        try:
+            logger = getLogger()
+            logger.debug("start login GET response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            #如何加密usrid,pwd
+
+            #如何在session中存储用户信息.
+
+            #如何跳转登录到其它页面?传入页面的参数.
+
+            #直接登录其它页面是需要登录信息的.
+
+            return 'hello'
 
         except :
             logger.error("exception occur, see the traceback.log")
