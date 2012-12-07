@@ -6,55 +6,6 @@ import traceback
 from configData import getConfig
 from logHelper import getLogger
 
-def IsValidCrusr(inCrusr):
-    ret = True
-    try:
-        logger = getLogger()
-        logger.debug("start IsValidCrusr")
-
-        if (inCrusr != 'taobao')&(inCrusr != 'guanwang'):
-            ret = False
-            globalDefine.globalOrderInfoErrorlog="crusr should be taobao or guanwang"
-
-    except :
-        logger.error("exception occur, see the traceback.log")
-        #异常写入日志文件.
-        f = open('traceback.txt','a')
-        traceback.print_exc()
-        traceback.print_exc(file = f)
-        f.flush()
-        f.close()
-    else:
-        pass
-    finally:
-        pass
-        return ret
-
-
-def IsValidOrderStatus(inOrderStatus):
-    ret = True
-    try:
-        logger = getLogger()
-        logger.debug("start IsValidOrderStatus")
-
-        if (inOrderStatus != 'yifu')&(inOrderStatus != 'weifu'):
-            ret = False
-            globalDefine.globalOrderInfoErrorlog="orderstatus should be yifu or weifu"
-
-    except :
-        logger.error("exception occur, see the traceback.log")
-        #异常写入日志文件.
-        f = open('traceback.txt','a')
-        traceback.print_exc()
-        traceback.print_exc(file = f)
-        f.flush()
-        f.close()
-    else:
-        pass
-    finally:
-        pass
-        return ret
-
 def DbConnect():
     db = web.database(dbn=getConfig('db','dbname','str'),db=getConfig('db','dbservice','str'),user=getConfig('db','dbuser','str'),pw=getConfig('db','dbpwd','str'))
     return db
@@ -62,6 +13,39 @@ def DbConnect():
 def DbSqliteConnect():
     db = web.database(dbn=getConfig('dbSqlite','dbname','str'),db=getConfig('dbSqlite','dbfile','str'))
     return db
+
+def IsValidUsrPwd(inUsrid,inPwd):
+    ret = False
+    try:
+        logger = getLogger()
+        logger.debug("start NotExitsContact")
+        dbCon = DbConnect()
+
+        validUsr = False
+
+        myvar = dict(usrid=inUsrid,password=inPwd)
+        entries = dbCon.select('sys_user',myvar,what='usrid',where="usrid=$usrid and password=$password")
+
+        #exits contact name .
+        for val in entries:
+            validUsr = True
+
+        if validUsr:
+            ret = True
+    except :
+        logger.error("exception occur, see the traceback.log")
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+    else:
+        pass
+    finally:
+        pass
+        return ret
+
 
 def IsValidContactAddress(inOrderInfo):
     ret = True

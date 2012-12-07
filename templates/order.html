@@ -2,10 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
     <title>
         投保单
     </title>
+    <script src="../static/js/jquery.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
     <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery("#btnModify").click(function(){
+                alert(jQuery("#myModal"));
+            });
+
+            jQuery("#btnAdd").click(function(){
+                showPostOrder();
+            });
+
+
+            jQuery("#btnConfirmAdd").click(function(){
+                //TODO: add button change status .
+                //jQuery("#myModal").modal("hide");
+                postOrder('${contactid}');
+            });
+        });
+
+        function showPostOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModal").modal("show");
+            }
+        }
+
         function postOrder(inContactid){
             if (check_submit())
             {
@@ -134,19 +161,28 @@ else:
 <body>
 
 <form id="formOrder">
+
 <div>保单操作>></div>
-<div>
-<table>
-    <tr>
-        <td>
-            <input id="btnSubmit" type="button" value="提交" onclick="postOrder('${contactid}')"/>
-        </td>
-        <td>
-            <input id="btnUpdate" type="button" value="修改" onclick="putOrder('${contactid}')"/>
-        </td>
-    </tr>
-</table>
+<div class="form-actions">
+    <button type="button" class="btn btn-primary" id="btnAdd" data-toggle="modal">新增</button>
+    <button  type="button" class="btn btn-primary" id="btnModify" >修改</button>
 </div>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">确认操作?</h3>
+    </div>
+    <div class="modal-body">
+        <p>点击确认后数据将永久保存！</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+        <button class="btn btn-primary" id="btnConfirmAdd" >确认</button>
+    </div>
+</div>
+
 <div style="border: solid 1px #ccc">
 </div>
 <div>

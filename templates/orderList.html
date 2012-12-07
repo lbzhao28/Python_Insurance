@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
     <title>
         投保单列表
     </title>
@@ -19,23 +20,14 @@ import json
 %>
 </head>
 <body>
-<style type="text/css">
-    .myTable,.myTable td {
-        border:1px solid #cccccc;
-        border-collapse:collapse;
-    }
-    .myNewTable,.myNewTable
-    table {
-        border-collapse:collapse;border-spacing:0;border-left:1px solid #888;border-top:1px solid #888;background:#efefef;
-    }
-    th,td {
-        border-right:1px solid #888;border-bottom:1px solid #888;padding:5px 15px;
-    }
-    th {
-        font-weight:bold;background:#ccc;
-    }
-</style>
+<br>
+<form class="form-search">
+    <input type="text" class="input-small search-query">
+    <button type="button" class="btn"><i class="icon-search"></i></button>
+</form>
+<br>
 <form id="formOrderList">
+    <fieldset>
 <%
 if contactid is not None:
     localOrderInfoLst = OrderClient.getOrderInfoLstContact(contactid)
@@ -43,7 +35,7 @@ else:
     print 'none contactid'
 %>
 <%def name="layoutdata(inOrderInfoLst)">
-    <table style="padding:1px;" border="1" class="myNewTable">
+    <table class="table table-hover table-condensed">
         % if inOrderInfoLst is not None:
         <tr>
             <th>操作</th>
@@ -56,7 +48,7 @@ else:
                 <tr>
                     <td>
                         <% orderid = item['ORDERID'] %>
-                        <input id="btnSubmit" type="button" value="转到" onclick="showOrder(${contactid},${orderid})"/>
+                        <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
                     </td>
                     ${caller.body(item=item)}
                 </tr>
@@ -70,6 +62,7 @@ else:
     <td>${item["CRDT"]}</td>
     <td>${item["STATUS"]}</td>
 </%call>
+</fieldset>
 </form>
 </body>
 </html>

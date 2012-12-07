@@ -18,6 +18,8 @@ import json
 import urlparse
 import OrderDomainHandler
 
+web.config.debug = False
+
 urls = (
         '/login/(.*)/(.*)/(.*)','login',
         '/order/(.*)','order',
@@ -27,6 +29,13 @@ urls = (
         )
 
 app = web.application(urls,globals(),autoreload=True)
+session = web.session.Session(app,web.session.DiskStore('sessions'),
+initializer={'usrid':'','pwd':''})
+
+def session_hook():
+    web.ctx.session = session
+
+app.add_processor(web.loadhook(session_hook))
 
 allowed = (
     (getConfig('allowedUser1','UserName','str'),getConfig('allowedUser1','Password','str')),
@@ -195,15 +204,24 @@ class login:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
+            #TODO:传过来的usrid和pwd要是加密的.
             #如何加密usrid,pwd
 
-            #如何在session中存储用户信息.
+            #连接逻辑层验证用户信息.
+            retDict = OrderDomainHandler.getUsrPurview(usrid,pwd)
+
+            if (retDict["right"] is True):
+                #保存用户信息到session里面
+                session.loginned = True
+                session.usrid = usrid
+                return retDict
+                pass
+            else:
+                return render.error(error = retDict["log"])
 
             #如何跳转登录到其它页面?传入页面的参数.
 
             #直接登录其它页面是需要登录信息的.
-
-            return 'hello'
 
         except :
             logger.error("exception occur, see the traceback.log")
