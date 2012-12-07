@@ -3,6 +3,7 @@
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../static/css/docs.css" rel="stylesheet" media="screen">
     <title>
         投保单列表
     </title>
@@ -20,12 +21,12 @@ import json
 %>
 </head>
 <body>
-<br>
-<form class="form-search">
-    <input type="text" class="input-small search-query">
-    <button type="button" class="btn"><i class="icon-search"></i></button>
-</form>
-<br>
+<div class="bs-docs-example">
+    <form class="form-search">
+        <input type="text" class="input-small search-query">
+        <button type="button" class="btn"><i class="icon-search"></i></button>
+    </form>
+</div>
 <form id="formOrderList">
     <fieldset>
 <%
@@ -35,6 +36,7 @@ else:
     print 'none contactid'
 %>
 <%def name="layoutdata(inOrderInfoLst)">
+        <div class="bs-docs-div">
     <table class="table table-hover table-condensed">
         % if inOrderInfoLst is not None:
         <tr>
@@ -55,6 +57,7 @@ else:
             % endfor
         % endif
     </table>
+        </div>
 </%def>
 <%call expr="layoutdata(localOrderInfoLst)" args="item">
     <td>${item["ORDERID"]}</td>
