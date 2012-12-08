@@ -7,6 +7,7 @@
     <title>
         投保单
     </title>
+    <script src="../static/js/My97DatePicker/WdatePicker.js"></script>
     <script src="../static/js/jquery.js"></script>
     <script src="../static/js/bootstrap.js"></script>
     <script type="text/javascript">
@@ -233,18 +234,18 @@ else:
                             <label class="label">出生日期</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_BIRTHDAY" id="PolicyInformation1_txtBirthday" type="text" class="input-medium"/>
+                            <input name="INSURANT_USR_BIRTHDAY" id="PolicyInformation1_txtBirthday" type="text" class="Wdate input-medium" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            年龄
+                            <label class="label">年龄</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text" value="${insurant_usr_age}"/>
+                            <input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text" value="${insurant_usr_age}" class="input-mini"/>
                         </td>
                         <td>
-                            职业
+                            <label class="label">职业</label>
                         </td>
                         <td>
                             <SELECT name="INSURANT_USR_PROFESSION" id="PolicyInformation1_ddlProfessional">
