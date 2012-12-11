@@ -23,6 +23,7 @@ web.config.debug = False
 urls = (
         '/login/(.*)/(.*)/(.*)','login',
         '/order/(.*)','order',
+        '/orderProduct','orderProduct',
         '/orderUpdate/(.*)/(.*)','orderUpdate',
         '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
         '/orderList/(.*)','orderList'
@@ -74,6 +75,51 @@ class orderList:
                 return render.error(error = 'no contactid')
             else:
                 return render.orderList(contactid = contactid)
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+class orderProduct:
+    def GET(self):
+        try:
+            logger = getLogger()
+            logger.debug("start OrderProduct Page GET response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            #TODO: open the auth in future.also need purview.
+            #            authreq = checkUserAuth(web)
+            #
+            #            if authreq:
+            #                web.header('WWW-Authenticate','Basic realm="Auth example"')
+            #                web.ctx.status = '401 Unauthorized'
+            #                logger.debug("no right HTTP_AUTHORIZATION")
+            #                return render.error(error = web.ctx.status)
+
+            #if has orderid according the orderid to get the order info.
+            #query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
+            parsed_url = urlparse.urlparse(web.ctx.fullpath)
+            query_url = parsed_url.query
+            if (query_url != ''):
+                query_dict = dict(urlparse.parse_qsl(query_url))
+                insurancecodeid = query_dict['INSURANCECODE']
+                securityplanid = query_dict['SECURITYPLAN']
+                premiumplanid = query_dict['PREMIUMPLAN']
+                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid)
+            else:
+                insurancecodeid = None
+                securityplanid = None
+                premiumplanid = None
+                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.

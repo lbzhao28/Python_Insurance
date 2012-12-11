@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="../static/css/docs.css" rel="stylesheet" media="screen">
+    <title>
+       保费试算
+    </title>
+    <script src="../static/js/jquery.js"></script>
+    <script src="../static/js/bootstrap.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery("#btnCal").click(function(){
+                //alert('${insurancecodeid}');
+                insurancecodeid = jQuery("#idDdlProduct").val();
+                securityplanid = jQuery("#idDdlPlan").val();
+                premiumplanid = jQuery("#idDdlPlanFamily").val();
+                //alert(insurancecodeid);
+                showOrderCal(insurancecodeid,securityplanid,premiumplanid);
+            });
+        });
+
+        function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
+            actionUrl ="http://192.168.1.103:8080/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+            window.location.href=actionUrl;
+        }
+    </script>
+##prepare the order Product info
+<%!
+import OrderClient
+import json
+%>
+<%
+if insurancecodeid is not None:
+    localOrderProductLst = OrderClient.getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid)
+    if localOrderProductLst.count > 0:
+        localTOTALPREMIUM = localOrderProductLst[0]["TOTALPREMIUM"]
+        localTOTALSUMINSURED = localOrderProductLst[0]["TOTALSUMINSURED"]
+else:
+    localOrderProductLst = None
+%>
+</head>
+<body>
+<form id="formCal" class="form-inline">
+    <fieldset>
+    <div class="bs-docs-div">
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary btn-small" id="btnCal">保费试算</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="label">保单产品</label>
+                </td>
+                <td>
+                    <SELECT id="idDdlProduct" name="ddlProduct" class="input-large">
+                        <OPTION value="001" selected>健行无忧意外伤害保险-A款</OPTION>
+                        <OPTION value="002">健行无忧意外伤害保险-B款</OPTION>
+                    </SELECT>
+                </td>
+                <td>
+                    <label class="label">保单计划</label>
+                </td>
+                <td>
+                    <SELECT id="idDdlPlan" name="ddlPlan" class="input-large">
+                        <OPTION value="0" selected>标准计划</OPTION>
+                        <OPTION value="1">经典计划</OPTION>
+                        <OPTION value="2">卓越计划</OPTION>
+                        <OPTION value="3">尊享计划</OPTION>
+                        <OPTION value="4">未成年人计划</OPTION>
+                    </SELECT>
+                </td>
+                <td>
+                    <label class="label">保单家庭计划</label>
+                </td>
+                <td>
+                    <SELECT id="idDdlPlanFamily" name="ddlPlanFamily" class="input-large">
+                        <OPTION value="0" selected>个人计划</OPTION>
+                        <OPTION value="1">双人计划</OPTION>
+                        <OPTION value="2">亲子计划</OPTION>
+                        <OPTION value="3">家庭计划</OPTION>
+                    </SELECT>
+                </td>
+            </tr>
+        </table>
+    </div>
+        <%def name="layoutdata(inOrderProductInfoLst)">
+        <div class="bs-docs-div">
+            <table class="table table-hover table-condensed">
+                % if inOrderProductInfoLst is not None:
+                <tr>
+                    <th>产品明细名称</th>
+                    <th>主险/附加险</th>
+                    <th>保额</th>
+                </tr>
+                    % for item in inOrderProductInfoLst:
+                    <tr>
+                        ${caller.body(item=item)}
+                    </tr>
+
+                    % endfor
+                %if localTOTALPREMIUM is not None:
+                <tr>
+                    <td>
+                        <label class="label label-success">月保费</label>
+                    </td>
+                    <td>
+                        <label class="label label-success">${localTOTALPREMIUM}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="label label-success">总保额</label>
+                    </td>
+                    <td>
+                        <label class="label label-success">${localTOTALSUMINSURED}</label>
+                    </td>
+                </tr>
+                % endif
+                % endif
+
+            </table>
+        </div>
+    </%def>
+    <%call expr="layoutdata(localOrderProductLst)" args="item">
+        <td><label class="label label-info"> ${item["ProductName"]} </label></td>
+        <td><label class="label label-info"> ${item["ISMAINNAME"]}</label></td>
+        <td><label class="label label-info"> ${item["SimpleSUMINSUREDINSURED"]}</label></td>
+    </%call>
+    </fieldset>
+</form>
+</body>
+</html>

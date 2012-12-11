@@ -81,5 +81,43 @@ function changevalCityPls(targetObj,parentid,selectedid)
     }
 }
 
+function changevalCityDel(targetObj,parentid,selectedid)
+{
+    var newoptsarr=new Array();
+    var newoptsarrval=new Array();
+    var newoptionI=0;
+    //清除现有
+    count1=targetObj.options.length;
+    while(count1!=0)
+    {
+        targetObj.options.remove(0);
+        count1=targetObj.options.length;
+    }
+    //过滤上级id=选中id
+    for(var i=0;i<arrayCity.length;i++)
+    {
+        if(arrayCity[i][2]==parentid)
+        {
+            newoptsarr[newoptionI]=arrayCity[i][0];
+            newoptsarrval[newoptionI]=arrayCity[i][3];
+            var aOption = new Option(arrayCity[i][3],arrayCity[i][0]);
+            targetObj.options[newoptionI]=aOption;
+            if(arrayCity[i][0]==selectedid)
+            {
+                targetObj.options[newoptionI].selected=true;
+            }
+            newoptionI++;
+        }
+    }
+    if(targetObj.id=="shengDel")
+    {
+        changevalCityDel(document.getElementById("shiDel"),newoptsarr[0],0)
+    }
+    if(targetObj.id=="shiDel")
+    {
+        changevalCityDel(document.getElementById("xianDel"),newoptsarr[0],0)
+    }
+}
+
 
 

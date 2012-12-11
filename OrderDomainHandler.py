@@ -73,7 +73,6 @@ def formatDictOrderInfo(dictData):
 
     return dictData
 
-
 def postOrderInfoContact(inContactid,storageData):
     try:
         logger = getLogger()
