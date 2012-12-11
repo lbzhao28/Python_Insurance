@@ -2,19 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="../static/css/docs.css" rel="stylesheet" media="screen">
+    <link href="http://localhost:8080/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://localhost:8080/static/css/docs.css" rel="stylesheet" media="screen">
     <title>
         投保单列表
     </title>
+    <script src="http://localhost:8080/static/js/jquery.js"></script>
+    <script src="http://localhost:8080/static/js/bootstrap.js"></script>
     <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery("#btnSearch").click(function(){
+                orderid = jQuery("#idOrderid").val();
+                contactid = jQuery("#idContactid").val();
+                searchOrder(contactid,orderid);
+            });
+        });
+
+        function searchOrder(inCONTACTID,inORDERID){
+            actionUrl ="http://localhost:8080/orderList"+'?CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID;
+            window.location.href=actionUrl;
+        }
         function showOrder(inContactid,inOrderid){
-            actionUrl ="http://192.168.1.103:8080/order/"+inContactid+'?orderid='+inOrderid;
+            actionUrl ="http://localhost:8080/order/"+inContactid+'?orderid='+inOrderid;
             window.location.href=actionUrl;
         }
     </script>
 ##prepare the order info
-##if has contactid ,show the data.
 <%!
 import OrderClient
 import json
@@ -23,17 +36,21 @@ import json
 <body>
 <div class="bs-docs-example">
     <form class="form-search">
-        <input type="text" class="input-small search-query">
-        <button type="button" class="btn"><i class="icon-search"></i></button>
+        <label class="label">客户编号</label>
+        <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
+        <label class="label">保单编号</label>
+        <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
+        <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
     </form>
 </div>
 <form id="formOrderList">
     <fieldset>
 <%
-if contactid is not None:
-    localOrderInfoLst = OrderClient.getOrderInfoLstContact(contactid)
+if (contactid is not None)|(orderid is not None):
+    localOrderInfoLst = OrderClient.getOrderInfoLstContact(contactid,orderid)
 else:
-    print 'none contactid'
+    localOrderInfoLst = None
+    print 'none contactid and orderid'
 %>
 <%def name="layoutdata(inOrderInfoLst)">
         <div class="bs-docs-div">

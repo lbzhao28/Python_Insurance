@@ -53,8 +53,9 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
-def getOrderInfoLstContact(inContactid):
+def getOrderInfoLstContact(inContactid,inOrderid):
     try:
+        #TODO: add orderid and so on query.
         logger = getLogger()
         logger.debug("start GET Order Info according contact id.")
 

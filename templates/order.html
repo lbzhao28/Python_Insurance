@@ -2,20 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="../static/css/docs.css" rel="stylesheet" media="screen">
+    <link href="http://localhost:8080/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://localhost:8080/static/css/docs.css" rel="stylesheet" media="screen">
     <title>
         投保单
     </title>
-    <script src="../static/js/My97DatePicker/WdatePicker.js"></script>
-    <script src="../static/js/jquery.js"></script>
-    <script src="../static/js/bootstrap.js"></script>
-    <script src="../static/js/util.js"></script>
-    <script src="../static/js/localAddressList.js"></script>
+    <script src="http://localhost:8080/static/js/jquery.js"></script>
+    <script src="http://localhost:8080/static/js/bootstrap.js"></script>
+    <script src="http://localhost:8080/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://localhost:8080/static/js/util.js"></script>
+    <script src="http://localhost:8080/static/js/localAddressList.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnModify").click(function(){
-                alert(jQuery("#myModal"));
+                showPutOrder();
             });
 
             jQuery("#btnAdd").click(function(){
@@ -33,6 +33,11 @@
                 //TODO: add button change status .
                 //jQuery("#myModal").modal("hide");
                 postOrder('${contactid}');
+            });
+
+            jQuery("#btnConfirmModify").click(function(){
+                //TODO: add button change status .
+                putOrder('${contactid}');
             });
 
             jQuery("#idRbtBeneficiaryLaw").click(function(){
@@ -68,7 +73,7 @@
         });
 
         function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
-            actionUrl ="http://192.168.1.103:8080/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+            actionUrl ="http://localhost:8080/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
             //window.location.href=actionUrl;
             window.open(actionUrl);
         }
@@ -77,6 +82,13 @@
             if (check_submit())
             {
                 jQuery("#myModal").modal("show");
+            }
+        }
+
+        function showPutOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModalModify").modal("show");
             }
         }
 
@@ -102,7 +114,7 @@
         function postOrder(inContactid){
             if (check_submit())
             {
-                document.getElementById("formOrder").action = "http://192.168.1.103:8080/order/"+inContactid;
+                document.getElementById("formOrder").action = "http://localhost:8080/order/"+inContactid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -112,7 +124,7 @@
             if (check_submit())
             {
                 inOrderid = $("lblOrderid").title;
-                document.getElementById("formOrder").action = "http://192.168.1.103:8080/orderUpdate/"+inContactid+"/"+inOrderid;
+                document.getElementById("formOrder").action = "http://localhost:8080/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -123,7 +135,7 @@
             {
                 inOrderid = $("lblOrderid").title;
                 // '3' status means fix order.
-                document.getElementById("formOrder").action = "http://192.168.1.103:8080/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
+                document.getElementById("formOrder").action = "http://localhost:8080/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -205,6 +217,12 @@ if orderid is not None:
     policyholder_usr_age = localOrderInfo["POLICYHOLDER_USR"]["AGE"]
     policyholder_usr_name = localOrderInfo["POLICYHOLDER_USR"]["NAME"]
     policyholder_usr_idcardno = localOrderInfo["POLICYHOLDER_USR"]["IDCARDNO"]
+
+    txtPolicyDistribution = u'测试地址'
+    INSURANT_USR_ADDRESS  = u'测试地址'
+    idPOLICYHOLDER_xian_USR_ADDRESS = u'测试地址'
+    dmpaybank = u'432432432432'
+
     purchasecount = localOrderInfo["PURCHASECOUNT"]
     paymentstatus = localOrderInfo["PAYMENTSTATUS"]
     insuranceid = localOrderInfo["INSURANCEID"]
@@ -214,12 +232,17 @@ else:
     beneficiarierelationdsc = ''
     deliveryaddress = ''
     crusr = ''
-    insurant_usr_age = ''
-    insurant_usr_name = ''
-    insurant_usr_idcardno = ''
-    policyholder_usr_age = ''
-    policyholder_usr_name = ''
-    policyholder_usr_idcardno = ''
+    insurant_usr_age = '25'
+    insurant_usr_name = u'测试用户1'
+    insurant_usr_idcardno = '2342343'
+    policyholder_usr_age = '25'
+    policyholder_usr_name = u'测试用户1'
+    policyholder_usr_idcardno = '2342343'
+
+    txtPolicyDistribution = u'测试地址'
+    INSURANT_USR_ADDRESS  = u'测试地址'
+    idPOLICYHOLDER_xian_USR_ADDRESS = u'测试地址'
+    dmpaybank = u'432432432432'
     purchasecount = ''
     paymentstatus = ''
     insuranceid = ''
@@ -248,15 +271,20 @@ else:
                 <button type="button" class="btn btn-primary btn-small" id="btnAdd">新增</button>
                 % if orderid is not None:
                 <button  type="button" class="btn btn-primary btn-small" id="btnModify">修改</button>
-                % else:
-                <button  type="button" class="btn btn-primary btn-small" id="btnModify" disabled="true" >修改</button>
-                %endif
-
                 <button type="button" class="btn btn-primary btn-small" id="btnStatus">审核</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnFix">承保</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnQA">质检</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnMoney">收款</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnClose">退保</button>
+                % else:
+                <button  type="button" class="btn btn-primary btn-small" id="btnModify" disabled="true" >修改</button>
+                <button type="button" class="btn btn-primary btn-small" id="btnStatus" disabled="true" >审核</button>
+                <button type="button" class="btn btn-primary btn-small" id="btnFix" disabled="true" >承保</button>
+                <button type="button" class="btn btn-primary btn-small" id="btnQA" disabled="true" >质检</button>
+                <button type="button" class="btn btn-primary btn-small" id="btnMoney" disabled="true" >收款</button>
+                <button type="button" class="btn btn-primary btn-small" id="btnClose" disabled="true" >退保</button>
+                %endif
+
             </div>
         </div>
     </div>
@@ -273,6 +301,21 @@ else:
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
             <button class="btn btn-primary" id="btnConfirmAdd" >确认</button>
+        </div>
+    </div>
+
+    <!-- Modal Modify -->
+    <div id="myModalModify" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalModifyLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalModifyLabel">确认操作?</h3>
+        </div>
+        <div class="modal-body">
+            <p>点击确认后数据将永久保存！</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+            <button class="btn btn-primary" id="btnConfirmModify" >确认</button>
         </div>
     </div>
 
@@ -502,7 +545,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址" />
+                            <input name="INSURANT_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址"  value="${INSURANT_USR_ADDRESS}"/>
                         </td>
                     </tr>
                     <tr>
@@ -632,7 +675,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input name="idPOLICYHOLDER_xian_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址" />
+                            <input name="idPOLICYHOLDER_xian_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址" value="${idPOLICYHOLDER_xian_USR_ADDRESS}" />
                         </td>
                     </tr>
                     <tr>
@@ -828,7 +871,7 @@ else:
                             <label class="label">帐号</label>
                         </td>
                         <td>
-							<input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text" class="input-medium"/>
+							<input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text" class="input-medium" value="${dmpaybank}"/>
                         </td>
                         <td>
                             <label class="label">续期帐号</label>
@@ -908,7 +951,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input id="PolicyDistribution_txtDistribution" type="text" name="txtPolicyDistribution" class="input-medium" placeholder="配送详细地址" />
+                            <input id="PolicyDistribution_txtDistribution" type="text" name="txtPolicyDistribution" class="input-medium" placeholder="配送详细地址"  value="${txtPolicyDistribution}"/>
                         </td>
                     </tr>
                 </table>

@@ -26,7 +26,7 @@ urls = (
         '/orderProduct','orderProduct',
         '/orderUpdate/(.*)/(.*)','orderUpdate',
         '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
-        '/orderList/(.*)','orderList'
+        '/orderList','orderList'
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -52,10 +52,8 @@ render = render_mako(
         output_encoding = 'utf-8',
         )
 
-# according the contactid ,to show the orderlist.
 class orderList:
-    #TODO:  always show all the order according the contactid?
-    def GET(self,contactid):
+    def GET(self):
         try:
             logger = getLogger()
             logger.debug("start OrderList Page GET response")
@@ -71,10 +69,23 @@ class orderList:
 #                logger.debug("no right HTTP_AUTHORIZATION")
 #                return render.error(error = web.ctx.status)
 
-            if not contactid:
-                return render.error(error = 'no contactid')
+            parsed_url = urlparse.urlparse(web.ctx.fullpath)
+            query_url = parsed_url.query
+            if (query_url != ''):
+                query_dict = dict(urlparse.parse_qsl(query_url))
+                if 'CONTACTID' in query_dict:
+                    contactid = query_dict['CONTACTID']
+                else:
+                    contactid = None
+                if 'ORDERID' in query_dict:
+                    orderid = query_dict['ORDERID']
+                else:
+                    orderid = None
+                return render.orderList(contactid = contactid,orderid=orderid)
             else:
-                return render.orderList(contactid = contactid)
+                contactid = None
+                orderid = None
+                return render.orderList(contactid = contactid,orderid=orderid)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -105,8 +116,6 @@ class orderProduct:
             #                logger.debug("no right HTTP_AUTHORIZATION")
             #                return render.error(error = web.ctx.status)
 
-            #if has orderid according the orderid to get the order info.
-            #query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
             parsed_url = urlparse.urlparse(web.ctx.fullpath)
             query_url = parsed_url.query
             if (query_url != ''):
