@@ -61,13 +61,14 @@ class orderList:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            authreq = checkUserAuth(web)
-
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
+            #TODO: open the auth in future.also need purview.
+#            authreq = checkUserAuth(web)
+#
+#            if authreq:
+#                web.header('WWW-Authenticate','Basic realm="Auth example"')
+#                web.ctx.status = '401 Unauthorized'
+#                logger.debug("no right HTTP_AUTHORIZATION")
+#                return render.error(error = web.ctx.status)
 
             if not contactid:
                 return render.error(error = 'no contactid')
@@ -95,13 +96,14 @@ class orderUpdate:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            authreq = checkUserAuth(web)
-
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
+            #TODO: open the auth in future.also need purview.
+#            authreq = checkUserAuth(web)
+#
+#            if authreq:
+#                web.header('WWW-Authenticate','Basic realm="Auth example"')
+#                web.ctx.status = '401 Unauthorized'
+#                logger.debug("no right HTTP_AUTHORIZATION")
+#                return render.error(error = web.ctx.status)
 
             if not orderid:
                 return render.error(error = 'no orderid')
@@ -140,13 +142,14 @@ class orderStatusUpdate:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            authreq = checkUserAuth(web)
-
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
+            #TODO: open the auth in future.also need purview.
+#            authreq = checkUserAuth(web)
+#
+#            if authreq:
+#                web.header('WWW-Authenticate','Basic realm="Auth example"')
+#                web.ctx.status = '401 Unauthorized'
+#                logger.debug("no right HTTP_AUTHORIZATION")
+#                return render.error(error = web.ctx.status)
 
             if not orderid:
                 return render.error(error = 'no orderid')
@@ -204,7 +207,7 @@ class login:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            #TODO:传过来的usrid和pwd要是加密的.
+            #TODO:传过来的usrid和pwd要是加密的.未来完成权限的取得.
             #如何加密usrid,pwd
 
             #连接逻辑层验证用户信息.
@@ -244,13 +247,14 @@ class order:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            authreq = checkUserAuth(web)
-
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
+            #TODO: open the auth in future.also need purview.
+#            authreq = checkUserAuth(web)
+#
+#            if authreq:
+#                web.header('WWW-Authenticate','Basic realm="Auth example"')
+#                web.ctx.status = '401 Unauthorized'
+#                logger.debug("no right HTTP_AUTHORIZATION")
+#                return render.error(error = web.ctx.status)
 
             if not contactid:
                 return render.error(error = 'no contactid')
@@ -290,13 +294,14 @@ class order:
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
-            authreq = checkUserAuth(web)
-
-            if authreq:
-                web.header('WWW-Authenticate','Basic realm="Auth example"')
-                web.ctx.status = '401 Unauthorized'
-                logger.debug("no right HTTP_AUTHORIZATION")
-                return render.error(error = web.ctx.status)
+            #TODO: open the auth in future.also need purview.
+#            authreq = checkUserAuth(web)
+#
+#            if authreq:
+#                web.header('WWW-Authenticate','Basic realm="Auth example"')
+#                web.ctx.status = '401 Unauthorized'
+#                logger.debug("no right HTTP_AUTHORIZATION")
+#                return render.error(error = web.ctx.status)
 
             if not contactid:
                 return render.error(error = 'no contactid')
