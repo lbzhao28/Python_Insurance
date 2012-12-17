@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="http://localhost:8080/static/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="http://localhost:8080/static/css/docs.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
     <title>
         投保单列表
     </title>
-    <script src="http://localhost:8080/static/js/jquery.js"></script>
-    <script src="http://localhost:8080/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnSearch").click(function(){
@@ -19,11 +20,11 @@
         });
 
         function searchOrder(inCONTACTID,inORDERID){
-            actionUrl ="http://localhost:8080/orderList"+'?CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID;
+            actionUrl ="http://${localURL}/orderList"+'?CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID;
             window.location.href=actionUrl;
         }
         function showOrder(inContactid,inOrderid){
-            actionUrl ="http://localhost:8080/order/"+inContactid+'?orderid='+inOrderid;
+            actionUrl ="http://${localURL}/order/"+inContactid+'?orderid='+inOrderid;
             window.location.href=actionUrl;
         }
     </script>
@@ -31,15 +32,34 @@
 <%!
 import OrderClient
 import json
+
+import configData
+from configData import getConfig
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+print localURL
 %>
 </head>
 <body>
 <div class="bs-docs-example">
     <form class="form-search">
+        <label class="label">TSR工号</label>
+        <input id="idUsr" type="text" class="input-small search-query"/>
         <label class="label">客户编号</label>
         <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
         <label class="label">保单编号</label>
         <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
+        <label class="label">保单状态</label>
+        <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
+            <OPTION value="0">未审核</OPTION>
+            <OPTION value="1" selected>已承保</OPTION>
+            <OPTION value="2" selected>未承保</OPTION>
+            <OPTION value="3" selected>退保</OPTION>
+        </SELECT>
+        <label class="label">开始日期</label>
+        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+        <label class="label">结束日期</label>
+        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
         <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
     </form>
 </div>

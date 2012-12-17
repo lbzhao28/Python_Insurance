@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="http://localhost:8080/static/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="http://localhost:8080/static/css/docs.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
     <title>
         投保单
     </title>
-    <script src="http://localhost:8080/static/js/jquery.js"></script>
-    <script src="http://localhost:8080/static/js/bootstrap.js"></script>
-    <script src="http://localhost:8080/static/js/My97DatePicker/WdatePicker.js"></script>
-    <script src="http://localhost:8080/static/js/util.js"></script>
-    <script src="http://localhost:8080/static/js/localAddressList.js"></script>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://${localURL}/static/js/util.js"></script>
+    <script src="http://${localURL}/static/js/localAddressList.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnModify").click(function(){
@@ -73,7 +73,7 @@
         });
 
         function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
-            actionUrl ="http://localhost:8080/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+            actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
             //window.location.href=actionUrl;
             window.open(actionUrl);
         }
@@ -114,7 +114,7 @@
         function postOrder(inContactid){
             if (check_submit())
             {
-                document.getElementById("formOrder").action = "http://localhost:8080/order/"+inContactid;
+                document.getElementById("formOrder").action = "http://${localURL}/order/"+inContactid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -124,7 +124,7 @@
             if (check_submit())
             {
                 inOrderid = $("lblOrderid").title;
-                document.getElementById("formOrder").action = "http://localhost:8080/orderUpdate/"+inContactid+"/"+inOrderid;
+                document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -135,7 +135,7 @@
             {
                 inOrderid = $("lblOrderid").title;
                 // '3' status means fix order.
-                document.getElementById("formOrder").action = "http://localhost:8080/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -189,7 +189,7 @@
 		var arrayCity= createArrayCity();
 
     </script>
-    <%doc>
+<%doc>
     ##test code.
     ## this is a comment.test for lookup.
     <% x = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 0 ]%>
@@ -204,6 +204,16 @@
 <%!
 import OrderClient
 import json
+
+import configObjData
+from configObjData import getConfigPage
+
+configPage = getConfigPage()
+
+import configData
+from configData import getConfig
+
+localURL = getConfig('SERVERINFO','serverIP','str')
 %>
 <%
 if orderid is not None:
@@ -429,8 +439,10 @@ else:
                     </td>
                     <td>
                         <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
-                            <OPTION value="0">待审</OPTION>
-                            <OPTION value="1" selected>审核通过</OPTION>
+                            <OPTION value="0">未审核</OPTION>
+                            <OPTION value="1" selected>已承保</OPTION>
+                            <OPTION value="2" selected>未承保</OPTION>
+                            <OPTION value="3" selected>退保</OPTION>
                         </SELECT>
                     </td>
                 </tr>
@@ -438,10 +450,12 @@ else:
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-            <button class="btn btn-primary" id="btnConfirmClose" >退保</button>
+            <button class="btn btn-primary" id="btnConfirmStatus" >确认</button>
         </div>
     </div>
 
+    %if configPage['hasInsurantUsr'] == 'True':
+    <%def name="layoutdata(inOrderProductInfoLst)">
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
@@ -449,6 +463,7 @@ else:
             </a>
         </div>
         <div id="collapseTwo" class="accordion-body collapse in">
+
             <div class="accordion-inner">
                 <table class="table table-condensed">
                     <tr>
@@ -463,10 +478,10 @@ else:
                         </td>
                         <td>
                             <label class="radio inline">
-                            <input name="optionsRadios" id="PolicyInformation1_rbtMan" checked type="radio"/><label class="label">男</label>
+                                <input name="optionsRadios" id="PolicyInformation1_rbtMan" checked type="radio"/><label class="label">男</label>
                             </label>
                             <label class="radio inline">
-                            <input name="optionsRadios" id="PolicyInformation1_rbtWoman" type="radio"/><label class="label">女</label>
+                                <input name="optionsRadios" id="PolicyInformation1_rbtWoman" type="radio"/><label class="label">女</label>
                             </label>
                         </td>
                         <td>
@@ -557,9 +572,19 @@ else:
                         </td>
                     </tr>
                 </table>
+
             </div>
-        </div>
     </div>
+    </div>
+    </%def>
+    <%call expr="layoutdata(localOrderProductLst)" args="item">
+    <tr>
+    <td><label class="label label-info"> haha</label></td>
+    <td><label class="label label-info"> heihei</label></td>
+    <td><label class="label label-info"> gogo</label></td>
+    </tr>
+    </%call>
+    %endif
 
 <div class="accordion-group">
         <div class="accordion-heading">
@@ -862,7 +887,6 @@ else:
                         <td>
                             <SELECT name="txtPayBank" id="PolicyInformation1_txtPayBank" class="input-medium">
                                 <OPTION value="0" selected>建设银行</OPTION>
-                                <OPTION value="1">上海银行</OPTION>
                             </SELECT>
                         </td>
                     </tr>

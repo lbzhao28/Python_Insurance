@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="http://localhost:8080/static/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="http://localhost:8080/static/css/docs.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
     <title>
        保费试算
     </title>
-    <script src="http://localhost:8080/static/js/jquery.js"></script>
-    <script src="http://localhost:8080/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnCal").click(function(){
@@ -22,7 +22,7 @@
         });
 
         function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
-            actionUrl ="http://192.168.1.103:8080/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+            actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
             window.location.href=actionUrl;
         }
     </script>
@@ -30,6 +30,12 @@
 <%!
 import OrderClient
 import json
+
+import configData
+from configData import getConfig
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+print localURL
 %>
 <%
 if insurancecodeid is not None:
@@ -83,6 +89,12 @@ else:
                         <OPTION value="2">亲子计划</OPTION>
                         <OPTION value="3">家庭计划</OPTION>
                     </SELECT>
+                </td>
+                <td>
+                    <label class="label">被保人年龄</label>
+                </td>
+                <td>
+                    <input name="POLICYHOLDER_USR_AGE" id="BePolicyHolder_txtBeHolderOldYears" type="text" class="input-mini"/>
                 </td>
             </tr>
         </table>
