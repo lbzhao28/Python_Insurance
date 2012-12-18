@@ -12,6 +12,7 @@ from configData import getConfig
 from logHelper import getLogger
 
 def getOrderInfoOrder(inOrderid):
+    """get the order info from REST """
     try:
         logger = getLogger()
         logger.debug("start GET Order Info according order id.")
@@ -35,6 +36,9 @@ def getOrderInfoOrder(inOrderid):
 
         logger.debug("get localOrderInfo success.")
 
+        #we need change the data structure, so the html show simple.
+        localOrderInfo = updateOrderInfoOrder(localOrderInfo)
+
         return localOrderInfo
     except pycurl.error, error:
         logger.error("exception occur, see the traceback.log")
@@ -48,6 +52,38 @@ def getOrderInfoOrder(inOrderid):
 
         errno, errstr = error
         print 'An error occurred: ', errstr
+    else:
+        pass
+    finally:
+        pass
+
+def updateOrderInfoOrder(inOrderInfo):
+    """update the order info according the web page show"""
+    try:
+        logger = getLogger()
+        logger.debug("start update Order Info .")
+
+        if inOrderInfo is None:
+            return None
+
+        # we only get the message we needed:
+        localOrderInfo = []
+
+
+
+        logger.debug("update localOrderInfo success.")
+
+
+        return localOrderInfo
+    except:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
     else:
         pass
     finally:

@@ -12,26 +12,35 @@ import traceback
 #if get UsrID, the type is str
 #if get freqTime,the type is int.
 #str->stirng,int->int.
+#TODO: add all docstring for public method and class.
 def getConfig(section,item,type):
-	try:
-		cf = ConfigParser.ConfigParser()
-		cf.read("config.conf")
+    """ get the config according input para
 
-		if (type == "str"):
-			o = cf.get(section,item)
-			return str(o)
-		else:
-			if (type == "int"): 
-				o = cf.getint(section,item)
-				return int(o)
-			else:
-				pass
-	except:
-		#异常写入日志文件.
-		f = open('traceback.txt','a')
-		traceback.print_exc()
-		traceback.print_exc(file = f)
-		f.flush()
-		f.close()
-	finally:
-		pass
+    arguments:
+        section:which section to get config
+        item:   which item to get config
+        type:   the data type:int or str.
+
+    """
+    try:
+        cf = ConfigParser.ConfigParser()
+        cf.read("config.conf")
+
+        if (type == "str"):
+            o = cf.get(section,item)
+            return str(o)
+        else:
+            if (type == "int"):
+                o = cf.getint(section,item)
+                return int(o)
+            else:
+                pass
+    except:
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+    finally:
+        pass

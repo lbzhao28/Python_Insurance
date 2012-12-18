@@ -207,13 +207,18 @@ import json
 
 import configObjData
 from configObjData import getConfigPage
-
-configPage = getConfigPage()
+#print getConfigPage.__doc__
 
 import configData
 from configData import getConfig
+#print getConfig.__doc__
 
+configPage = getConfigPage()
 localURL = getConfig('SERVERINFO','serverIP','str')
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 %>
 <%
 if orderid is not None:
@@ -238,6 +243,7 @@ if orderid is not None:
     insuranceid = localOrderInfo["INSURANCEID"]
     status = localOrderInfo["STATUS"]
 else:
+    localOrderInfo = None
     print 'none orderid'
     beneficiarierelationdsc = ''
     deliveryaddress = ''
@@ -454,8 +460,14 @@ else:
         </div>
     </div>
 
-    %if configPage['hasInsurantUsr'] == 'True':
-    <%def name="layoutdata(inOrderProductInfoLst)">
+    %if configPage.as_bool('hasInsurantUsr'):
+    <%
+    itemCountInsurantUsr = configPage.as_int('itemCountInsurantUsr')
+    rowNumberInsurantUsr = configPage.as_int( 'rowNumberInsurantUsr')
+    stepInsurantUsr = int((itemCountInsurantUsr+rowNumberInsurantUsr-1)/rowNumberInsurantUsr)
+    configPageInsurantUsr = configPage['InsurantUsr']
+    %>
+    <%def name="layoutdata(inPageConf)">
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
@@ -466,6 +478,15 @@ else:
 
             <div class="accordion-inner">
                 <table class="table table-condensed">
+                    %for i in range(stepInsurantUsr):
+                        <%
+                            configPageInsurantUsr = configPage['InsurantUsr']
+                            #print configPageInsurantUsr
+                        %>
+                        %for member in configPageInsurantUsr:
+                                ${caller.body(item=configPageInsurantUsr[member],dataItem = localOrderInfo)}
+                        %endfor
+                    %endfor
                     <tr>
                         <td>
                             <label class="label label-important">姓名</label>
@@ -577,12 +598,25 @@ else:
     </div>
     </div>
     </%def>
-    <%call expr="layoutdata(localOrderProductLst)" args="item">
-    <tr>
-    <td><label class="label label-info"> haha</label></td>
-    <td><label class="label label-info"> heihei</label></td>
-    <td><label class="label label-info"> gogo</label></td>
-    </tr>
+    <%call expr="layoutdata(inData)" args="item,dataItem">
+            <tr>
+                <td>
+                    <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                </td>
+                <td>
+                    <%
+                        dataValueName = item["dataName"]
+                        if localOrderInfo is not None:
+                            realDataValue = dataItem["INSURANT_USR"]["NAME"]
+                        else:
+                            realDataValue = ''
+                    %>
+                    %if item["dataType"] == 'input':
+                    ##%if ${item["dataType"]}:
+                        <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}"/>
+                    %endif
+                </td>
+            </tr>
     </%call>
     %endif
 
