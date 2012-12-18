@@ -16,9 +16,18 @@ def getConfigPage():
 
     #configPageInsurantUsr = configPage['InsurantUsr']
     #dictFirst = configPageInsurantUsr.dict()
-    #for member in configPageInsurantUsr:
-        #dictSecond = configPageInsurantUsr[member]
-        #print dictSecond
+    #print dictFirst
+    #j = 2
+    #for j in range(j):
+    #    for member in dictFirst:
+    #        if 'titleText' in dictFirst[member]:
+    #            print member
+    #            dictSecond = dictFirst[member]
+    #            print dictSecond
+    #            break
+    #    dictFirst.pop(member)
+            #i = i+1
+            #print i
         #for item in configPageInsurantUsr[member]:
         #    print configPageInsurantUsr[member][item]
         #for item in member:

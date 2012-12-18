@@ -223,48 +223,10 @@ sys.setdefaultencoding('utf8')
 <%
 if orderid is not None:
     localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
-    beneficiarierelationdsc = localOrderInfo["BENEFICIARIERELATIONDSC"]
-    deliveryaddress = localOrderInfo["DELIVERYADDRESS"]
-    crusr = localOrderInfo["CRUSR"]
-    insurant_usr_age = localOrderInfo["INSURANT_USR"]["AGE"]
-    insurant_usr_name = localOrderInfo["INSURANT_USR"]["NAME"]
-    insurant_usr_idcardno = localOrderInfo["INSURANT_USR"]["IDCARDNO"]
-    policyholder_usr_age = localOrderInfo["POLICYHOLDER_USR"]["AGE"]
-    policyholder_usr_name = localOrderInfo["POLICYHOLDER_USR"]["NAME"]
-    policyholder_usr_idcardno = localOrderInfo["POLICYHOLDER_USR"]["IDCARDNO"]
-
-    txtPolicyDistribution = u'测试地址'
-    INSURANT_USR_ADDRESS  = u'测试地址'
-    idPOLICYHOLDER_xian_USR_ADDRESS = u'测试地址'
-    dmpaybank = u'432432432432'
-
-    purchasecount = localOrderInfo["PURCHASECOUNT"]
-    paymentstatus = localOrderInfo["PAYMENTSTATUS"]
-    insuranceid = localOrderInfo["INSURANCEID"]
-    status = localOrderInfo["STATUS"]
 else:
     localOrderInfo = None
-    print 'none orderid'
-    beneficiarierelationdsc = ''
-    deliveryaddress = ''
-    crusr = ''
-    insurant_usr_age = '25'
-    insurant_usr_name = u'测试用户1'
-    insurant_usr_idcardno = '2342343'
-    policyholder_usr_age = '25'
-    policyholder_usr_name = u'测试用户1'
-    policyholder_usr_idcardno = '2342343'
-
-    txtPolicyDistribution = u'测试地址'
-    INSURANT_USR_ADDRESS  = u'测试地址'
-    idPOLICYHOLDER_xian_USR_ADDRESS = u'测试地址'
-    dmpaybank = u'432432432432'
-    purchasecount = ''
-    paymentstatus = ''
-    insuranceid = ''
 %>
 </head>
-
 
 <body>
 
@@ -280,9 +242,9 @@ else:
             <div class="accordion-inner">
                 % if orderid is not None:
                 <label class="label label-info" id='lblOrderid' title="${orderid}">保单编号: ${orderid}</label>
-                % if status is not None:
-                <label class="label label-info" id='lblOrderStatus' title="${status}">保单状态: ${status}</label>
-                %endif
+                ##% if status is not None:
+                ##<label class="label label-info" id='lblOrderStatus' title="${status}">保单状态: ${status}</label>
+                ##%endif
                 %endif
                 <button type="button" class="btn btn-primary btn-small" id="btnAdd">新增</button>
                 % if orderid is not None:
@@ -348,7 +310,7 @@ else:
                         <label class="label">承保单号</label>
                     </td>
                     <td>
-                        <input id="idINSURANCEID" name="INSURANCEID" type="text" value="${insuranceid}">
+                        ##<input id="idINSURANCEID" name="INSURANCEID" type="text" value="${insuranceid}">
                     </td>
                 </tr>
             </table>
@@ -462,12 +424,9 @@ else:
 
     %if configPage.as_bool('hasInsurantUsr'):
     <%
-    itemCountInsurantUsr = configPage.as_int('itemCountInsurantUsr')
-    rowNumberInsurantUsr = configPage.as_int( 'rowNumberInsurantUsr')
-    stepInsurantUsr = int((itemCountInsurantUsr+rowNumberInsurantUsr-1)/rowNumberInsurantUsr)
-    configPageInsurantUsr = configPage['InsurantUsr']
+        configPageInsurantUsr = configPage['InsurantUsr']
     %>
-    <%def name="layoutdata(inPageConf)">
+    <%def name="layoutdata()">
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
@@ -478,22 +437,8 @@ else:
 
             <div class="accordion-inner">
                 <table class="table table-condensed">
-                    %for i in range(stepInsurantUsr):
-                        <%
-                            configPageInsurantUsr = configPage['InsurantUsr']
-                            #print configPageInsurantUsr
-                        %>
-                        %for member in configPageInsurantUsr:
-                                ${caller.body(item=configPageInsurantUsr[member],dataItem = localOrderInfo)}
-                        %endfor
-                    %endfor
+                    ${caller.body(configItem=configPageInsurantUsr,dataItem = localOrderInfo)}
                     <tr>
-                        <td>
-                            <label class="label label-important">姓名</label>
-                        </td>
-                        <td>
-                            <input name="INSURANT_USR_NAME" id="PolicyInformation1_txtName" type="text" value="${insurant_usr_name}" class="input-mini"/>
-                        </td>
                         <td>
                             <label class="label">性别</label>
                         </td>
@@ -517,7 +462,7 @@ else:
                             <label class="label">年龄</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text" value="${insurant_usr_age}" class="input-mini"/>
+                            ##<input name="INSURANT_USR_AGE" id="PolicyInformation1_txtHolderOldYears" type="text" value="${insurant_usr_age}" class="input-mini"/>
                         </td>
                         <td>
                             <label class="label">职业</label>
@@ -550,7 +495,7 @@ else:
                             <label class="label label-important">证件号码</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_IDCARDNO" id="PolicyInformation1_txtHolderCardNumber" type="text" value="${insurant_usr_idcardno}"/>
+                            ##<input name="INSURANT_USR_IDCARDNO" id="PolicyInformation1_txtHolderCardNumber" type="text" value="${insurant_usr_idcardno}"/>
                         </td>
                         <td>
                             <label class="label">身高</label>
@@ -581,7 +526,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input name="INSURANT_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址"  value="${INSURANT_USR_ADDRESS}"/>
+                            ##<input name="INSURANT_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址"  value="${INSURANT_USR_ADDRESS}"/>
                         </td>
                     </tr>
                     <tr>
@@ -597,28 +542,50 @@ else:
             </div>
     </div>
     </div>
-    </%def>
-    <%call expr="layoutdata(inData)" args="item,dataItem">
-            <tr>
+</%def>
+<%call expr="layoutdata()" args="configItem,dataItem">
+<%
+itemCountInsurantUsr = configItem.as_int('itemCountInsurantUsr')
+rowNumberInsurantUsr = configItem.as_int( 'rowNumberInsurantUsr')
+stepInsurantUsr = int((itemCountInsurantUsr+rowNumberInsurantUsr-1)/rowNumberInsurantUsr)
+%>
+%for i in range(stepInsurantUsr):
+<tr>
+    %for j in range(rowNumberInsurantUsr):
+        %for member in configItem:
+            <%
+            item=configItem[member]
+            %>
+            %if "titleType" in item:
+                <%
+                print item
+                %>
                 <td>
                     <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
                 </td>
                 <td>
                     <%
-                        dataValueName = item["dataName"]
-                        if localOrderInfo is not None:
-                            realDataValue = dataItem["INSURANT_USR"]["NAME"]
-                        else:
-                            realDataValue = ''
+                    dataValueName = item["dataName"]
+                    if localOrderInfo is not None:
+                        realDataValue = dataItem[dataValueName]
+                    else:
+                        realDataValue = ''
                     %>
                     %if item["dataType"] == 'input':
-                    ##%if ${item["dataType"]}:
-                        <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}"/>
+                    <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}"/>
                     %endif
                 </td>
-            </tr>
-    </%call>
-    %endif
+                <% break %>
+            %endif
+        %endfor
+        <%
+        configItem.pop(member)
+        %>
+    %endfor
+</tr>
+%endfor
+</%call>
+%endif
 
 <div class="accordion-group">
         <div class="accordion-heading">
@@ -645,7 +612,7 @@ else:
                             <label class="label label-important">姓名</label>
                         </td>
                         <td>
-                            <input name="POLICYHOLDER_USR_NAME" id="BePolicyHolder_txtBeHolderName" type="text" value="${policyholder_usr_name}" class="input-mini"/>
+                            ##<input name="POLICYHOLDER_USR_NAME" id="BePolicyHolder_txtBeHolderName" type="text" value="${policyholder_usr_name}" class="input-mini"/>
                         </td>
                         <td>
                             <label class="label">性别</label>
@@ -670,7 +637,7 @@ else:
                             <label class="label">年龄</label>
                         </td>
                         <td>
-                            <input name="POLICYHOLDER_USR_AGE" id="BePolicyHolder_txtBeHolderOldYears" type="text" value="${policyholder_usr_age}" class="input-mini"/>
+                            ##<input name="POLICYHOLDER_USR_AGE" id="BePolicyHolder_txtBeHolderOldYears" type="text" value="${policyholder_usr_age}" class="input-mini"/>
                         </td>
                         <td>
                             <label class="label">职业</label>
@@ -703,7 +670,7 @@ else:
                             <label class="label label-important">证件号码</label>
                         </td>
                         <td>
-                            <input name="POLICYHOLDER_USR_IDCARDNO" id="BePolicyHolder_txtBeHolderCardNumber" type="text" value="${policyholder_usr_idcardno}"/>
+                            ##<input name="POLICYHOLDER_USR_IDCARDNO" id="BePolicyHolder_txtBeHolderCardNumber" type="text" value="${policyholder_usr_idcardno}"/>
                         </td>
                         <td>
                             <label class="label">身高</label>
@@ -734,7 +701,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input name="idPOLICYHOLDER_xian_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址" value="${idPOLICYHOLDER_xian_USR_ADDRESS}" />
+                            ##<input name="idPOLICYHOLDER_xian_USR_ADDRESS" type="text" class="input-medium" placeholder="详细地址" value="${idPOLICYHOLDER_xian_USR_ADDRESS}" />
                         </td>
                     </tr>
                     <tr>
@@ -929,7 +896,7 @@ else:
                             <label class="label">帐号</label>
                         </td>
                         <td>
-							<input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text" class="input-medium" value="${dmpaybank}"/>
+							##<input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text" class="input-medium" value="${dmpaybank}"/>
                         </td>
                         <td>
                             <label class="label">续期帐号</label>
@@ -941,7 +908,7 @@ else:
                             <label class="label label-important">购买份数</label>
                         </td>
                         <td>
-                            <input name="PURCHASECOUNT" id="PolicyInformation1_txtNum"   type="text" class="input-mini" value="${purchasecount}"/>
+                            ##<input name="PURCHASECOUNT" id="PolicyInformation1_txtNum"   type="text" class="input-mini" value="${purchasecount}"/>
                         </td>
                     </tr>
                     <tr>
@@ -1009,7 +976,7 @@ else:
                             <label class="label">详细地址</label>
                         </td>
                         <td>
-                            <input id="PolicyDistribution_txtDistribution" type="text" name="txtPolicyDistribution" class="input-medium" placeholder="配送详细地址"  value="${txtPolicyDistribution}"/>
+                            ##<input id="PolicyDistribution_txtDistribution" type="text" name="txtPolicyDistribution" class="input-medium" placeholder="配送详细地址"  value="${txtPolicyDistribution}"/>
                         </td>
                     </tr>
                 </table>

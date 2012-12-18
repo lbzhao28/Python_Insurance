@@ -5,12 +5,12 @@ import pycurl
 import cStringIO
 import json
 
-import globalDefine
 import traceback
-import configData
 from configData import getConfig
 from logHelper import getLogger
+from configObjData import getConfigPage
 
+configPage = getConfigPage()
 def getOrderInfoOrder(inOrderid):
     """get the order info from REST """
     try:
@@ -57,6 +57,13 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
+def addDictListValue(srcDict,dstName,srcName1,srcName2):
+    """add value data to dscName to srcDict"""
+    localVal = srcDict[srcName1].pop(srcName2)
+    upDict = {dstName:localVal}
+    srcDict.update(upDict)
+
+
 def updateOrderInfoOrder(inOrderInfo):
     """update the order info according the web page show"""
     try:
@@ -67,12 +74,26 @@ def updateOrderInfoOrder(inOrderInfo):
             return None
 
         # we only get the message we needed:
-        localOrderInfo = []
-
-
+        #change the list to flat data.
+        localOrderInfo = inOrderInfo
+        #TODO: add all order data here.
+        # beneficiarierelationdsc = localOrderInfo["BENEFICIARIERELATIONDSC"]
+        #deliveryaddress = localOrderInfo["DELIVERYADDRESS"]
+        #crusr = localOrderInfo["CRUSR"]
+        #purchasecount = localOrderInfo["PURCHASECOUNT"]
+        #paymentstatus = localOrderInfo["PAYMENTSTATUS"]
+        #insuranceid = localOrderInfo["INSURANCEID"]
+        #status = localOrderInfo["STATUS"]
+        configPageInsurantUsr = configPage['InsurantUsr']
+        #addDictListValue(localOrderInfo,configPageInsurantUsr['INSURANT_USR_AGE'],"INSURANT_USR","AGE")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['name']['dataName'],"INSURANT_USR","NAME")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['sex']['dataName'],"INSURANT_USR","SEX")
+        #addDictListValue(localOrderInfo,'INSURANT_USR_IDCARDNO',"INSURANT_USR","IDCARDNO")
+        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_AGE',"POLICYHOLDER_USR","AGE")
+        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_NAME',"POLICYHOLDER_USR","NAME")
+        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_IDCARDNO',"POLICYHOLDER_USR","IDCARDNO")
 
         logger.debug("update localOrderInfo success.")
-
 
         return localOrderInfo
     except:
