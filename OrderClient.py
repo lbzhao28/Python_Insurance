@@ -85,13 +85,34 @@ def updateOrderInfoOrder(inOrderInfo):
         #insuranceid = localOrderInfo["INSURANCEID"]
         #status = localOrderInfo["STATUS"]
         configPageInsurantUsr = configPage['InsurantUsr']
-        #addDictListValue(localOrderInfo,configPageInsurantUsr['INSURANT_USR_AGE'],"INSURANT_USR","AGE")
         addDictListValue(localOrderInfo,configPageInsurantUsr['name']['dataName'],"INSURANT_USR","NAME")
         addDictListValue(localOrderInfo,configPageInsurantUsr['sex']['dataName'],"INSURANT_USR","SEX")
-        #addDictListValue(localOrderInfo,'INSURANT_USR_IDCARDNO',"INSURANT_USR","IDCARDNO")
-        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_AGE',"POLICYHOLDER_USR","AGE")
-        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_NAME',"POLICYHOLDER_USR","NAME")
-        #addDictListValue(localOrderInfo,'POLICYHOLDER_USR_IDCARDNO',"POLICYHOLDER_USR","IDCARDNO")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['birthday']['dataName'],"INSURANT_USR","BIRTHDAY")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['age']['dataName'],"INSURANT_USR","AGE")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['profession']['dataName'],"INSURANT_USR","PROFESSION")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['phone']['dataName'],"INSURANT_USR","PHONE")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['idcardtype']['dataName'],"INSURANT_USR","IDCARDTYPE")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['idcardno']['dataName'],"INSURANT_USR","IDCARDNO")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['height']['dataName'],"INSURANT_USR","HEIGHT")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['weight']['dataName'],"INSURANT_USR","WEIGHT")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['detailAddress']['dataName'],"INSURANT_USR","ADDRESS")
+        addDictListValue(localOrderInfo,configPageInsurantUsr['postcode']['dataName'],"INSURANT_USR","ZIPCODE")
+
+        configPagePolicyholderUsr = configPage['PolicyholderUsr']
+        #TODO: wrong data in relation.
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['relation']['dataName'],"INSURANT_USR","AREA")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['name']['dataName'],"POLICYHOLDER_USR","NAME")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['sex']['dataName'],"POLICYHOLDER_USR","SEX")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['birthday']['dataName'],"POLICYHOLDER_USR","BIRTHDAY")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['age']['dataName'],"POLICYHOLDER_USR","AGE")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['profession']['dataName'],"POLICYHOLDER_USR","PROFESSION")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['phone']['dataName'],"POLICYHOLDER_USR","PHONE")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['idcardtype']['dataName'],"POLICYHOLDER_USR","IDCARDTYPE")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['idcardno']['dataName'],"POLICYHOLDER_USR","IDCARDNO")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['height']['dataName'],"POLICYHOLDER_USR","HEIGHT")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['weight']['dataName'],"POLICYHOLDER_USR","WEIGHT")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['detailAddress']['dataName'],"POLICYHOLDER_USR","ADDRESS")
+        addDictListValue(localOrderInfo,configPagePolicyholderUsr['postcode']['dataName'],"POLICYHOLDER_USR","ZIPCODE")
 
         logger.debug("update localOrderInfo success.")
 
