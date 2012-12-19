@@ -72,11 +72,75 @@
             });
 
             jQuery("#btnAddPolicy").click(function(){
-                jQuery("#divPolicyholderUsrA").collapse('show');
+                if (divPolicyholderUsrAStatus == 'hidden'){
+                    jQuery("#divPolicyholderUsrA").collapse('show');
+                }
+                else
+                {
+                    if (divPolicyholderUsrBStatus == 'hidden'){
+                        jQuery("#divPolicyholderUsrB").collapse('show');
+                    }
+                    else
+                    {
+                        if (divPolicyholderUsrCStatus == 'hidden'){
+                            jQuery("#divPolicyholderUsrC").collapse('show');
+                        }
+                        else
+                        {
+                            alert("被保人不能再增加了!");
+                        }
+                    }
+                }
             });
 
+            jQuery("#btnDecreasePolicy").click(function(){
+                if (divPolicyholderUsrCStatus == 'shown'){
+                    jQuery("#divPolicyholderUsrC").collapse('hide');
+                }
+                else
+                {
+                    if (divPolicyholderUsrBStatus == 'shown'){
+                        jQuery("#divPolicyholderUsrB").collapse('hide');
+                    }
+                    else
+                    {
+                        if (divPolicyholderUsrAStatus == 'shown'){
+                            jQuery("#divPolicyholderUsrA").collapse('hide');
+                        }
+                        else
+                        {
+                            alert('被保人不能再减少了!');
+                        }
+                    }
+                }
+            });
+
+            var divPolicyholderUsrAStatus = 'hidden';
+            var divPolicyholderUsrBStatus = 'hidden';
+            var divPolicyholderUsrCStatus = 'hidden';
+
             jQuery("#divPolicyholderUsrA").on('shown',function(){
-                alert("show");
+                divPolicyholderUsrAStatus = 'shown';
+            });
+
+            jQuery("#divPolicyholderUsrA").on('hidden',function(){
+                divPolicyholderUsrAStatus = 'hidden';
+            });
+
+            jQuery("#divPolicyholderUsrB").on('shown',function(){
+                divPolicyholderUsrBStatus = 'shown';
+            });
+
+            jQuery("#divPolicyholderUsrB").on('hidden',function(){
+                divPolicyholderUsrBStatus = 'hidden';
+            });
+
+            jQuery("#divPolicyholderUsrC").on('shown',function(){
+                divPolicyholderUsrCStatus = 'shown';
+            });
+
+            jQuery("#divPolicyholderUsrC").on('hidden',function(){
+                divPolicyholderUsrCStatus = 'hidden';
             });
         });
 
@@ -432,7 +496,6 @@ else:
         </div>
     </div>
 
-
 <%def name="layoutdata()">
     %if configPage.as_bool('hasInsurantUsr'):
     <div class="accordion-group">
@@ -461,17 +524,17 @@ else:
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
                 被保人信息
             </a>
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <input type="button" class="btn" id="btnAddPolicy" value="添加被保人" />
-                        <button class="btn" id="btnDelPolicy">减少被保人</button>
-                    </td>
-                </tr>
-            </table>
         </div>
         <div id="collapseThree" class="accordion-body collapse in">
             <div class="accordion-inner">
+                <table class="table table-condensed">
+                    <tr>
+                        <td>
+                            <input type="button" class="btn" id="btnAddPolicy" value="添加被保人" />
+                            <input type="button" class="btn" id="btnDecreasePolicy" value="减少被保人" />
+                        </td>
+                    </tr>
+                </table>
                 <table class="table table-condensed">
                     <%
                         configPagePolicyholderUsr = configPage['PolicyholderUsr']
@@ -479,294 +542,137 @@ else:
                     %>
                     ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
+
+                <div id="divPolicyholderUsrA" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <table class="table table-condensed">
+                            <%
+                            configPagePolicyholderUsrA = configPage['PolicyholderUsrA']
+                            configUsing =copy.deepcopy(configPagePolicyholderUsrA)
+                            %>
+                            ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                        </table>
+                    </div>
+                </div>
+
+                <div id="divPolicyholderUsrB" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <table class="table table-condensed">
+                            <%
+                            configPagePolicyholderUsrB = configPage['PolicyholderUsrB']
+                            configUsing =copy.deepcopy(configPagePolicyholderUsrB)
+                            %>
+                            ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                        </table>
+                    </div>
+                </div>
+
+                <div id="divPolicyholderUsrC" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <table class="table table-condensed">
+                            <%
+                            configPagePolicyholderUsrC = configPage['PolicyholderUsrC']
+                            configUsing =copy.deepcopy(configPagePolicyholderUsrC)
+                            %>
+                            ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <div id="divPolicyholderUsrA" class="accordion-body collapse">
-            <div class="accordion-inner">
-                gogo
-            </div>
-        </div>
-
-        <div id="divPolicyholderUsrB" class="accordion-body collapse">
-            <div class="accordion-inner">
-                qq
-            </div>
-        </div>
-
     </div>
     %endif
+
+    %if configPage.as_bool('hasBeneficiaryUsr'):
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse">
+                受益人信息
+            </a>
+            <table class="table table-condensed">
+                <tr>
+                    <td>
+                        <label class="radio inline">
+                            <input id="idRbtBeneficiaryLaw" name="rbtBeneficiary" value="1" type="radio" checked /><label class="label">法定</label>
+                        </label>
+                        <label class="radio inline">
+                            <input id="idRbtBeneficiaryJunfen" name="rbtBeneficiary" value="2" type="radio" /><label class="label">指定</label>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="idBeneficiary" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <table class="table table-condensed">
+                    <tr>
+                        <td>
+                            <input type="button" class="btn" id="btnAddBeneficiary" value="添加受益人" />
+                            <input type="button" class="btn" id="btnDecreaseBeneficiary" value="减少受益人" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-condensed">
+                    <%
+                    configBeneficiaryUsr = configPage['BeneficiaryUsr']
+                    configUsing =copy.deepcopy(configBeneficiaryUsr)
+                    %>
+                    ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                </table>
+            </div>
+        </div>
+    </div>
+    %endif
+
+    %if configPage.as_bool('hasInsurantPlan'):
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">
+                保险计划
+            </a>
+        </div>
+        <div id="collapseFive" class="accordion-body collapse in">
+            <div class="accordion-inner">
+                <table class="table table-condensed">
+                    <tr>
+                        <td colspan="3">
+                            <button type="button" class="btn btn-primary btn-small" id="btnCal">保费试算</button>
+                        </td>
+                    </tr>
+                    <%
+                    configPageInsurantPlan = configPage['InsurantPlan']
+                    configUsing =copy.deepcopy(configPageInsurantPlan)
+                    %>
+                    ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                </table>
+            </div>
+        </div>
+    </div>
+    %endif
+
+    %if configPage.as_bool('hasDelivery'):
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSix">
+                保单配送
+            </a>
+        </div>
+        <div id="collapseSix" class="accordion-body collapse in">
+            <div class="accordion-inner">
+                <table class="table table-condensed">
+                    <%
+                    configPagedelivery = configPage['delivery']
+                    configUsing =copy.deepcopy(configPagedelivery)
+                    %>
+                    ${caller.body(configItem=configUsing,dataItem = localOrderInfo)}
+                </table>
+            </div>
+        </div>
+    </div>
+    %endif
+
 </%def>
-
-
-
-<div class="accordion-group">
-    <div class="accordion-heading">
-        <a class="accordion-toggle">
-            受益人信息
-        </a>
-        <table class="table table-condensed">
-            <tr>
-                <td>
-                    <label class="radio inline">
-                        <input id="idRbtBeneficiaryLaw" name="rbtBeneficiary" value="1" type="radio" checked /><label class="label">法定</label>
-                    </label>
-                    <label class="radio inline">
-                        <input id="idRbtBeneficiaryJunfen" name="rbtBeneficiary" value="2" type="radio" /><label class="label">指定</label>
-                    </label>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div id="idBeneficiary" class="accordion-body collapse">
-        <div class="accordion-inner">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <label class="label">与被保人关系</label>
-                    </td>
-                    <td>
-                        <select name="BeneficiaryCatId" id="idBeneficiaryCatId" class="input-small">
-                            <option value="1" selected="selected">本人</option>
-                            <option value="2">家属</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label label-important">姓名</label>
-                    </td>
-                    <td>
-                        <input name="Lstbeneficiaries_NAME" id="Lstbeneficiaries_txtBeHolderName" type="text" class="input-mini"/>
-                    </td>
-                    <td>
-                        <label class="label">性别</label>
-                    </td>
-                    <td>
-                        <label class="radio inline">
-                            <input name="rbtBeneficiarySexMan" id="Lstbeneficiaries_rbtBeHolderSexMan" checked type="radio"/><label class="label">男</label>
-                        </label>
-                        <label class="radio inline">
-                            <input name="rbtBeneficiarySexMan" id="Lstbeneficiaries_rbtBeHolderSexWoman" type="radio"/><label class="label">女</label>
-                        </label>
-                    </td>
-                    <td>
-                        <label class="label">出生日期</label>
-                    </td>
-                    <td>
-                        <input name="Lstbeneficiaries_BIRTHDAY" id="Lstbeneficiaries_txtBeHolderBirthday" type="text" class="Wdate input-medium" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label">年龄</label>
-                    </td>
-                    <td>
-                        <input name="Lstbeneficiaries_AGE" id="Lstbeneficiaries_txtBeHolderOldYears" type="text" class="input-mini"/>
-                    </td>
-                    <td>
-                        <label class="label">联系电话</label>
-                    </td>
-                    <td>
-                        <input name="Lstbeneficiaries_PHONE" id="Lstbeneficiaries_txtBeHolderPhoneNumber"   type="text" class="input-medium"/>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label">证件类型</label>
-                    </td>
-                    <td>
-                        <select name="Lstbeneficiaries_IDCARDTYPE" id="Lstbeneficiaries_selectBeHolderCardType" class="input-medium">
-                            <option value="1" selected="selected">身份证</option>
-                            <option value="2">军官证</option>
-                        </select>
-                    </td>
-                    <td>
-                        <label class="label label-important">证件号码</label>
-                    </td>
-                    <td>
-                        <input name="Lstbeneficiaries_IDCARDNO" id="Lstbeneficiaries_txtBeHolderCardNumber" type="text" />
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="accordion-group">
-    <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">
-            保险计划
-        </a>
-    </div>
-    <div id="collapseFive" class="accordion-body collapse in">
-        <div class="accordion-inner">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-small" id="btnCal">保费试算</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label">保单产品</label>
-                    </td>
-                    <td>
-                        <SELECT id="idDdlProduct" name="ddlProduct" class="input-large">
-                            <OPTION value="001" selected>健行无忧意外伤害保险-A款</OPTION>
-                            <OPTION value="002">健行无忧意外伤害保险-B款</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">保单计划</label>
-                    </td>
-                    <td>
-                        <SELECT id="idDdlPlan" name="ddlPlan" class="input-large">
-                            <OPTION value="0" selected>标准计划</OPTION>
-                            <OPTION value="1">经典计划</OPTION>
-                            <OPTION value="2">卓越计划</OPTION>
-                            <OPTION value="3">尊享计划</OPTION>
-                            <OPTION value="4">未成年人计划</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">保单家庭计划</label>
-                    </td>
-                    <td>
-                        <SELECT id="idDdlPlanFamily" name="ddlPlanFamily" class="input-large">
-                            <OPTION value="0" selected>个人计划</OPTION>
-                            <OPTION value="1">双人计划</OPTION>
-                            <OPTION value="2">亲子计划</OPTION>
-                            <OPTION value="3">家庭计划</OPTION>
-                        </SELECT>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label label-important">首期支付方式</label>
-                    </td>
-                    <td>
-                        <SELECT name="PAYMENTSTATUS" id="PolicyInformation1_txtPayMode" class="input-medium">
-                            <OPTION value="0" selected>信用卡刷</OPTION>
-                            <OPTION value="1">转账</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">续期支付方式</label>
-                    </td>
-                    <td>
-                        <SELECT name="DMPAYMODE" id="PolicyInformation1_txtPayContinuationPayMode" class="input-medium">
-                            <OPTION value="0" selected>信用卡刷</OPTION>
-                            <OPTION value="1">转账</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">开户银行</label>
-                    </td>
-                    <td>
-                        <SELECT name="txtPayBank" id="PolicyInformation1_txtPayBank" class="input-medium">
-                            <OPTION value="0" selected>建设银行</OPTION>
-                        </SELECT>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label">帐号</label>
-                    </td>
-                    <td>
-                        ##<input name="DMPAYBANK" id="PolicyInformation1_txtBankCardNum" type="text" class="input-medium" value="${dmpaybank}"/>
-                    </td>
-                    <td>
-                        <label class="label">续期帐号</label>
-                    </td>
-                    <td>
-                        <input name="DMPAYBANKEXT" id="PolicyInformation1_txtBankCardNumExt" type="text" class="input-medium"/>
-                    </td>
-                    <td>
-                        <label class="label label-important">购买份数</label>
-                    </td>
-                    <td>
-                        ##<input name="PURCHASECOUNT" id="PolicyInformation1_txtNum"   type="text" class="input-mini" value="${purchasecount}"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label">续费年限</label>
-                    </td>
-                    <td>
-                        <SELECT name="DMCONTINUATIONYEARS" id="PolicyInformation1_txtContinuationYears" class="input-medium">
-                            <OPTION value="0" selected>5年</OPTION>
-                            <OPTION value="1">10年</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">缴费方式</label>
-                    </td>
-                    <td>
-                        <SELECT name="DMPAYTYPE" id="PolicyInformation1_txtPayType" class="input-medium">
-                            <OPTION value="0" selected>年缴</OPTION>
-                            <OPTION value="1">月缴</OPTION>
-                        </SELECT>
-                    </td>
-                    <td>
-                        <label class="label">保险期间</label>
-                    </td>
-                    <td>
-                        <SELECT name="DMPOLICYDATES" id="PolicyInformation1_txtPolicyDates" class="input-medium">
-                            <OPTION value="0" selected>10年</OPTION>
-                            <OPTION value="1">30年</OPTION>
-                        </SELECT>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="accordion-group">
-    <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" href="#collapseSix">
-            保单配送
-        </a>
-    </div>
-    <div id="collapseSix" class="accordion-body collapse in">
-        <div class="accordion-inner">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <label class="label">配送时间</label>
-                    </td>
-                    <td>
-                        <input name="PolicyDistribution_txtDistributionTime" id="idPolicyDistribution_txtDistributionTime" type="text" class="Wdate input-medium" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-                    </td>
-                    <td>
-                        <label class="label">配送省市区</label>
-                    </td>
-                    <td>
-                        <select id="shengDel" name="shengDel" onchange="changevalCityDel(document.getElementById('shiDel'),this.value);" class="input-small"></select>
-                        <select id="shiDel" name="shiDel" onchange="changevalCityDel(document.getElementById('xianDel'),this.value);" class="input-small"></select>
-                        <select id="xianDel" name="xianDel" class="input-small"></select>
-                        <script type="text/javascript" language="javascript">
-                            changevalCityDel(document.getElementById("shengDel"),0,1);
-                        </script>
-                    </td>
-                    <td>
-                        <label class="label">详细地址</label>
-                    </td>
-                    <td>
-                        ##<input id="PolicyDistribution_txtDistribution" type="text" name="txtPolicyDistribution" class="input-medium" placeholder="配送详细地址"  value="${txtPolicyDistribution}"/>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
 
 <%call expr="layoutdata()" args="configItem,dataItem">
 <%
@@ -776,10 +682,9 @@ stepLine = int((itemCount+rowNumber-1)/rowNumber)
 configItem.pop('itemCount')
 configItem.pop('rowNumber')
 %>
+
 %for i in range(stepLine):
 <%
-print 'i='+str(i)
-
 #go to last line:
 if i!=(stepLine-1):
     stepRow = rowNumber
@@ -789,19 +694,14 @@ else:
         stepRow = rowNumber
     else:
         stepRow = itemCount%rowNumber
-print 'stepRow='+str(stepRow)
 
 #start from 0.
 j = 0
 %>
 <tr>
     %for j in range(stepRow):
-    <%
-    print 'j='+str(j)
-    %>
         %for member in configItem:
             <%
-            print 'member='+member
             item=configItem[member]
             %>
             %if "titleType" in item:
@@ -813,7 +713,9 @@ j = 0
                     if "dataName" in item:
                         dataValueName = item["dataName"]
                         if localOrderInfo is not None:
-                            realDataValue = dataItem[dataValueName]
+                            #TODO:show the real data value.
+                            realDataValue = ''
+                            #realDataValue = dataItem[dataValueName]
                         else:
                             realDataValue = ''
                     %>
@@ -875,7 +777,7 @@ j = 0
 %endfor
 </%call>
 
-
 </form>
 </body>
 </html>
+
