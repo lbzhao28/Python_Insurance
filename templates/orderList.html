@@ -67,7 +67,7 @@ print localURL
     <fieldset>
 <%
 if (contactid is not None)|(orderid is not None):
-    localOrderInfoLst = OrderClient.getOrderInfoLstContact(contactid,orderid)
+    localOrderInfoLst = OrderClient.getOrderInfoLst(contactid,orderid)
 else:
     localOrderInfoLst = None
     print 'none contactid and orderid'
@@ -86,8 +86,8 @@ else:
             % for item in inOrderInfoLst:
                 <tr>
                     <td>
-                        <% orderid = item['ORDERID'] %>
-                        <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
+                        ##<% orderid = item['ORDERID'] %>
+                        ##<button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
                     </td>
                     ${caller.body(item=item)}
                 </tr>
@@ -97,10 +97,10 @@ else:
         </div>
 </%def>
 <%call expr="layoutdata(localOrderInfoLst)" args="item">
-    <td>${item["ORDERID"]}</td>
-    <td>${item["CRUSR"]}</td>
-    <td>${item["CRDT"]}</td>
-    <td>${item["STATUS"]}</td>
+    ##<td>${item["ORDERID"]}</td>
+    ##<td>${item["CRUSR"]}</td>
+    ##<td>${item["CRDT"]}</td>
+    ##<td>${item["STATUS"]}</td>
 </%call>
 </fieldset>
 </form>

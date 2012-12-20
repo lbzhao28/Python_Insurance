@@ -16,13 +16,14 @@
                 insurancecodeid = jQuery("#idDdlProduct").val();
                 securityplanid = jQuery("#idDdlPlan").val();
                 premiumplanid = jQuery("#idDdlPlanFamily").val();
+                ageplan = jQuery("#BePolicyHolder_txtBeHolderOldYears").val();
                 //alert(insurancecodeid);
-                showOrderCal(insurancecodeid,securityplanid,premiumplanid);
+                showOrderCal(insurancecodeid,securityplanid,premiumplanid,ageplan);
             });
         });
 
-        function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
-            actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+        function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN,inAGEPLAN){
+            actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN+"&AGEPLAN="+inAGEPLAN;
             window.location.href=actionUrl;
         }
     </script>
@@ -39,7 +40,7 @@ print localURL
 %>
 <%
 if insurancecodeid is not None:
-    localOrderProductLst = OrderClient.getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid)
+    localOrderProductLst = OrderClient.getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
     if localOrderProductLst.count > 0:
         localTOTALPREMIUM = localOrderProductLst[0]["TOTALPREMIUM"]
         localTOTALSUMINSURED = localOrderProductLst[0]["TOTALSUMINSURED"]

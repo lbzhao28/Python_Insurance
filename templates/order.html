@@ -32,6 +32,10 @@
             jQuery("#btnConfirmAdd").click(function(){
                 //TODO: add button change status .
                 //jQuery("#myModal").modal("hide");
+                //prepare some data.
+
+                //prepare radio button data:
+                //jQuery("#PolicyInformation_txtSexMan").checked
                 postOrder('${contactid}');
             });
 
@@ -483,8 +487,8 @@ else:
                         <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
                             <OPTION value="0">未审核</OPTION>
                             <OPTION value="1" selected>已承保</OPTION>
-                            <OPTION value="2" selected>未承保</OPTION>
-                            <OPTION value="3" selected>退保</OPTION>
+                            <OPTION value="2" >未承保</OPTION>
+                            <OPTION value="3" >退保</OPTION>
                         </SELECT>
                     </td>
                 </tr>
@@ -536,6 +540,7 @@ else:
                     </tr>
                 </table>
                 <table class="table table-condensed">
+                    ##根据被保人的实际情况,决定显示多少个被保人，需要在载入的时候判断.
                     <%
                         configPagePolicyholderUsr = configPage['PolicyholderUsr']
                         configUsing =copy.deepcopy(configPagePolicyholderUsr)
@@ -713,9 +718,10 @@ j = 0
                     if "dataName" in item:
                         dataValueName = item["dataName"]
                         if localOrderInfo is not None:
-                            #TODO:show the real data value.
-                            realDataValue = ''
-                            #realDataValue = dataItem[dataValueName]
+                            if dataValueName in dataItem:
+                                realDataValue = dataItem[dataValueName]
+                            else:
+                                realDataValue = ''
                         else:
                             realDataValue = ''
                     %>
@@ -727,16 +733,28 @@ j = 0
                                 <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}"/>
                             %endif
                         %elif item["dataShowType"] == 'textDate':
-                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataRealShowType"]} class="${item["dataCss"]}" onclick="${item["onClick"]}"/>
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataRealShowType"]} class="${item["dataCss"]}" value="${realDataValue}" onclick="${item["onClick"]}"/>
                         %elif item["dataShowType"] == 'radio':
+                            <%
+                                if realDataValue == '':
+                                    #default value
+                                    realDataValue = 0
+                            %>
                             %for radioItem in item["radio"]:
                                 <%
                                     radioItemData = item["radio"][radioItem]
                                 %>
                                 <${radioItemData["titleType"]} class="${radioItemData["titleCss"]}">
-                                    <${item["dataType"]} name=${item["dataName"]} id=${radioItemData["inDataID"]} type = "${item["dataShowType"]}"/>
+                                    %if realDataValue == radioItemData["inDataValue"]:
+                                        <${item["dataType"]} name=${item["dataName"]} id=${radioItemData["inDataID"]} type = "${item["dataShowType"]}" value="${radioItemData["inDataValue"]}" checked/>
+                                    %else:
+                                        <${item["dataType"]} name=${item["dataName"]} id=${radioItemData["inDataID"]} type = "${item["dataShowType"]}" value="${radioItemData["inDataValue"]}"/>
+                                    %endif
                                         <${radioItemData["inDataType"]} class="${radioItemData["inDataCss"]}"> ${radioItemData["inDataText"]}</${radioItemData["inDataType"]}>
                                 </${radioItemData["titleType"]}>
+                                <script type="text/javascript" language="javascript">
+
+                                </script>
                             %endfor
                         %endif
                     %elif item["dataType"] == 'select':
@@ -746,7 +764,11 @@ j = 0
                                 <%
                                     selectItemData = item["select"][selectItem]
                                 %>
-                                <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}">${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %if selectItemData["inDataValue"] ==  realDataValue:
+                                    <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}" selected>${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %else:
+                                    <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}">${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %endif
                             %endfor
                             </${item["dataType"]}>
                         %elif item["dataShowType"] == 'selectBriefAddress':
@@ -755,9 +777,9 @@ j = 0
                                 selectItemData = item["select"][selectItem]
                                 %>
                                 %if "onchange" in selectItemData:
-                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataID"]}" class="${selectItemData["inDataCss"]}" onchange="${selectItemData["onchange"]}" ></${selectItemData["titleType"]}>
+                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataName"]}" class="${selectItemData["inDataCss"]}" onchange="${selectItemData["onchange"]}" ></${selectItemData["titleType"]}>
                                 %else:
-                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataID"]}" class="${selectItemData["inDataCss"]}" ></${selectItemData["titleType"]}>
+                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataName"]}" class="${selectItemData["inDataCss"]}" ></${selectItemData["titleType"]}>
                                 %endif
                             %endfor
                             <script type="text/javascript" language="javascript">

@@ -124,12 +124,14 @@ class orderProduct:
                 insurancecodeid = query_dict['INSURANCECODE']
                 securityplanid = query_dict['SECURITYPLAN']
                 premiumplanid = query_dict['PREMIUMPLAN']
-                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid)
+                ageplan = query_dict['AGEPLAN']
+                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid,ageplan=ageplan)
             else:
                 insurancecodeid = None
                 securityplanid = None
                 premiumplanid = None
-                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid)
+                ageplan = None
+                return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid,ageplan=ageplan)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
