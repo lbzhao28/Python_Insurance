@@ -60,17 +60,6 @@
                 showFixOrder();
             });
 
-            jQuery("#btnQA").click(function(){
-                showQAOrder();
-            });
-
-            jQuery("#btnClose").click(function(){
-                showCloseOrder();
-            });
-            jQuery("#btnMoney").click(function(){
-                showMoneyOrder();
-            });
-
             jQuery("#btnStatus").click(function(){
                 showStatusOrder();
             });
@@ -172,17 +161,6 @@
             jQuery("#myModalFix").modal("show");
         }
 
-        function showQAOrder(){
-            jQuery("#myModalQA").modal("show");
-        }
-
-        function showCloseOrder(){
-            jQuery("#myModalClose").modal("show");
-        }
-        function showMoneyOrder(){
-            jQuery("#myModalMoney").modal("show");
-        }
-
         function showStatusOrder(){
             jQuery("#myModalStatus").modal("show");
         }
@@ -199,7 +177,7 @@
         function putOrder(inContactid){
             if (check_submit())
             {
-                inOrderid = $("lblOrderid").title;
+                inOrderid = jQuery("#lblOrderid").title;
                 document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
@@ -209,7 +187,7 @@
         function putFixOrder(inContactid){
             if (check_submit())
             {
-                inOrderid = $("lblOrderid").title;
+                inOrderid = jQuery("#lblOrderid").title;
                 // '3' status means fix order.
                 document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
                 document.getElementById("formOrder").method = "POST";
@@ -217,61 +195,44 @@
             }
         }
 
-        function $(str){
-            return (document.getElementById(str));
-        }
-
         function check_submit(){
-            if($("PolicyInformation1_txtName").value ==""){
+            if(jQuery("#PolicyInformation1_txtName").val() ==""){
                 alert("投保人姓名不能为空!");
                 return false;
             }
-            if($("BePolicyHolder_txtBeHolderName").value ==""){
+            if(jQuery("#BePolicyHolder_txtBeHolderName").val() ==""){
                 alert("被保人姓名不能为空!");
                 return false;
             }
-            if($("PolicyInformation1_txtHolderCardNumber").value ==""){
+            if(jQuery("#PolicyInformation1_txtHolderCardNumber").val() ==""){
                 alert("投保人证件不能为空!");
                 return false;
             }
-            if($("PolicyInformation1_txtHolderCardNumber").value ==""){
+            if(jQuery("#PolicyInformation1_txtHolderCardNumber").val() ==""){
                 alert("投保人证件不能为空!");
                 return false;
             }
-            if($("BePolicyHolder_txtBeHolderCardNumber").value ==""){
+            if(jQuery("#BePolicyHolder_txtBeHolderCardNumber").val() ==""){
                 alert("被保人证件不能为空!");
                 return false;
             }
-            if($("PolicyInformation1_txtPayMode").value ==""){
+            if(jQuery("#PolicyInformation1_txtPayMode").val() ==""){
                 alert("首期支付方式不能为空!");
                 return false;
             }
-            if($("PolicyInformation1_txtNum").value ==""){
+            if(jQuery("#PolicyInformation1_txtNum").val() ==""){
                 alert("购买份数不能为空!");
                 return false;
             }
             return true;
         }
 
-        function showDiv(divId){
-            document.getElementById(divId).style.display="";
-            //alert(document.getElementById("div").style.display)
-        }
-        function hiddenDiv(divId){
-            document.getElementById(divId).style.display="none";
-            //alert(document.getElementById("div").style.display)
-        }
-
+        //prepare province,city,area
 		var arrayCity= createArrayCity();
 
     </script>
 <%doc>
-    ##test code.
-    ## this is a comment.test for lookup.
-    <% x = [ 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 0 ]%>
-    % for elem in x:
-    element: ${elem}
-    % endfor
+    ##using Mako to create html file.
 </%doc>
 
 ##prepare the order info
@@ -283,6 +244,7 @@ import json
 
 import configObjData
 from configObjData import getConfigPage
+from configObjData import getConfigFile
 #print getConfigPage.__doc__
 
 import configData
@@ -290,10 +252,12 @@ from configData import getConfig
 #print getConfig.__doc__
 
 configPage = getConfigPage()
+
 localURL = getConfig('SERVERINFO','serverIP','str')
 
 import sys
 reload(sys)
+#convert the show code.
 sys.setdefaultencoding('utf8')
 
 import copy
@@ -329,16 +293,10 @@ else:
                 <button  type="button" class="btn btn-primary btn-small" id="btnModify">修改</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnStatus">审核</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnFix">承保</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnQA">质检</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnMoney">收款</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnClose">退保</button>
                 % else:
                 <button  type="button" class="btn btn-primary btn-small" id="btnModify" disabled="true" >修改</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnStatus" disabled="true" >审核</button>
                 <button type="button" class="btn btn-primary btn-small" id="btnFix" disabled="true" >承保</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnQA" disabled="true" >质检</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnMoney" disabled="true" >收款</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnClose" disabled="true" >退保</button>
                 %endif
 
             </div>
@@ -399,78 +357,6 @@ else:
         </div>
     </div>
 
-    <!-- Modal QA -->
-    <div id="myModalQA" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalQALabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalQALabel">保单质检</h3>
-        </div>
-        <div class="modal-body">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <label class="label">录音编号</label>
-                    </td>
-                    <td>
-                        <input id="idRECORDID" name="RECORDID" type="text" >
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-            <button class="btn btn-primary" id="btnConfirmQA" >保单质检</button>
-        </div>
-    </div>
-
-    <!-- Modal Money -->
-    <div id="myModalMoney" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalMoneyLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalMoneyLabel">保单收款</h3>
-        </div>
-        <div class="modal-body">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <label class="label">收款信息</label>
-                    </td>
-                    <td>
-                        <input id="idMoneyinfo" name="moneyinfo" type="text" >
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-            <button class="btn btn-primary" id="btnConfirmMoney" >收款</button>
-        </div>
-    </div>
-
-    <!-- Modal Close -->
-    <div id="myModalClose" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalCloseLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalCloseLabel">保单退保</h3>
-        </div>
-        <div class="modal-body">
-            <table class="table table-condensed">
-                <tr>
-                    <td>
-                        <label class="label">退保原因</label>
-                    </td>
-                    <td>
-                        <input id="idCloseOrder" name="closeOrder" type="text" >
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-            <button class="btn btn-primary" id="btnConfirmClose" >退保</button>
-        </div>
-    </div>
-
     <!-- Modal Status -->
     <div id="myModalStatus" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalStatusLabel" aria-hidden="true">
         <div class="modal-header">
@@ -480,16 +366,29 @@ else:
         <div class="modal-body">
             <table class="table table-condensed">
                 <tr>
+                    <%
+                        item = configPage["SingleControl"]["OrderStatus"]
+                    %>
                     <td>
-                        <label class="label">保单状态</label>
+                        <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
                     </td>
                     <td>
-                        <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
-                            <OPTION value="0">未审核</OPTION>
-                            <OPTION value="1" selected>已承保</OPTION>
-                            <OPTION value="2" >未承保</OPTION>
-                            <OPTION value="3" >退保</OPTION>
-                        </SELECT>
+                    <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+                       <%
+                            configUsing = getConfigFile(item["dataSource"])
+                        %>
+                        %for selectItem in configUsing[item["dataSourceId"]]:
+                            <%
+                                selectItemData = configUsing[item["dataSourceId"]][selectItem]
+                                print selectItemData
+                            %>
+                            %if selectItemData["value"] ==  realDataValue:
+                                <${item["dataTitleType"]} value="${selectItemData["value"]}" selected>${selectItemData["text"]}</${item["dataTitleType"]}>
+                            %else:
+                                <${item["dataTitleType"]} value="${selectItemData["value"]}">${selectItemData["text"]}</${item["dataTitleType"]}>
+                            %endif
+                        %endfor
+                    </${item["dataType"]}>
                     </td>
                 </tr>
             </table>
@@ -768,6 +667,23 @@ j = 0
                                     <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}" selected>${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
                                 %else:
                                     <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}">${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %endif
+                            %endfor
+                            </${item["dataType"]}>
+                        %elif item["dataShowType"] == 'selectConf':
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+                            <%
+                                configUsing = getConfigFile(item["dataSource"])
+                            %>
+                            %for selectItem in configUsing[item["dataSourceId"]]:
+                                <%
+                                    selectItemData = configUsing[item["dataSourceId"]][selectItem]
+                                    print selectItemData
+                                %>
+                                %if selectItemData["value"] ==  realDataValue:
+                                    <${item["dataTitleType"]} value="${selectItemData["value"]}" selected>${selectItemData["text"]}</${item["dataTitleType"]}>
+                                %else:
+                                    <${item["dataTitleType"]} value="${selectItemData["value"]}">${selectItemData["text"]}</${item["dataTitleType"]}>
                                 %endif
                             %endfor
                             </${item["dataType"]}>

@@ -41,5 +41,11 @@ def getConfigPage():
     #print configPage.as_bool("hasInsurantUsr")
     return configPage
 
+def getConfigFile(inFileName):
+    """get the Static config file"""
+
+    configFile = ConfigObj(inFileName)
+    return configFile
+
 if __name__ == "__main__":
     getConfigPage()
