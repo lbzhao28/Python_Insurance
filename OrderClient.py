@@ -103,7 +103,11 @@ def getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
 
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderProductInfourl','str')+'?INSURANCECODE='+insurancecodeid+"&SECURITYPLAN="+securityplanid+"&PREMIUMPLAN="+premiumplanid+"&AGEPLAN="+ageplan
+        #TODO: how to disable the age.
+        if ageplan != 'null':
+            localURL = getConfig('RESTService','orderProductInfourl','str')+'?INSURANCECODE='+insurancecodeid+"&SECURITYPLAN="+securityplanid+"&PREMIUMPLAN="+premiumplanid+"&AGEPLAN="+ageplan
+        else:
+            localURL = getConfig('RESTService','orderProductInfourl','str')+'?INSURANCECODE='+insurancecodeid+"&SECURITYPLAN="+securityplanid+"&PREMIUMPLAN="+premiumplanid
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
         c.setopt(c.WRITEFUNCTION,buf.write)
