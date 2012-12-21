@@ -68,6 +68,9 @@ print localURL
 <%
 if (contactid is not None)|(orderid is not None):
     localOrderInfoLst = OrderClient.getOrderInfoLst(contactid,orderid)
+    #如果没有保单信息,直接无视
+    if len(localOrderInfoLst["OrderInfoLst"])==0:
+        localOrderInfoLst = None
 else:
     localOrderInfoLst = None
     print 'none contactid and orderid'
@@ -83,24 +86,32 @@ else:
             <th>创建日期</th>
             <th>保单状态</th>
         </tr>
-            % for item in inOrderInfoLst:
-                <tr>
-                    <td>
-                        ##<% orderid = item['ORDERID'] %>
-                        ##<button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
-                    </td>
-                    ${caller.body(item=item)}
-                </tr>
-            % endfor
+            <%
+        orderInfoLst = inOrderInfoLst["OrderInfoLst"]
+
+        if len(orderInfoLst) == 0:
+            orderInfoLst = None
+            %>
+            %if orderInfoLst is not None:
+                % for item in orderInfoLst:
+                    <tr>
+                        <td>
+                            <% orderid = item['OrderId'] %>
+                            <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
+                        </td>
+                        ${caller.body(item=item)}
+                    </tr>
+                % endfor
+            %endif
         % endif
     </table>
         </div>
 </%def>
 <%call expr="layoutdata(localOrderInfoLst)" args="item">
-    ##<td>${item["ORDERID"]}</td>
-    ##<td>${item["CRUSR"]}</td>
-    ##<td>${item["CRDT"]}</td>
-    ##<td>${item["STATUS"]}</td>
+    <td>${item["OrderId"]}</td>
+    <td>${item["Crusr"]}</td>
+    <td>${item["Crdt"]}</td>
+    <td>${item["StatusDsc"]}</td>
 </%call>
 </fieldset>
 </form>

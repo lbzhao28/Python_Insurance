@@ -370,12 +370,18 @@ class order:
                 query_url = parsed_url.query
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
-                    orderid = query_dict['orderid']
-                    return render.order(contactid = contactid,orderid = orderid)
+                    if 'orderid' in query_dict:
+                        orderid = query_dict['orderid']
+                        return render.order(contactid = contactid,orderid = orderid,query_dict=query_dict)
+                    else:
+                        #if no orderid,show a blank file.
+                        orderid = None
+                        return render.order(contactid = contactid,orderid = orderid,query_dict=query_dict)
                 else:
                     #if no orderid,show a blank file.
                     orderid = None
-                    return render.order(contactid = contactid,orderid = orderid)
+                    query_dict = None
+                    return render.order(contactid = contactid,orderid = orderid,query_dict=query_dict)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
