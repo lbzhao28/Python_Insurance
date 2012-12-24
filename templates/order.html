@@ -56,6 +56,10 @@
                 putFixOrder('${contactid}');
             });
 
+            jQuery("#btnConfirmStatus").click(function(){
+                putStatusOrder('${contactid}');
+            });
+
             jQuery("#btnFix").click(function(){
                 showFixOrder();
             });
@@ -177,7 +181,8 @@
         function putOrder(inContactid){
             if (check_submit())
             {
-                inOrderid = jQuery("#lblOrderid").title;
+                var inOrderid = jQuery("#lblOrderid").text();
+                //alert(inOrderid);
                 document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
@@ -187,13 +192,28 @@
         function putFixOrder(inContactid){
             if (check_submit())
             {
-                inOrderid = jQuery("#lblOrderid").title;
-                // '3' status means fix order.
-                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'3';
+                var inOrderid = jQuery("#lblOrderid").text();
+                //alert(inOrderid);
+                //TODO: we need get the status from config.
+                // '1' status means fix order.
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'1';
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
         }
+
+        function putStatusOrder(inContactid){
+            if (check_submit())
+            {
+                var inOrderid = jQuery("#lblOrderid").text();
+                var status = jQuery("#idDDLORDERSTATUS").val();
+                //alert(status);
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
+                document.getElementById("formOrder").method = "POST";
+                document.getElementById("formOrder").submit();
+            }
+        }
+
 
         function check_submit(){
             if(jQuery("#PolicyInformation1_txtName").val() ==""){
@@ -202,10 +222,6 @@
             }
             if(jQuery("#BePolicyHolder_txtBeHolderName").val() ==""){
                 alert("被保人姓名不能为空!");
-                return false;
-            }
-            if(jQuery("#PolicyInformation1_txtHolderCardNumber").val() ==""){
-                alert("投保人证件不能为空!");
                 return false;
             }
             if(jQuery("#PolicyInformation1_txtHolderCardNumber").val() ==""){
@@ -222,6 +238,104 @@
             }
             if(jQuery("#PolicyInformation1_txtNum").val() ==""){
                 alert("购买份数不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtBirthday").val() ==""){
+                alert("投保人出生日期不能为空!");
+                return false;
+            }
+
+            if(jQuery("#BePolicyHolder_txtBeHolderBirthday").val() ==""){
+                alert("被保人出生日期不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtHolderOldYears").val() ==""){
+                alert("投保人年龄不能为空!");
+                return false;
+            }
+
+            if(jQuery("#BePolicyHolder_txtBeHolderOldYears").val() ==""){
+                alert("被保人年龄不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtHolderPhoneNumber").val() ==""){
+                alert("投保人联系电话不能为空!");
+                return false;
+            }
+
+            if(jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val() ==""){
+                alert("被保人联系电话不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtHolderDetailAddress").val() ==""){
+                alert("投保人联系地址不能为空!");
+                return false;
+            }
+
+            if(jQuery("#idPOLICYHOLDER_USR_ADDRESS").val() ==""){
+                alert("被保人联系地址不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtHolderZip").val() ==""){
+                alert("投保人邮编不能为空!");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtBeHolderZip").val() ==""){
+                alert("被保人邮编不能为空!");
+                return false;
+            }
+
+            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEX"]').is(":checked");
+
+            if(!boolCheck){
+                alert("投保人性别不能为空");
+                return false;
+            }
+
+            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEX"]').is(":checked");
+
+            if(!boolCheck){
+                alert("被保人性别不能为空");
+                return false;
+            }
+
+            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXA"]').is(":checked");
+
+            if(!boolCheck){
+                alert("被保人性别不能为空");
+                return false;
+            }
+
+            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXB"]').is(":checked");
+
+            if(!boolCheck){
+                alert("被保人性别不能为空");
+                return false;
+            }
+
+            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXC"]').is(":checked");
+
+            if(!boolCheck){
+                alert("被保人性别不能为空");
+                return false;
+            }
+
+
+            var boolCheck=jQuery('input:radio[name="rbtBeneficiarySex"]').is(":checked");
+
+            if(!boolCheck){
+                alert("受益人性别不能为空");
+                return false;
+            }
+
+            if(jQuery("#PolicyInformation1_txtPayMode").val() ==""){
+                alert("首期支付方式不能为空!");
                 return false;
             }
             return true;
@@ -244,8 +358,9 @@ import json
 
 import configObjData
 from configObjData import getConfigPage
-from configObjData import getConfigFile
-#print getConfigPage.__doc__
+
+import staticDbModule
+from staticDbModule import getDictStatic
 
 import configData
 from configData import getConfig
@@ -283,10 +398,19 @@ else:
         <div id="collapseOne" class="accordion-body collapse in">
             <div class="accordion-inner">
                 % if orderid is not None:
-                <label class="label label-info" id='lblOrderid' title="${orderid}">保单编号: ${orderid}</label>
-                ##% if status is not None:
-                ##<label class="label label-info" id='lblOrderStatus' title="${status}">保单状态: ${status}</label>
-                ##%endif
+                    <label class="label label-info" >保单编号:</label>
+                    <label class="label label-info" id='lblOrderid'>${orderid}</label>
+                    <%
+                        if localOrderInfo is not None:
+                            statusDsc = localOrderInfo["STATUSDSC"]
+                        else:
+                            statusDsc = None
+                        #TODO: we need get the status dsc.from the config data.
+                    %>
+                    % if statusDsc is not None:
+                        <label class="label label-info">保单状态:</label>
+                        <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
+                    %endif
                 %endif
                 <button type="button" class="btn btn-primary btn-small" id="btnAdd">新增</button>
                 % if orderid is not None:
@@ -346,7 +470,17 @@ else:
                         <label class="label">承保单号</label>
                     </td>
                     <td>
-                        ##<input id="idINSURANCEID" name="INSURANCEID" type="text" value="${insuranceid}">
+                        <%
+                            if localOrderInfo is not None:
+                                insuranceid = localOrderInfo["INSURANCEID"]
+                            else:
+                                insuranceid = None
+                        %>
+                        %if insuranceid is not None:
+                            <input id="idINSURANCEID" name="INSURANCEID" type="text" value="${insuranceid}">
+                        %else:
+                            <input id="idINSURANCEID" name="INSURANCEID" type="text">
+                        %endif
                     </td>
                 </tr>
             </table>
@@ -373,13 +507,13 @@ else:
                         <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
                     </td>
                     <td>
+                    <%
+                        dataDict = getDictStatic(item["dataSourceId"])
+                    %>
                     <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
-                       <%
-                            configUsing = getConfigFile(item["dataSource"])
-                        %>
-                        %for selectItem in configUsing[item["dataSourceId"]]:
+                        %for selectItem in dataDict:
                             <%
-                                selectItemData = configUsing[item["dataSourceId"]][selectItem]
+                                selectItemData = dataDict[selectItem]
                                 print selectItemData
                             %>
                             %if selectItemData["value"] ==  realDataValue:
@@ -637,7 +771,7 @@ j = 0
                             <%
                                 if realDataValue == '':
                                     #default value
-                                    realDataValue = 0
+                                    realDataValue = '0'
                             %>
                             %for radioItem in item["radio"]:
                                 <%
@@ -671,13 +805,13 @@ j = 0
                             %endfor
                             </${item["dataType"]}>
                         %elif item["dataShowType"] == 'selectConf':
-                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
                             <%
-                                configUsing = getConfigFile(item["dataSource"])
+                                dataDict = getDictStatic(item["dataSourceId"])
                             %>
-                            %for selectItem in configUsing[item["dataSourceId"]]:
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+                            %for selectItem in dataDict:
                                 <%
-                                    selectItemData = configUsing[item["dataSourceId"]][selectItem]
+                                    selectItemData = dataDict[selectItem]
                                     print selectItemData
                                 %>
                                 %if selectItemData["value"] ==  realDataValue:

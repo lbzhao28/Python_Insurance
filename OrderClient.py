@@ -56,15 +56,51 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
-def getOrderInfoLst(inContactid,inOrderid):
+def getOrderInfoLst(inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus):
     try:
-        #TODO: add orderid and so on query.
         logger = getLogger()
-        logger.debug("start GET Order Info according contact id.")
+        logger.debug("start GET Order Info according query condition.")
+
+        localURL = ''
+
+        if inCrusr is None:
+            inCrusr = ''
+        if inCrusr != '':
+            localURL = localURL+'&Crusr='+inCrusr
+
+
+        if inContactid is None:
+            inContactid = ''
+        if inContactid != '':
+            localURL = localURL+'&Contactid='+inContactid
+
+        if inOrderid is None:
+            inOrderid = ''
+        if inOrderid != '':
+            localURL = localURL+'&Orderid='+ inOrderid
+
+        if inStartDt is None:
+            inStartDt = ''
+        if inStartDt != '':
+            localURL = localURL+'&Scrdt='+ inStartDt
+
+        if inEndDt is None:
+            inEndDt = ''
+        if inEndDt != '':
+            localURL = localURL+'&Ecrdt='+ inEndDt
+
+        if inOrderStatus  is None:
+            inOrderStatus = ''
+        if inOrderStatus != '':
+            localURL = localURL+'&Status='+ inOrderStatus
 
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderInfoSearchUrl','str')+'?Contactid='+inContactid
+        if localURL != '':
+            #use 1=1 to use all condition.
+            localURL = getConfig('RESTService','orderInfoSearchUrl','str') + '?1=1' + localURL
+        else:
+            localURL = getConfig('RESTService','orderInfoSearchUrl','str')
         localURL = str(localURL)
         c.setopt(pycurl.URL,localURL)
         c.setopt(c.WRITEFUNCTION,buf.write)
@@ -104,7 +140,7 @@ def getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
         #TODO: how to disable the age.
-        if ageplan != 'null':
+        if (ageplan != 'null') & (ageplan is not None):
             localURL = getConfig('RESTService','orderProductInfourl','str')+'?INSURANCECODE='+insurancecodeid+"&SECURITYPLAN="+securityplanid+"&PREMIUMPLAN="+premiumplanid+"&AGEPLAN="+ageplan
         else:
             localURL = getConfig('RESTService','orderProductInfourl','str')+'?INSURANCECODE='+insurancecodeid+"&SECURITYPLAN="+securityplanid+"&PREMIUMPLAN="+premiumplanid

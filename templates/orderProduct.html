@@ -52,7 +52,7 @@ print localURL
 <%
 if insurancecodeid is not None:
     localOrderProductLst = OrderClient.getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
-    print insurancecodeid+','+securityplanid+','+premiumplanid+','+ageplan
+    #print insurancecodeid+','+securityplanid+','+premiumplanid+','+ageplan
     if localOrderProductLst is not None:
         if len(localOrderProductLst) > 0:
             localTOTALPREMIUM = localOrderProductLst[0]["TOTALPREMIUM"]
@@ -151,6 +151,17 @@ else:
                     </td>
                     <td>
                         <label class="label label-success">${localTOTALPREMIUM}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="label label-success">年保费</label>
+                    </td>
+                    <td>
+                        <%
+                            yearMoney = int(localTOTALPREMIUM)*12
+                        %>
+                        <label class="label label-success">${yearMoney}</label>
                     </td>
                 </tr>
                 <tr>

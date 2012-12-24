@@ -74,19 +74,46 @@ class orderList:
             query_url = parsed_url.query
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
+
+                if 'CRUSR' in query_dict:
+                    crusr = query_dict['CRUSR']
+                else:
+                    crusr = None
+
+                if 'STARTDT' in query_dict:
+                    startdt = query_dict['STARTDT']
+                else:
+                    startdt = None
+
+                if 'ENDDT' in query_dict:
+                    enddt = query_dict['ENDDT']
+                else:
+                    enddt = None
+
+                if 'ORDERSTATUS' in query_dict:
+                    orderstatus = query_dict['ORDERSTATUS']
+                else:
+                    orderstatus = None
+
                 if 'CONTACTID' in query_dict:
                     contactid = query_dict['CONTACTID']
                 else:
                     contactid = None
+
                 if 'ORDERID' in query_dict:
                     orderid = query_dict['ORDERID']
                 else:
                     orderid = None
-                return render.orderList(contactid = contactid,orderid=orderid)
+
+                return render.orderList(crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
             else:
+                crusr = None
                 contactid = None
                 orderid = None
-                return render.orderList(contactid = contactid,orderid=orderid)
+                startdt = None
+                enddt = None
+                orderstatus = None
+                return render.orderList(crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -121,10 +148,27 @@ class orderProduct:
             query_url = parsed_url.query
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
-                insurancecodeid = query_dict['INSURANCECODE']
-                securityplanid = query_dict['SECURITYPLAN']
-                premiumplanid = query_dict['PREMIUMPLAN']
-                ageplan = query_dict['AGEPLAN']
+
+                if 'INSURANCECODE' in query_dict:
+                    insurancecodeid = query_dict['INSURANCECODE']
+                else:
+                    insurancecodeid = None
+
+                if 'SECURITYPLAN' in query_dict:
+                    securityplanid = query_dict['SECURITYPLAN']
+                else:
+                    securityplanid = None
+
+                if 'PREMIUMPLAN' in query_dict:
+                    premiumplanid = query_dict['PREMIUMPLAN']
+                else:
+                    premiumplanid = None
+
+                if 'AGEPLAN' in query_dict:
+                    ageplan = query_dict['AGEPLAN']
+                else:
+                    ageplan = None
+
                 return render.orderProduct(insurancecodeid = insurancecodeid,securityplanid=securityplanid,premiumplanid=premiumplanid,ageplan=ageplan)
             else:
                 insurancecodeid = None
@@ -163,7 +207,7 @@ class orderUpdate:
 #                logger.debug("no right HTTP_AUTHORIZATION")
 #                return render.error(error = web.ctx.status)
 
-            if not orderid:
+            if orderid is None:
                 return render.error(error = 'no orderid')
             else:
                 #get POST form data
@@ -209,7 +253,7 @@ class orderStatusUpdate:
 #                logger.debug("no right HTTP_AUTHORIZATION")
 #                return render.error(error = web.ctx.status)
 
-            if not orderid:
+            if orderid is None:
                 return render.error(error = 'no orderid')
             else:
                 #get POST form data
@@ -314,7 +358,7 @@ class order:
 #                logger.debug("no right HTTP_AUTHORIZATION")
 #                return render.error(error = web.ctx.status)
 
-            if not contactid:
+            if contactid is None:
                 return render.error(error = 'no contactid')
             else:
                 #get POST form data
@@ -361,7 +405,7 @@ class order:
 #                logger.debug("no right HTTP_AUTHORIZATION")
 #                return render.error(error = web.ctx.status)
 
-            if not contactid:
+            if contactid is None:
                 return render.error(error = 'no contactid')
             else:
                 #if has orderid according the orderid to get the order info.

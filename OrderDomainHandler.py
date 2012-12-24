@@ -227,8 +227,7 @@ def zipOrderInfoOrder(inOrderInfo):
             #TODO: wrong data in relation.
             addItemDictValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
             addItemDictValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
-            #TODO:多性别也有问题.
-            #addItemDictValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
+            addItemDictValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
             addItemDictValue(item,"BIRTHDAY",localOrderInfo,configPageUsing['birthday']['dataName'])
             addItemDictValue(item,"AGE",localOrderInfo,configPageUsing['age']['dataName'])
             addItemDictValue(item,"PROFESSION",localOrderInfo,configPageUsing['profession']['dataName'])
@@ -397,7 +396,6 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
         logger = getLogger()
         logger.debug("start PUT Order Status Info according contact id.")
 
-        #TODO: simle the method?
         jsonData = json.dumps(storageData)
         dictData = json.loads(jsonData)
 
@@ -407,27 +405,9 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
         #add orderid
         updateDictSingleValue(dictData,"ORDERID",inOrderid)
 
-        #format the dict
-        dictData = formatDictOrderInfo(dictData)
+        dictData = zipOrderInfoOrder(dictData)
 
-        #combine the json string
-
-        #remove  and save the user string.
-        uInsurantUsrVal = dictData.pop('INSURANT_USR')
-        uPHUsrVal = dictData.pop('POLICYHOLDER_USR')
-
-        #get no user json string
         jsonData =  json.dumps(dictData)
-
-        #add user string to json string
-        strInsurantUsrVal = uInsurantUsrVal.encode('UTF-8')
-        strInsurantUsrVal = ',\"INSURANT_USR\":' + strInsurantUsrVal
-        jsonData = jsonData[:-1] + strInsurantUsrVal + '}'
-
-        #add user string to json string
-        strPHUsrVal = uPHUsrVal.encode('UTF-8')
-        strPHUsrVal = ',\"POLICYHOLDER_USR\":' + strPHUsrVal
-        jsonData = jsonData[:-1] + strPHUsrVal + '}'
 
         buf = cStringIO.StringIO()
         c = pycurl.Curl()

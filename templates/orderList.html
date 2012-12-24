@@ -13,14 +13,33 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnSearch").click(function(){
-                orderid = jQuery("#idOrderid").val();
+                //TODO: 要可以联动选择工作组和工号.
+                crusr = jQuery("#idUsr").val();
                 contactid = jQuery("#idContactid").val();
-                searchOrder(contactid,orderid);
+                orderid = jQuery("#idOrderid").val();
+                orderStatus = jQuery("#idCheckOrderStatus").val();
+                startDt = jQuery("#idStartDT").val();
+                endDt = jQuery("#idEndDT").val();
+
+                //对于空值,不进行处理
+                orderStatusText = jQuery("#idCheckOrderStatus").find("option:selected").text();
+                if (orderStatusText == ""){
+                    orderStatus = "";
+                }
+                searchOrder(crusr,contactid,orderid,orderStatus,startDt,endDt);
             });
         });
 
-        function searchOrder(inCONTACTID,inORDERID){
-            actionUrl ="http://${localURL}/orderList"+'?CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID;
+        //alert('${orderstatus}');
+        //jQuery("#idCheckOrderStatus").val('${orderstatus}');
+
+        function setStatus(inStatus){
+            //alert(inStatus);
+            jQuery("#idCheckOrderStatus").val(inStatus);
+        }
+
+        function searchOrder(inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT){
+            actionUrl ="http://${localURL}/orderList"+'?CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT;
             window.location.href=actionUrl;
         }
         function showOrder(inContactid,inOrderid){
@@ -43,37 +62,65 @@ print localURL
 <body>
 <div class="bs-docs-example">
     <form class="form-search">
-        <label class="label">TSR工号</label>
-        <input id="idUsr" type="text" class="input-small search-query"/>
+
+        <label class="label" >TSR工号</label>
+        %if crusr is not None:
+            <input id="idUsr" type="text" class="input-small search-query" value="${crusr}"/>
+        %else:
+            <input id="idUsr" type="text" class="input-small search-query" />
+        %endif
         <label class="label">客户编号</label>
-        <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
+        %if contactid is not None:
+            <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
+        %else:
+            <input id="idContactid" type="text" class="input-small search-query" />
+        %endif
         <label class="label">保单编号</label>
-        <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
+        %if orderid is not None:
+            <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
+        %else:
+            <input id="idOrderid" type="text" class="input-small search-query" />
+        %endif
         <label class="label">保单状态</label>
         <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
+            ##TODO: 要和配置文件一致,给出value为100的空值可以吗?
+            <OPTION value="100"></OPTION>
             <OPTION value="0">未审核</OPTION>
-            <OPTION value="1" selected>已承保</OPTION>
-            <OPTION value="2" selected>未承保</OPTION>
-            <OPTION value="3" selected>退保</OPTION>
+            <OPTION value="1">已承保</OPTION>
+            <OPTION value="2">未承保</OPTION>
+            <OPTION value="3">退保</OPTION>
         </SELECT>
+        %if orderstatus is not None:
+            <script type="text/javascript">
+                setStatus(${orderstatus});
+            </script>
+        %endif
         <label class="label">开始日期</label>
-        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+        %if startdt is not None:
+            <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${startdt}"/>
+        %else:
+            <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+        %endif
         <label class="label">结束日期</label>
-        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+        %if enddt is not None:
+            <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${enddt}"/>
+        %else:
+            <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+        %endif
         <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
     </form>
 </div>
 <form id="formOrderList">
     <fieldset>
 <%
-if (contactid is not None)|(orderid is not None):
-    localOrderInfoLst = OrderClient.getOrderInfoLst(contactid,orderid)
+if (crusr is not None)|(contactid is not None)|(orderid is not None)|(startdt is not None)|(enddt  is not None)|(orderstatus is not None):
+    localOrderInfoLst = OrderClient.getOrderInfoLst(crusr,contactid,orderid,startdt,enddt,orderstatus)
     #如果没有保单信息,直接无视
     if len(localOrderInfoLst["OrderInfoLst"])==0:
         localOrderInfoLst = None
 else:
     localOrderInfoLst = None
-    print 'none contactid and orderid'
+    print 'none query condition'
 %>
 <%def name="layoutdata(inOrderInfoLst)">
         <div class="bs-docs-div">
