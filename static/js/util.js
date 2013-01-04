@@ -119,5 +119,52 @@ function changevalCityDel(targetObj,parentid,selectedid)
     }
 }
 
+function changevalGrpUsrIns(targetObj,parentid,selectedid)
+{
+    //alert("haha");
+
+    //alert("parentid is : "+parentid);
+    //alert("selectedid is : "+selectedid);
+
+    var newoptsarr=new Array();
+    var newoptsarrval=new Array();
+    var newoptionI=0;
+    //清除现有
+    count1=targetObj.options.length;
+    while(count1!=0)
+    {
+        targetObj.options.remove(0);
+        count1=targetObj.options.length;
+    }
+    //过滤上级id=选中id
+    for(var i=0;i<arrayGrpUsr.length;i++)
+    {
+        if(arrayGrpUsr[i][2]==parentid)
+        {
+            newoptsarr[newoptionI]=arrayGrpUsr[i][0];
+            newoptsarrval[newoptionI]=arrayGrpUsr[i][3];
+            var aOption = new Option(arrayGrpUsr[i][3],arrayGrpUsr[i][0]);
+            targetObj.options[newoptionI]=aOption;
+            if(arrayGrpUsr[i][0]==selectedid)
+            {
+                targetObj.options[newoptionI].selected=true;
+            }
+            newoptionI++;
+        }
+    }
+
+    //alert("parentid is : "+parentid);
+    //alert("selectedid is : "+selectedid);
+
+    if(targetObj.id=="idGrpValue")
+    {
+        //alert ("in idGrpValue");
+        changevalGrpUsrIns(document.getElementById("idUsrValue"),newoptsarr[0],0);
+    }
+    if(targetObj.id=="idUsrValue")
+    {
+        //changevalGrpUsrIns(document.getElementById("xian"),newoptsarr[0],0):
+    }
+}
 
 

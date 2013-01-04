@@ -14,6 +14,41 @@
     <script src="http://${localURL}/static/js/localAddressList.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
+            jQuery("#PolicyInformation1_txtPolicyRelation").change(function(){
+                //alert("change select");
+                //change the data.
+                //本人,和投保人一样;其它选项,清空
+                if (jQuery("#PolicyInformation1_txtPolicyRelation").val() == '1')
+                {
+                    //TODO:性别如何带过来?省市区如何带过来?
+                    jQuery("#BePolicyHolder_txtBeHolderName").val(jQuery("#PolicyInformation1_txtName").val());
+                    jQuery("#BePolicyHolder_txtBeHolderBirthday").val(jQuery("#PolicyInformation1_txtBirthday").val());
+                    jQuery("#BePolicyHolder_txtBeHolderOldYears").val(jQuery("#PolicyInformation1_txtHolderOldYears").val());
+                    jQuery("#BePolicyHolder_ddlBeHolderProfessional").val(jQuery("#PolicyInformation1_ddlProfessional").val());
+                    jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val(jQuery("#PolicyInformation1_txtHolderPhoneNumber").val());
+                    jQuery("#BePolicyHolder_selectBeHolderCardType").val(jQuery("#PolicyInformation1_sHolderCardType").val());
+                    jQuery("#BePolicyHolder_txtBeHolderCardNumber").val(jQuery("#PolicyInformation1_txtHolderCardNumber").val());
+                    jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val(jQuery("#PolicyInformation1_txtHolderUsrHeight").val());
+                    jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val(jQuery("#PolicyInformation1_txtHolderUsrWeight").val());
+                    jQuery("#idPOLICYHOLDER_USR_ADDRESS").val(jQuery("#PolicyInformation1_txtHolderDetailAddress").val());
+                    jQuery("#PolicyInformation1_txtBeHolderZip").val(jQuery("#PolicyInformation1_txtHolderZip").val());
+                }
+                else
+                {
+                    jQuery("#BePolicyHolder_txtBeHolderName").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderBirthday").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderOldYears").val("");
+                    jQuery("#BePolicyHolder_ddlBeHolderProfessional").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val("");
+                    jQuery("#BePolicyHolder_selectBeHolderCardType").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderCardNumber").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val("");
+                    jQuery("#idPOLICYHOLDER_USR_ADDRESS").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderZip").val("");
+                }
+            });
+
             jQuery("#btnModify").click(function(){
                 showPutOrder();
             });
@@ -339,6 +374,36 @@
                 return false;
             }
             return true;
+        }
+
+        function pickedFuncPolicyInformation1_txtHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#PolicyInformation1_txtHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsA(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsA").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsB(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsB").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsC(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsC").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncLstbeneficiaries_txtBeHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#Lstbeneficiaries_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
         }
 
         //prepare province,city,area

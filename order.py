@@ -75,6 +75,11 @@ class orderList:
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
 
+                if 'GRPID' in query_dict:
+                    grpid = query_dict['GRPID']
+                else:
+                    grpid = None
+
                 if 'CRUSR' in query_dict:
                     crusr = query_dict['CRUSR']
                 else:
@@ -105,15 +110,16 @@ class orderList:
                 else:
                     orderid = None
 
-                return render.orderList(crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
+                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
             else:
+                grpid = None
                 crusr = None
                 contactid = None
                 orderid = None
                 startdt = None
                 enddt = None
                 orderstatus = None
-                return render.orderList(crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
+                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.

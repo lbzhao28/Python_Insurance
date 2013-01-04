@@ -346,6 +346,10 @@ def postOrderInfoContact(inContactid,storageData):
         #add addressid
         updateDictSingleValue(dictData,"ADDRESSID",'1')
 
+        #TODO:the value should come from html page.
+        #add grpid
+        updateDictSingleValue(dictData,"GRPID",'ccbgroup1')
+
         #zip the dict
         dictData = zipOrderInfoOrder(dictData)
 

@@ -56,12 +56,18 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
-def getOrderInfoLst(inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus):
+def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus):
     try:
         logger = getLogger()
         logger.debug("start GET Order Info according query condition.")
 
         localURL = ''
+
+
+        if inGrpid is None:
+            inGrpid = ''
+        if inGrpid != '':
+            localURL = localURL+'&Grpid='+inGrpid
 
         if inCrusr is None:
             inCrusr = ''

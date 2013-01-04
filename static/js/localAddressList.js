@@ -3677,6 +3677,8 @@ function createArrayCity()
     arrayCity[3665]=new Array(3666,2,9,"上海市");
     arrayCity[3666]=new Array(3667,2,22,"重庆市");
 
+    //alert(arrayCity);
+
     return arrayCity;
 }
 

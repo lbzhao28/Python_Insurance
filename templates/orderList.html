@@ -10,11 +10,13 @@
     <script src="http://${localURL}/static/js/jquery.js"></script>
     <script src="http://${localURL}/static/js/bootstrap.js"></script>
     <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://${localURL}/static/js/util.js"></script>
+    <script src="http://${localURL}/static/js/localGrpUsrList.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnSearch").click(function(){
-                //TODO: 要可以联动选择工作组和工号.
-                crusr = jQuery("#idUsr").val();
+                grpid = jQuery("#idGrpValue").find("option:selected").text();
+                crusr = jQuery("#idUsrValue").find("option:selected").text();
                 contactid = jQuery("#idContactid").val();
                 orderid = jQuery("#idOrderid").val();
                 orderStatus = jQuery("#idCheckOrderStatus").val();
@@ -26,26 +28,47 @@
                 if (orderStatusText == ""){
                     orderStatus = "";
                 }
-                searchOrder(crusr,contactid,orderid,orderStatus,startDt,endDt);
+                searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt);
             });
         });
 
         //alert('${orderstatus}');
         //jQuery("#idCheckOrderStatus").val('${orderstatus}');
 
+        function setGrpid(inGrpid){
+            //alert(inGrpid);
+            jQuery("#idGrpValue").val(inGrpid);
+            changevalGrpUsrIns(document.getElementById('idUsrValue'),inGrpid);
+            //TODO:根据文本选择下拉框?现在只能让下拉框的value 和 text 一样.
+            //jQuery("#idGrpValue option[text='ccbgroup1']").attr("selected", true);
+        }
+
+        function setCrusr(inCrusr){
+            jQuery("#idUsrValue").val(inCrusr);
+            //TODO:根据文本选择下拉框?现在只能让下拉框的value 和 text 一样.
+            //jQuery("#idGrpValue option[text='ccbgroup1']").attr("selected", true);
+        }
+
+
         function setStatus(inStatus){
             //alert(inStatus);
             jQuery("#idCheckOrderStatus").val(inStatus);
         }
 
-        function searchOrder(inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT){
-            actionUrl ="http://${localURL}/orderList"+'?CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT;
+        function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT){
+            //alert(inGRPID);
+            actionUrl ="http://${localURL}/orderList"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT;
+            //alert(actionUrl);
             window.location.href=actionUrl;
         }
         function showOrder(inContactid,inOrderid){
             actionUrl ="http://${localURL}/order/"+inContactid+'?orderid='+inOrderid;
             window.location.href=actionUrl;
         }
+
+        //prepare group,user.
+        var arrayGrpUsr= createGrpUsrList();
+
     </script>
 ##prepare the order info
 <%!
@@ -63,58 +86,105 @@ print localURL
 <div class="bs-docs-example">
     <form class="form-search">
 
-        <label class="label" >TSR工号</label>
-        %if crusr is not None:
-            <input id="idUsr" type="text" class="input-small search-query" value="${crusr}"/>
-        %else:
-            <input id="idUsr" type="text" class="input-small search-query" />
-        %endif
-        <label class="label">客户编号</label>
-        %if contactid is not None:
-            <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
-        %else:
-            <input id="idContactid" type="text" class="input-small search-query" />
-        %endif
-        <label class="label">保单编号</label>
-        %if orderid is not None:
-            <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
-        %else:
-            <input id="idOrderid" type="text" class="input-small search-query" />
-        %endif
-        <label class="label">保单状态</label>
-        <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
-            ##TODO: 要和配置文件一致,给出value为100的空值可以吗?
-            <OPTION value="100"></OPTION>
-            <OPTION value="0">未审核</OPTION>
-            <OPTION value="1">已承保</OPTION>
-            <OPTION value="2">未承保</OPTION>
-            <OPTION value="3">退保</OPTION>
-        </SELECT>
-        %if orderstatus is not None:
-            <script type="text/javascript">
-                setStatus(${orderstatus});
-            </script>
-        %endif
-        <label class="label">开始日期</label>
-        %if startdt is not None:
-            <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${startdt}"/>
-        %else:
-            <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-        %endif
-        <label class="label">结束日期</label>
-        %if enddt is not None:
-            <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${enddt}"/>
-        %else:
-            <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-        %endif
+        <table>
+            <tr>
+                <td>
+                    <label class="label">团队</label>
+                </td>
+                <td>
+                    <select id="idGrpValue" name="grpValue" class="input-medium" onchange="changevalGrpUsrIns(document.getElementById('idUsrValue'),this.value);//alert(options[this.value-1].text);"></select>
+
+                </td>
+                <td>
+                    <label class="label" >TSR工号</label>
+                </td>
+                <td>
+                    <select id="idUsrValue" name="usrValue" class="input-small" ></select>
+                </td>
+                <script type="text/javascript" language="javascript">
+                    changevalGrpUsrIns(document.getElementById("idGrpValue"),0,1);
+                </script>
+                %if grpid is not None:
+                <script type="text/javascript">
+                    setGrpid("${grpid}");
+                </script>
+                %endif
+                %if crusr is not None:
+                <script type="text/javascript">
+                    setCrusr("${crusr}");
+                </script>
+                %endif
+            </tr>
+            <tr>
+                <td>
+                    <label class="label">客户编号</label>
+                </td>
+                <td>
+                   %if contactid is not None:
+                        <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
+                    %else:
+                        <input id="idContactid" type="text" class="input-small search-query" />
+                    %endif
+                </td>
+                <td>
+                    <label class="label">保单编号</label>
+                </td>
+                <td>
+                    %if orderid is not None:
+                        <input id="idOrderid" type="text" class="input-small search-query" value="${orderid}"/>
+                    %else:
+                        <input id="idOrderid" type="text" class="input-small search-query" />
+                    %endif
+                </td>
+                <td>
+                    <label class="label">保单状态</label>
+                </td>
+                <td>
+                       <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
+                            ##TODO: 要和配置文件一致,给出value为100的空值可以吗?
+                            <OPTION value="100"></OPTION>
+                            <OPTION value="0">未审核</OPTION>
+                            <OPTION value="1">已承保</OPTION>
+                            <OPTION value="2">未承保</OPTION>
+                            <OPTION value="3">退保</OPTION>
+                        </SELECT>
+                        %if orderstatus is not None:
+                            <script type="text/javascript">
+                                setStatus("${orderstatus}");
+                            </script>
+                        %endif
+                </td>
+                <td>
+                    <label class="label">开始日期</label>
+                </td>
+                <td>
+                    %if startdt is not None:
+                        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${startdt}"/>
+                    %else:
+                        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    %endif
+                </td>
+                <td>
+                    <label class="label">结束日期</label>
+                </td>
+                <td>
+                    %if enddt is not None:
+                        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${enddt}"/>
+                    %else:
+                        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    %endif
+                </td>
+            </tr>
+        </table>
         <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
     </form>
 </div>
 <form id="formOrderList">
     <fieldset>
 <%
-if (crusr is not None)|(contactid is not None)|(orderid is not None)|(startdt is not None)|(enddt  is not None)|(orderstatus is not None):
-    localOrderInfoLst = OrderClient.getOrderInfoLst(crusr,contactid,orderid,startdt,enddt,orderstatus)
+print crusr
+if (grpid is not None)|(crusr is not None)|(contactid is not None)|(orderid is not None)|(startdt is not None)|(enddt  is not None)|(orderstatus is not None):
+    localOrderInfoLst = OrderClient.getOrderInfoLst(grpid,crusr,contactid,orderid,startdt,enddt,orderstatus)
     #如果没有保单信息,直接无视
     if len(localOrderInfoLst["OrderInfoLst"])==0:
         localOrderInfoLst = None
