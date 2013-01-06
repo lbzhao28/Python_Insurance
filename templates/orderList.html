@@ -15,25 +15,81 @@
     <script type="text/javascript">
         jQuery(document).ready(function(){
             jQuery("#btnSearch").click(function(){
-                grpid = jQuery("#idGrpValue").find("option:selected").text();
-                crusr = jQuery("#idUsrValue").find("option:selected").text();
-                contactid = jQuery("#idContactid").val();
-                orderid = jQuery("#idOrderid").val();
-                orderStatus = jQuery("#idCheckOrderStatus").val();
-                startDt = jQuery("#idStartDT").val();
-                endDt = jQuery("#idEndDT").val();
-
-                //对于空值,不进行处理
-                orderStatusText = jQuery("#idCheckOrderStatus").find("option:selected").text();
-                if (orderStatusText == ""){
-                    orderStatus = "";
-                }
-                searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt);
+                //默认只查询第1页
+                submitSearch('1');
             });
         });
 
+        function showFastPrev(){
+            submitSearch('1');
+        }
+
+        function showFastNext(pageCount){
+            submitSearch(pageCount);
+        }
+
+        function showCurrent(pageIndex,pageCount){
+            //alert(pageIndex);
+            var intPageIndex = parseInt(pageIndex);
+            var intPageCount = parseInt(pageCount);
+
+            if (intPageIndex < 1){
+                intPageIndex = 1;
+            }
+
+            if (intPageIndex > intPageCount){
+                intPageIndex = intPageCount;
+            }
+
+            var localPageIndex = String(intPageIndex);
+            submitSearch(localPageIndex);
+        }
+
+
+        function showPrev(pageIndex){
+            //alert(pageIndex);
+            var intPageIndex = parseInt(pageIndex);
+            intPageIndex = intPageIndex - 1;
+
+            if (intPageIndex < 1){
+                intPageIndex = 1;
+            }
+
+            var localPageIndex = String(intPageIndex);
+            submitSearch(localPageIndex);
+        }
+
+        function showNext(pageIndex,pageCount){
+            var intPageIndex = parseInt(pageIndex);
+            var intPageCount = parseInt(pageCount);
+            intPageIndex = intPageIndex + 1;
+
+            if (intPageIndex > intPageCount){
+                intPageIndex = intPageCount;
+            }
+            var localPageIndex = String(intPageIndex);
+            submitSearch(localPageIndex);
+        }
+
         //alert('${orderstatus}');
         //jQuery("#idCheckOrderStatus").val('${orderstatus}');
+
+        function submitSearch(pageIndex){
+            grpid = jQuery("#idGrpValue").find("option:selected").text();
+            crusr = jQuery("#idUsrValue").find("option:selected").text();
+            contactid = jQuery("#idContactid").val();
+            orderid = jQuery("#idOrderid").val();
+            orderStatus = jQuery("#idCheckOrderStatus").val();
+            startDt = jQuery("#idStartDT").val();
+            endDt = jQuery("#idEndDT").val();
+
+            //对于空值,不进行处理
+            orderStatusText = jQuery("#idCheckOrderStatus").find("option:selected").text();
+            if (orderStatusText == ""){
+                orderStatus = "";
+            }
+            searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt,pageIndex);
+        }
 
         function setGrpid(inGrpid){
             //alert(inGrpid);
@@ -70,14 +126,15 @@
             jQuery("#idCheckOrderStatus").val(inStatus);
         }
 
-        function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT){
+        function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT,inPAGEINDEX){
             //alert(inGRPID);
-            actionUrl ="http://${localURL}/orderList"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT;
+            actionUrl ="http://${localURL}/orderList"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
         function showOrder(inContactid,inOrderid){
             actionUrl ="http://${localURL}/order/"+inContactid+'?orderid='+inOrderid;
+            //alert(actionUrl);
             window.location.href=actionUrl;
         }
 
@@ -197,9 +254,8 @@ print localURL
 <form id="formOrderList">
     <fieldset>
 <%
-print crusr
 if (grpid is not None)|(crusr is not None)|(contactid is not None)|(orderid is not None)|(startdt is not None)|(enddt  is not None)|(orderstatus is not None):
-    localOrderInfoLst = OrderClient.getOrderInfoLst(grpid,crusr,contactid,orderid,startdt,enddt,orderstatus)
+    localOrderInfoLst = OrderClient.getOrderInfoLst(grpid,crusr,contactid,orderid,startdt,enddt,orderstatus,pageindex)
     #如果没有保单信息,直接无视
     if len(localOrderInfoLst["OrderInfoLst"])==0:
         localOrderInfoLst = None
@@ -213,6 +269,7 @@ else:
         % if inOrderInfoLst is not None:
         <tr>
             <th>操作</th>
+            <th>客户编号</th>
             <th>保单编号</th>
             <th>创建人</th>
             <th>创建日期</th>
@@ -229,6 +286,7 @@ else:
                     <tr>
                         <td>
                             <% orderid = item['OrderId'] %>
+                            <% contactid = item['ContactId'] %>
                             <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
                         </td>
                         ${caller.body(item=item)}
@@ -239,12 +297,36 @@ else:
     </table>
         </div>
 </%def>
+
 <%call expr="layoutdata(localOrderInfoLst)" args="item">
+    <td>${item["ContactId"]}</td>
     <td>${item["OrderId"]}</td>
     <td>${item["Crusr"]}</td>
     <td>${item["Crdt"]}</td>
     <td>${item["StatusDsc"]}</td>
 </%call>
+%if localOrderInfoLst is not None:
+    %if len(localOrderInfoLst['PageManager']) > 0:
+    <div>
+    <table>
+        <tr>
+            <td>
+                总共有:${localOrderInfoLst['PageManager']['DataCount']}条数据.
+                <br>
+                总共有:${localOrderInfoLst['PageManager']['PageCount']}页数据,每页显示${localOrderInfoLst['PageManager']['PageSize']}条,当前是第${localOrderInfoLst['PageManager']['PageIndex']}页.
+                <br>
+                <button id = "btnFastBackward" type="button" class="btn" onclick="showFastPrev()"><i class="icon-fast-backward"></i></button>
+                <button id = "btnBackward" type="button" class="btn" onclick="showPrev(${localOrderInfoLst['PageManager']['PageIndex']})"><i class="icon-backward"></i></button>
+                <button id = "btnForward" type="button" class="btn" onclick="showNext(${localOrderInfoLst['PageManager']['PageIndex']},${localOrderInfoLst['PageManager']['PageCount']})"><i class="icon-forward"></i></button>
+                <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(${localOrderInfoLst['PageManager']['PageCount']})"><i class="icon-fast-forward"></i></button>
+                <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
+                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(document.getElementById('idPageIndex').value,${localOrderInfoLst['PageManager']['PageCount']})"><i class="icon-arrow-right"></i></button>
+            </td>
+        </tr>
+    </table>
+    </div>
+    %endif
+%endif
 </fieldset>
 </form>
 </body>

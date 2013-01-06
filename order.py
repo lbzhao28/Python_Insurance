@@ -110,7 +110,12 @@ class orderList:
                 else:
                     orderid = None
 
-                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
+                if 'PAGEINDEX' in query_dict:
+                    pageindex = query_dict['PAGEINDEX']
+                else:
+                    pageindex = None
+
+                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
             else:
                 grpid = None
                 crusr = None

@@ -56,7 +56,7 @@ def getOrderInfoOrder(inOrderid):
     finally:
         pass
 
-def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus):
+def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus,inPageIndex):
     try:
         logger = getLogger()
         logger.debug("start GET Order Info according query condition.")
@@ -99,6 +99,11 @@ def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOr
             inOrderStatus = ''
         if inOrderStatus != '':
             localURL = localURL+'&Status='+ inOrderStatus
+
+        if inPageIndex  is None:
+            inPageIndex = ''
+        if inPageIndex != '':
+            localURL = localURL+'&PageIndex='+ inPageIndex
 
         buf = cStringIO.StringIO() #define in function.
         c = pycurl.Curl()
