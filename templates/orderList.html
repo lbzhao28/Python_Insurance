@@ -208,6 +208,7 @@ print localURL
                         <input id="idOrderid" type="text" class="input-small search-query" />
                     %endif
                 </td>
+
                 <td>
                     <label class="label">保单状态</label>
                 </td>
@@ -220,12 +221,12 @@ print localURL
                             <OPTION value="2">未承保</OPTION>
                             <OPTION value="3">退保</OPTION>
                         </SELECT>
+                </td>
                         %if orderstatus is not None:
                             <script type="text/javascript">
                                 setStatus("${orderstatus}");
                             </script>
                         %endif
-                </td>
                 <td>
                     <label class="label">开始日期</label>
                 </td>

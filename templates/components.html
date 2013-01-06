@@ -1,0 +1,144 @@
+## components.html
+<%!
+import staticDbModule
+from staticDbModule import getDictStatic
+%>
+
+<%def name="layoutControl(configItem,dataItem)">
+<%
+itemCount = configItem.as_int('itemCount')
+rowNumber = configItem.as_int( 'rowNumber')
+stepLine = int((itemCount+rowNumber-1)/rowNumber)
+configItem.pop('itemCount')
+configItem.pop('rowNumber')
+%>
+
+%for i in range(stepLine):
+<%
+#go to last line:
+if i!=(stepLine-1):
+    stepRow = rowNumber
+else:
+    #last line:
+    if itemCount%rowNumber == 0:
+        stepRow = rowNumber
+    else:
+        stepRow = itemCount%rowNumber
+
+#start from 0.
+j = 0
+%>
+<tr>
+    %for j in range(stepRow):
+        %for member in configItem:
+            <%
+            item=configItem[member]
+            %>
+            %if "titleType" in item:
+                <td>
+                    <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                </td>
+                <td>
+                    <%
+                    if "dataName" in item:
+                        dataValueName = item["dataName"]
+                        if dataItem is not None:
+                            if dataValueName in dataItem:
+                                realDataValue = dataItem[dataValueName]
+                            else:
+                                realDataValue = ''
+                        else:
+                            realDataValue = ''
+                    %>
+                    %if item["dataType"] == 'input':
+                        %if item["dataShowType"] == 'text':
+                            %if "placeholder" in item:
+                                <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}" placeholder="${item["placeholder"]}"/>
+                            %else:
+                                <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataShowType"]} class="${item["dataCss"]}" value="${realDataValue}"/>
+                            %endif
+                        %elif item["dataShowType"] == 'textDate':
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]} type = ${item["dataRealShowType"]} class="${item["dataCss"]}" value="${realDataValue}" onclick="${item["onClick"]}"/>
+                        %elif item["dataShowType"] == 'radio':
+                            <%
+                                if realDataValue == '':
+                                    #default value
+                                    realDataValue = '0'
+                            %>
+                            %for radioItem in item["radio"]:
+                                <%
+                                    radioItemData = item["radio"][radioItem]
+                                %>
+                                <${radioItemData["titleType"]} class="${radioItemData["titleCss"]}">
+                                    %if realDataValue == radioItemData["inDataValue"]:
+                                        <${item["dataType"]} name=${item["dataName"]} id=${radioItemData["inDataID"]} type = "${item["dataShowType"]}" value="${radioItemData["inDataValue"]}" checked/>
+                                    %else:
+                                        <${item["dataType"]} name=${item["dataName"]} id=${radioItemData["inDataID"]} type = "${item["dataShowType"]}" value="${radioItemData["inDataValue"]}"/>
+                                    %endif
+                                        <${radioItemData["inDataType"]} class="${radioItemData["inDataCss"]}"> ${radioItemData["inDataText"]}</${radioItemData["inDataType"]}>
+                                </${radioItemData["titleType"]}>
+                                <script type="text/javascript" language="javascript">
+
+                                </script>
+                            %endfor
+                        %endif
+                    %elif item["dataType"] == 'select':
+                        %if item["dataShowType"] == 'selectSingle':
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+                            %for selectItem in item["select"]:
+                                <%
+                                    selectItemData = item["select"][selectItem]
+                                %>
+                                %if selectItemData["inDataValue"] ==  realDataValue:
+                                    <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}" selected>${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %else:
+                                    <${selectItemData["titleType"]} value="${selectItemData["inDataValue"]}">${selectItemData["inDataText"]}</${selectItemData["titleType"]}>
+                                %endif
+                            %endfor
+                            </${item["dataType"]}>
+                        %elif item["dataShowType"] == 'selectConf':
+                            <%
+                                dataDict = getDictStatic(item["dataSourceId"])
+                            %>
+                            <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+                            %for selectItem in dataDict:
+                                <%
+                                    selectItemData = dataDict[selectItem]
+                                    ##print selectItemData
+                                %>
+                                %if selectItemData["value"] ==  realDataValue:
+                                    <${item["dataTitleType"]} value="${selectItemData["value"]}" selected>${selectItemData["text"]}</${item["dataTitleType"]}>
+                                %else:
+                                    <${item["dataTitleType"]} value="${selectItemData["value"]}">${selectItemData["text"]}</${item["dataTitleType"]}>
+                                %endif
+                            %endfor
+                            </${item["dataType"]}>
+                        %elif item["dataShowType"] == 'selectBriefAddress':
+                            %for selectItem in item["select"]:
+                                <%
+                                selectItemData = item["select"][selectItem]
+                                %>
+                                %if "onchange" in selectItemData:
+                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataName"]}" class="${selectItemData["inDataCss"]}" onchange="${selectItemData["onchange"]}" ></${selectItemData["titleType"]}>
+                                %else:
+                                    <${selectItemData["titleType"]} id="${selectItemData["inDataID"]}"  name="${selectItemData["inDataName"]}" class="${selectItemData["inDataCss"]}" ></${selectItemData["titleType"]}>
+                                %endif
+                            %endfor
+                            <script type="text/javascript" language="javascript">
+                                ${item["scriptFile"]}
+                            </script>
+                        %endif
+                    %endif
+                </td>
+                <% break %>
+            %endif
+        %endfor
+        <%
+        configItem.pop(member)
+        %>
+    %endfor
+</tr>
+%endfor
+
+</%def>
+
