@@ -37,16 +37,31 @@
 
         function setGrpid(inGrpid){
             //alert(inGrpid);
-            jQuery("#idGrpValue").val(inGrpid);
-            changevalGrpUsrIns(document.getElementById('idUsrValue'),inGrpid);
-            //TODO:根据文本选择下拉框?现在只能让下拉框的value 和 text 一样.
-            //jQuery("#idGrpValue option[text='ccbgroup1']").attr("selected", true);
+            var selectText = function(dropdown, selectedValue) {
+                var options = $(dropdown).find("option");
+                var matches = $.grep(options,
+                        function(n) { return $(n).text() == selectedValue; });
+                $(matches).attr("selected", "selected");
+                return $(matches).val()
+            };
+
+            inGrpVal = selectText("#idGrpValue",inGrpid);
+            //alert(inGrpVal);
+
+            changevalGrpUsrIns(document.getElementById('idUsrValue'),inGrpVal);
         }
 
         function setCrusr(inCrusr){
-            jQuery("#idUsrValue").val(inCrusr);
-            //TODO:根据文本选择下拉框?现在只能让下拉框的value 和 text 一样.
-            //jQuery("#idGrpValue option[text='ccbgroup1']").attr("selected", true);
+            //alert(inCrusr);
+            var selectText = function(dropdown, selectedValue) {
+                var options = $(dropdown).find("option");
+                var matches = $.grep(options,
+                        function(n) { return $(n).text() == selectedValue; });
+                $(matches).attr("selected", "selected");
+                return $(matches).val()
+            };
+
+            inUsrVal = selectText("#idUsrValue",inCrusr);
         }
 
 
