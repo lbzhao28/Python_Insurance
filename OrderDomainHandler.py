@@ -44,9 +44,9 @@ def flatOrderInfoOrder(inOrderInfo):
         #change the list to flat data.
         localOrderInfo = inOrderInfo
 
-        #InsurantUsr 投保人
-        configPageUsing = configPage['InsurantUsr']
-        item = localOrderInfo["INSURANT_USR"]
+        #PolicyHolder_Usr 投保人
+        configPageUsing = configPage['PolicyHolder_Usr']
+        item = localOrderInfo["POLICYHOLDER_USR"]
         addDictItemValue(item,'NAME',localOrderInfo,configPageUsing['name']['dataName'])
         addDictItemValue(item,'SEX',localOrderInfo,configPageUsing['sex']['dataName'])
         addDictItemValue(item,'BIRTHDAY',localOrderInfo,configPageUsing['birthday']['dataName'])
@@ -63,13 +63,13 @@ def flatOrderInfoOrder(inOrderInfo):
         addDictItemValue(item,'ADDRESS',localOrderInfo,configPageUsing['detailAddress']['dataName'])
         addDictItemValue(item,'ZIPCODE',localOrderInfo,configPageUsing['postcode']['dataName'])
 
-        #PolicyholderUsr 被保人
+        #InsurantUsr 被保人
         #a loop for multi data
         i=0
         for item in localOrderInfo["LstINSURANT_USR"]:
-            configLst = {0:'PolicyholderUsr',1:'PolicyholderUsrA',2:'PolicyholderUsrB',3:'PolicyholderUsrC'}
+            configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB',3:'InsurantUsrC'}
 
-            #only show 4 Policyholder
+            #only show 4 Insurant
             #TODO: how to dynamic in page?
             if i==len(configLst) :
                 break
@@ -181,8 +181,8 @@ def zipOrderInfoOrder(inOrderInfo):
         #change the flat to list data.
         localOrderInfo = inOrderInfo
 
-        #InsurantUsr 投保人
-        configPageUsing = configPage['InsurantUsr']
+        #PolicyHolder_Usr 投保人
+        configPageUsing = configPage['PolicyHolder_Usr']
 
         item = {}
 
@@ -202,16 +202,16 @@ def zipOrderInfoOrder(inOrderInfo):
         addItemDictValue(item,'ADDRESS',localOrderInfo,configPageUsing['detailAddress']['dataName'])
         addItemDictValue(item,'ZIPCODE',localOrderInfo,configPageUsing['postcode']['dataName'])
 
-        upDict = {'INSURANT_USR':item}
+        upDict = {'POLICYHOLDER_USR':item}
         localOrderInfo.update(upDict)
 
-        #PolicyholderUsr 被保人
+        #InsurantUsr 被保人
         #a loop for multi data
-		#only save 4 Policyholder
+		#only save 4 Insurant
 		#TODO: every time ,save 4 data?
 
 
-        configLst = {0:'PolicyholderUsr',1:'PolicyholderUsrA',2:'PolicyholderUsrB',3:'PolicyholderUsrC'}
+        configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB',3:'InsurantUsrC'}
 
         localLst =[]
 

@@ -14,8 +14,8 @@ def getConfigPage():
 
     configPage = ConfigObj('pagesConf.conf')
 
-    #configPageInsurantUsr = configPage['InsurantUsr']
-    #dictFirst = configPageInsurantUsr.dict()
+    #configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
+    #dictFirst = configPagePolicyHolder_Usr.dict()
     #print dictFirst
     #j = 2
     #for j in range(j):
@@ -28,17 +28,17 @@ def getConfigPage():
     #    dictFirst.pop(member)
             #i = i+1
             #print i
-        #for item in configPageInsurantUsr[member]:
-        #    print configPageInsurantUsr[member][item]
+        #for item in configPagePolicyHolder_Usr[member]:
+        #    print configPagePolicyHolder_Usr[member][item]
         #for item in member:
         #    print member[item]
     #print configPage
-    #print configPageInsurantUsr
-    #configPageInsurantUsr = configPage['InsurantUsr']
-    #print configPageInsurantUsr
+    #print configPagePolicyHolder_Usr
+    #configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
+    #print configPagePolicyHolder_Usr
 
-    #print configPageInsurantUsr.as_int( 'rowNumber')
-    #print configPage.as_bool("hasInsurantUsr")
+    #print configPagePolicyHolder_Usr.as_int( 'rowNumber')
+    #print configPage.as_bool("hasPolicyHolder_Usr")
     return configPage
 
 def getConfigFile(inFileName):

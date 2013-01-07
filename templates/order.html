@@ -30,7 +30,7 @@
                     jQuery("#BePolicyHolder_txtBeHolderCardNumber").val(jQuery("#PolicyInformation1_txtHolderCardNumber").val());
                     jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val(jQuery("#PolicyInformation1_txtHolderUsrHeight").val());
                     jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val(jQuery("#PolicyInformation1_txtHolderUsrWeight").val());
-                    jQuery("#idPOLICYHOLDER_USR_ADDRESS").val(jQuery("#PolicyInformation1_txtHolderDetailAddress").val());
+                    jQuery("#idINSURANT_USR_ADDRESS").val(jQuery("#PolicyInformation1_txtHolderDetailAddress").val());
                     jQuery("#PolicyInformation1_txtBeHolderZip").val(jQuery("#PolicyInformation1_txtHolderZip").val());
                 }
                 else
@@ -44,7 +44,7 @@
                     jQuery("#BePolicyHolder_txtBeHolderCardNumber").val("");
                     jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val("");
                     jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val("");
-                    jQuery("#idPOLICYHOLDER_USR_ADDRESS").val("");
+                    jQuery("#idINSURANT_USR_ADDRESS").val("");
                     jQuery("#PolicyInformation1_txtBeHolderZip").val("");
                 }
             });
@@ -104,18 +104,18 @@
             });
 
             jQuery("#btnAddPolicy").click(function(){
-                if (divPolicyholderUsrAStatus == 'hidden'){
-                    jQuery("#divPolicyholderUsrA").collapse('show');
+                if (divInsurantUsrAStatus == 'hidden'){
+                    jQuery("#divInsurantUsrA").collapse('show');
                 }
                 else
                 {
-                    if (divPolicyholderUsrBStatus == 'hidden'){
-                        jQuery("#divPolicyholderUsrB").collapse('show');
+                    if (divInsurantUsrBStatus == 'hidden'){
+                        jQuery("#divInsurantUsrB").collapse('show');
                     }
                     else
                     {
-                        if (divPolicyholderUsrCStatus == 'hidden'){
-                            jQuery("#divPolicyholderUsrC").collapse('show');
+                        if (divInsurantUsrCStatus == 'hidden'){
+                            jQuery("#divInsurantUsrC").collapse('show');
                         }
                         else
                         {
@@ -126,18 +126,18 @@
             });
 
             jQuery("#btnDecreasePolicy").click(function(){
-                if (divPolicyholderUsrCStatus == 'shown'){
-                    jQuery("#divPolicyholderUsrC").collapse('hide');
+                if (divInsurantUsrCStatus == 'shown'){
+                    jQuery("#divInsurantUsrC").collapse('hide');
                 }
                 else
                 {
-                    if (divPolicyholderUsrBStatus == 'shown'){
-                        jQuery("#divPolicyholderUsrB").collapse('hide');
+                    if (divInsurantUsrBStatus == 'shown'){
+                        jQuery("#divInsurantUsrB").collapse('hide');
                     }
                     else
                     {
-                        if (divPolicyholderUsrAStatus == 'shown'){
-                            jQuery("#divPolicyholderUsrA").collapse('hide');
+                        if (divInsurantUsrAStatus == 'shown'){
+                            jQuery("#divInsurantUsrA").collapse('hide');
                         }
                         else
                         {
@@ -147,32 +147,32 @@
                 }
             });
 
-            var divPolicyholderUsrAStatus = 'hidden';
-            var divPolicyholderUsrBStatus = 'hidden';
-            var divPolicyholderUsrCStatus = 'hidden';
+            var divInsurantUsrAStatus = 'hidden';
+            var divInsurantUsrBStatus = 'hidden';
+            var divInsurantUsrCStatus = 'hidden';
 
-            jQuery("#divPolicyholderUsrA").on('shown',function(){
-                divPolicyholderUsrAStatus = 'shown';
+            jQuery("#divInsurantUsrA").on('shown',function(){
+                divInsurantUsrAStatus = 'shown';
             });
 
-            jQuery("#divPolicyholderUsrA").on('hidden',function(){
-                divPolicyholderUsrAStatus = 'hidden';
+            jQuery("#divInsurantUsrA").on('hidden',function(){
+                divInsurantUsrAStatus = 'hidden';
             });
 
-            jQuery("#divPolicyholderUsrB").on('shown',function(){
-                divPolicyholderUsrBStatus = 'shown';
+            jQuery("#divInsurantUsrB").on('shown',function(){
+                divInsurantUsrBStatus = 'shown';
             });
 
-            jQuery("#divPolicyholderUsrB").on('hidden',function(){
-                divPolicyholderUsrBStatus = 'hidden';
+            jQuery("#divInsurantUsrB").on('hidden',function(){
+                divInsurantUsrBStatus = 'hidden';
             });
 
-            jQuery("#divPolicyholderUsrC").on('shown',function(){
-                divPolicyholderUsrCStatus = 'shown';
+            jQuery("#divInsurantUsrC").on('shown',function(){
+                divInsurantUsrCStatus = 'shown';
             });
 
-            jQuery("#divPolicyholderUsrC").on('hidden',function(){
-                divPolicyholderUsrCStatus = 'hidden';
+            jQuery("#divInsurantUsrC").on('hidden',function(){
+                divInsurantUsrCStatus = 'hidden';
             });
         });
 
@@ -313,7 +313,7 @@
                 return false;
             }
 
-            if(jQuery("#idPOLICYHOLDER_USR_ADDRESS").val() ==""){
+            if(jQuery("#idINSURANT_USR_ADDRESS").val() ==""){
                 alert("被保人联系地址不能为空!");
                 return false;
             }
@@ -328,35 +328,35 @@
                 return false;
             }
 
-            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEX"]').is(":checked");
+            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEX"]').is(":checked");
 
             if(!boolCheck){
                 alert("投保人性别不能为空");
                 return false;
             }
 
-            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEX"]').is(":checked");
+            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEX"]').is(":checked");
 
             if(!boolCheck){
                 alert("被保人性别不能为空");
                 return false;
             }
 
-            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXA"]').is(":checked");
+            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXA"]').is(":checked");
 
             if(!boolCheck){
                 alert("被保人性别不能为空");
                 return false;
             }
 
-            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXB"]').is(":checked");
+            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXB"]').is(":checked");
 
             if(!boolCheck){
                 alert("被保人性别不能为空");
                 return false;
             }
 
-            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEXC"]').is(":checked");
+            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXC"]').is(":checked");
 
             if(!boolCheck){
                 alert("被保人性别不能为空");
@@ -457,14 +457,14 @@ import copy
 %>
 <%
     localOrderInfo = None
-    localInsurantUsrInfo = None
+    localPolicyHolder_UsrInfo = None
     if queryDict is None:
         localOrderInfo = None
     else:
         if orderid is not None:
             localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
         else:
-            localInsurantUsrInfo = OrderClient.getUsrInfoSource(queryDict)
+            localPolicyHolder_UsrInfo = OrderClient.getUsrInfoSource(queryDict)
             localOrderInfo = None
 %>
 </head>
@@ -602,7 +602,7 @@ import copy
         </div>
     </div>
 
-    %if configPage.as_bool('hasInsurantUsr'):
+    %if configPage.as_bool('hasPolicyHolder_Usr'):
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
@@ -613,15 +613,15 @@ import copy
             <div class="accordion-inner">
                 <table class="table table-condensed">
                     <%
-                        configPageInsurantUsr = configPage['InsurantUsr']
-                        configUsing =copy.deepcopy(configPageInsurantUsr)
+                        configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
+                        configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
                     %>
                     <%namespace name="comp" file="components.html" />
-                    %if localInsurantUsrInfo is not None:
+                    %if localPolicyHolder_UsrInfo is not None:
                         <%
-                            print localInsurantUsrInfo
+                            print localPolicyHolder_UsrInfo
                         %>
-                        ${comp.layoutControlList(configItem=configUsing,dataItem = localInsurantUsrInfo)}
+                        ${comp.layoutControlList(configItem=configUsing,dataItem = localPolicyHolder_UsrInfo)}
                     %else:
                         <%
                             print localOrderInfo
@@ -635,7 +635,7 @@ import copy
     </div>
     %endif
 
-    %if configPage.as_bool('hasPolicyholderUsr'):
+    %if configPage.as_bool('hasInsurantUsr'):
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
@@ -655,19 +655,19 @@ import copy
                 <table class="table table-condensed">
                     ##根据被保人的实际情况,决定显示多少个被保人，需要在载入的时候判断.
                     <%
-                        configPagePolicyholderUsr = configPage['PolicyholderUsr']
-                        configUsing =copy.deepcopy(configPagePolicyholderUsr)
+                        configPageInsurantUsr = configPage['InsurantUsr']
+                        configUsing =copy.deepcopy(configPageInsurantUsr)
                     %>
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
 
-                <div id="divPolicyholderUsrA" class="accordion-body collapse">
+                <div id="divInsurantUsrA" class="accordion-body collapse">
                     <div class="accordion-inner">
                         <table class="table table-condensed">
                             <%
-                            configPagePolicyholderUsrA = configPage['PolicyholderUsrA']
-                            configUsing =copy.deepcopy(configPagePolicyholderUsrA)
+                            configPageInsurantUsrA = configPage['InsurantUsrA']
+                            configUsing =copy.deepcopy(configPageInsurantUsrA)
                             %>
                             <%namespace name="comp" file="components.html" />
                             ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
@@ -675,12 +675,12 @@ import copy
                     </div>
                 </div>
 
-                <div id="divPolicyholderUsrB" class="accordion-body collapse">
+                <div id="divInsurantUsrB" class="accordion-body collapse">
                     <div class="accordion-inner">
                         <table class="table table-condensed">
                             <%
-                            configPagePolicyholderUsrB = configPage['PolicyholderUsrB']
-                            configUsing =copy.deepcopy(configPagePolicyholderUsrB)
+                            configPageInsurantUsrB = configPage['InsurantUsrB']
+                            configUsing =copy.deepcopy(configPageInsurantUsrB)
                             %>
                             <%namespace name="comp" file="components.html" />
                             ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
@@ -688,12 +688,12 @@ import copy
                     </div>
                 </div>
 
-                <div id="divPolicyholderUsrC" class="accordion-body collapse">
+                <div id="divInsurantUsrC" class="accordion-body collapse">
                     <div class="accordion-inner">
                         <table class="table table-condensed">
                             <%
-                            configPagePolicyholderUsrC = configPage['PolicyholderUsrC']
-                            configUsing =copy.deepcopy(configPagePolicyholderUsrC)
+                            configPageInsurantUsrC = configPage['InsurantUsrC']
+                            configUsing =copy.deepcopy(configPageInsurantUsrC)
                             %>
                             <%namespace name="comp" file="components.html" />
                             ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}

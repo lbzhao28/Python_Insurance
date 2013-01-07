@@ -254,8 +254,8 @@ def getUsrInfoSource(inQueryDict):
         if inQueryDict is None:
             return None
 
-        #InsurantUsr 投保人
-        configPageUsing = configPage['InsurantUsr']
+        #PolicyHolder_Usr 投保人
+        configPageUsing = configPage['PolicyHolder_Usr']
 
         retDict = inQueryDict
 
