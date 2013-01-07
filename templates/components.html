@@ -4,7 +4,7 @@ import staticDbModule
 from staticDbModule import getDictStatic
 %>
 
-<%def name="layoutControl(configItem,dataItem)">
+<%def name="layoutControlList(configItem,dataItem)">
 <%
 itemCount = configItem.as_int('itemCount')
 rowNumber = configItem.as_int( 'rowNumber')
@@ -32,16 +32,13 @@ j = 0
     %for j in range(stepRow):
         %for member in configItem:
             <%
-            item=configItem[member]
+            itemMember=configItem[member]
             %>
-            %if "titleType" in item:
-                <td>
-                    <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
-                </td>
-                <td>
-                    <%
-                    if "dataName" in item:
-                        dataValueName = item["dataName"]
+            %if "titleType" in itemMember:
+				${layoutControlStatic(item=itemMember)} 
+				<%
+                    if "dataName" in itemMember:
+                        dataValueName = itemMember["dataName"]
                         if dataItem is not None:
                             if dataValueName in dataItem:
                                 realDataValue = dataItem[dataValueName]
@@ -49,7 +46,28 @@ j = 0
                                 realDataValue = ''
                         else:
                             realDataValue = ''
-                    %>
+				%>
+				${layoutControlDynamic(item=itemMember,realDataValue=realDataValue)} 
+                <% break %>
+            %endif
+        %endfor
+        <%
+        configItem.pop(member)
+        %>
+    %endfor
+</tr>
+%endfor
+
+</%def>
+
+<%def name="layoutControlStatic(item)">
+                <td>
+                    <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                </td>
+</%def>
+
+<%def name="layoutControlDynamic(item,realDataValue)">
+                <td>
                     %if item["dataType"] == 'input':
                         %if item["dataShowType"] == 'text':
                             %if "placeholder" in item:
@@ -101,10 +119,11 @@ j = 0
                                 dataDict = getDictStatic(item["dataSourceId"])
                             %>
                             <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
+							##TODO: show in order.
                             %for selectItem in dataDict:
                                 <%
                                     selectItemData = dataDict[selectItem]
-                                    ##print selectItemData
+                                    ##print selectItemData["value"]
                                 %>
                                 %if selectItemData["value"] ==  realDataValue:
                                     <${item["dataTitleType"]} value="${selectItemData["value"]}" selected>${selectItemData["text"]}</${item["dataTitleType"]}>
@@ -130,15 +149,5 @@ j = 0
                         %endif
                     %endif
                 </td>
-                <% break %>
-            %endif
-        %endfor
-        <%
-        configItem.pop(member)
-        %>
-    %endfor
-</tr>
-%endfor
-
 </%def>
 

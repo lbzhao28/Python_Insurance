@@ -10,6 +10,10 @@ from configData import getConfig
 from logHelper import getLogger
 from OrderDomainHandler import flatOrderInfoOrder
 
+from configObjData import getConfigPage
+
+configPage = getConfigPage()
+
 def getOrderInfoOrder(inOrderid):
     """get the order info from REST """
     try:
@@ -143,6 +147,51 @@ def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOr
     finally:
         pass
 
+def getStaticLst(inTid):
+    try:
+        logger = getLogger()
+        logger.debug("start GET static list.")
+
+        if inTid is None:
+            return None
+        if inTid == '':
+            return None
+
+        buf = cStringIO.StringIO() #define in function.
+        c = pycurl.Curl()
+        localURL = getConfig('RESTService','staticLstUrl','str')
+        localURL = localURL + inTid
+        localURL = str(localURL)
+        c.setopt(pycurl.URL,localURL)
+        c.setopt(c.WRITEFUNCTION,buf.write)
+        c.setopt(c.VERBOSE, True)
+        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
+        c.perform()
+
+        #get the data from json.
+        localStaticLst = json.loads(buf.getvalue())
+        buf.close()
+
+        logger.debug("get static List success.")
+
+        return localStaticLst
+    except pycurl.error, error:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+
+        errno, errstr = error
+        print 'An error occurred: ', errstr
+    else:
+        pass
+    finally:
+        pass
+
 def getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan):
     try:
         logger = getLogger()
@@ -185,3 +234,44 @@ def getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
         pass
     finally:
         pass
+
+def addItemDictValue(dstDict,dstName,srcDict,srcName):
+    """add value data from srcDict to dstDict .from dic to item data."""
+
+    localVal = srcDict.pop(srcName)
+    upDict = {dstName:localVal}
+    dstDict.update(upDict)
+
+def getUsrInfoSource(inQueryDict):
+    """get insurant user info from query string.
+
+        we need get the data from out usr info.
+    """
+    try:
+        logger = getLogger()
+        logger.debug("start get user info from query string .")
+
+        if inQueryDict is None:
+            return None
+
+        #InsurantUsr 投保人
+        configPageUsing = configPage['InsurantUsr']
+
+        retDict = inQueryDict
+
+
+        return retDict
+    except:
+        logger.error("exception occur, see the traceback.log")
+
+        #异常写入日志文件.
+        f = open('traceback.txt','a')
+        traceback.print_exc()
+        traceback.print_exc(file = f)
+        f.flush()
+        f.close()
+    else:
+        pass
+    finally:
+        pass
+

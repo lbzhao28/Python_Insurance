@@ -71,20 +71,18 @@
             submitSearch(localPageIndex);
         }
 
-        //alert('${orderstatus}');
-        //jQuery("#idCheckOrderStatus").val('${orderstatus}');
 
         function submitSearch(pageIndex){
             grpid = jQuery("#idGrpValue").find("option:selected").text();
             crusr = jQuery("#idUsrValue").find("option:selected").text();
             contactid = jQuery("#idContactid").val();
             orderid = jQuery("#idOrderid").val();
-            orderStatus = jQuery("#idCheckOrderStatus").val();
+            orderStatus = jQuery("#idDDLORDERSTATUS").val();
             startDt = jQuery("#idStartDT").val();
             endDt = jQuery("#idEndDT").val();
 
             //对于空值,不进行处理
-            orderStatusText = jQuery("#idCheckOrderStatus").find("option:selected").text();
+            orderStatusText = jQuery("#idDDLORDERSTATUS").find("option:selected").text();
             if (orderStatusText == ""){
                 orderStatus = "";
             }
@@ -120,12 +118,6 @@
             inUsrVal = selectText("#idUsrValue",inCrusr);
         }
 
-
-        function setStatus(inStatus){
-            //alert(inStatus);
-            jQuery("#idCheckOrderStatus").val(inStatus);
-        }
-
         function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT,inPAGEINDEX){
             //alert(inGRPID);
             actionUrl ="http://${localURL}/orderList"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX;
@@ -149,6 +141,16 @@ import json
 
 import configData
 from configData import getConfig
+
+import configObjData
+from configObjData import getConfigPage
+
+configPage = getConfigPage()
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
 
 localURL = getConfig('SERVERINFO','serverIP','str')
 print localURL
@@ -212,21 +214,19 @@ print localURL
                 <td>
                     <label class="label">保单状态</label>
                 </td>
-                <td>
-                       <SELECT name="checkOrderStatus" id="idCheckOrderStatus" class="input-medium">
-                            ##TODO: 要和配置文件一致,给出value为100的空值可以吗?
-                            <OPTION value="100"></OPTION>
-                            <OPTION value="0">未审核</OPTION>
-                            <OPTION value="1">已承保</OPTION>
-                            <OPTION value="2">未承保</OPTION>
-                            <OPTION value="3">退保</OPTION>
-                        </SELECT>
-                </td>
-                        %if orderstatus is not None:
-                            <script type="text/javascript">
-                                setStatus("${orderstatus}");
-                            </script>
-                        %endif
+                <%
+                    item = configPage["SingleControl"]["OrderStatus"]
+                %>
+                <%namespace name="comp" file="components.html" />
+                <%
+                    if orderstatus is not None:
+                        realDataValue = orderstatus
+                    else:
+                        ## empty value
+                        realDataValue = '0'
+                %>
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+
                 <td>
                     <label class="label">开始日期</label>
                 </td>
