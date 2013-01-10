@@ -97,6 +97,9 @@ class orderList:
 
                 if 'ORDERSTATUS' in query_dict:
                     orderstatus = query_dict['ORDERSTATUS']
+                    #special for show all ,do not judge orderstatus.
+                    if orderstatus == 'SHOWALL':
+                        orderstatus = None
                 else:
                     orderstatus = None
 
@@ -423,6 +426,7 @@ class order:
                 #query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
                 parsed_url = urlparse.urlparse(web.ctx.fullpath)
                 query_url = parsed_url.query
+                query_url = query_url.encode('utf-8')
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
                     if 'orderid' in query_dict:
