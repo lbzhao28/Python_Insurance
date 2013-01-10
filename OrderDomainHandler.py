@@ -367,12 +367,18 @@ def postOrderInfoContact(inContactid,storageData):
         c.setopt(c.WRITEFUNCTION,buf.write)
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
-        c.close()
+
+        #TODO: how to show succes code? 200 or OK?
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge post success.
+        if http_code != 201:
+            return None
 
         logger.debug(buf.getvalue())
         retStr = buf.getvalue()
 
         buf.close()
+        c.close()
 
         logger.debug("post OrderInfo success.")
         return retStr
@@ -425,12 +431,19 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
         c.setopt(c.WRITEFUNCTION,buf.write)
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
-        c.close()
+
+
+        #TODO: how to show succes code? 200 or OK?
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge put success.
+        if http_code != 201:
+            return None
 
         logger.debug(buf.getvalue())
         retStr = buf.getvalue()
 
         buf.close()
+        c.close()
 
         logger.debug("put OrderInfo success.")
         return retStr
@@ -511,12 +524,20 @@ def putOrderInfoContact(inOrderid,storageData):
             c.setopt(c.WRITEFUNCTION,buf.write)
             c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
             c.perform()
-            c.close()
+
+
+            #TODO: how to show succes code? 200 or OK?
+            http_code = c.getinfo(pycurl.HTTP_CODE)
+            #judge put success.
+            if http_code != 201:
+                return None
+
 
             logger.debug(buf.getvalue())
             retStr = buf.getvalue()
 
             buf.close()
+            c.close()
 
             logger.debug("put OrderInfo success.")
             return retStr

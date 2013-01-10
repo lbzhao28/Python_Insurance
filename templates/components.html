@@ -81,7 +81,7 @@ j = 0
                             <%
                                 if realDataValue == '':
                                     #default value
-                                    realDataValue = '0'
+                                    realDataValue = None
                             %>
                             %for radioItem in item["radio"]:
                                 <%
@@ -101,6 +101,7 @@ j = 0
                             %endfor
                         %endif
                     %elif item["dataType"] == 'select':
+                        ##now , we do not use selectSingle. all data from db or config file.
                         %if item["dataShowType"] == 'selectSingle':
                             <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
                             %for selectItem in item["select"]:
@@ -119,7 +120,13 @@ j = 0
                                 dataDict = getDictStatic(item["dataSourceId"])
                             %>
                             <${item["dataType"]} name=${item["dataName"]} id=${item["dataID"]}  class="${item["dataCss"]}">
-							##TODO: show in order.
+                            %if "needShowExt" in item:
+                                %if realDataValue is None:
+                                    <${item["dataTitleType"]} value="${item["needShowExtValue"]}" selected>${item["needShowExt"]}</${item["dataTitleType"]}>
+                                %else:
+                                    <${item["dataTitleType"]} value="${item["needShowExtValue"]}">${item["needShowExt"]}</${item["dataTitleType"]}>
+                                %endif
+                            %endif
                             %for selectItem in dataDict:
                                 <%
                                     selectItemData = dataDict[selectItem]

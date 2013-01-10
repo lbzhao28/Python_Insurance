@@ -33,14 +33,25 @@ def getOrderInfoOrder(inOrderid):
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
 
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return None
+
         #get the data from json.
-        localOrderInfo = json.loads(buf.getvalue())
+        if (len(buf.getvalue())>0):
+            s = buf.getvalue()
+            localOrderInfo = json.loads(buf.getvalue())
+        else:
+            localOrderInfo =  None
         buf.close()
+        c.close()
 
         logger.debug("get localOrderInfo success.")
 
         #we need change the data structure, so the html show simple.
-        localOrderInfo = flatOrderInfoOrder(localOrderInfo)
+        if localOrderInfo is not None:
+            localOrderInfo = flatOrderInfoOrder(localOrderInfo)
 
         return localOrderInfo
     except pycurl.error, error:
@@ -123,9 +134,15 @@ def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOr
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
 
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return None
+
         #get the data from json.
         localOrderInfoLst = json.loads(buf.getvalue())
         buf.close()
+        c.close()
 
         logger.debug("get localOrderInfo List success.")
 
@@ -168,9 +185,15 @@ def getStaticLst(inTid):
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
 
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return None
+
         #get the data from json.
         localStaticLst = json.loads(buf.getvalue())
         buf.close()
+        c.close()
 
         logger.debug("get static List success.")
 
@@ -211,9 +234,15 @@ def getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
 
+        http_code = c.getinfo(pycurl.HTTP_CODE)
+        #judge get success.
+        if http_code != 200:
+            return None
+
         #get the data from json.
         localOrderInfoLst = json.loads(buf.getvalue())
         buf.close()
+        c.close()
 
         logger.debug("get localOrder Product Info List success.")
 

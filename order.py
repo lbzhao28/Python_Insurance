@@ -431,7 +431,6 @@ class order:
                     else:
                         #if no orderid, according the query_dict to show a file.
                         orderid = None
-
                         return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
                 else:
                     #if no querey string.  show blank file
