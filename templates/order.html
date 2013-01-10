@@ -473,16 +473,11 @@ import copy
 
 <form id="formOrder">
 
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse"  href="#collapseOne">
-                保单操作
-            </a>
-        </div>
-        <div id="collapseOne" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                % if orderid is not None:
-                    <label class="label label-info" >保单编号:</label>
+<div class="bs-docs-div-compress">
+                <h4>保单操作</h4>
+    <div>
+                    % if orderid is not None:
+                    <label class="label label-normal" >保单编号:</label>
                     <label class="label label-info" id='lblOrderid'>${orderid}</label>
                     <%
                         if localOrderInfo is not None:
@@ -491,25 +486,23 @@ import copy
                             statusDsc = None
                         #TODO: we need get the status dsc.from the config data.
                     %>
-                    % if statusDsc is not None:
-                        <label class="label label-info">保单状态:</label>
-                        <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
+                        % if statusDsc is not None:
+                            <label class="label label-normal">保单状态:</label>
+                            <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
+                        %endif
                     %endif
-                %endif
-                <button type="button" class="btn btn-primary btn-small" id="btnAdd">新增</button>
-                % if orderid is not None:
-                <button  type="button" class="btn btn-primary btn-small" id="btnModify">修改</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnStatus">审核</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnFix">承保</button>
-                % else:
-                <button  type="button" class="btn btn-primary btn-small" id="btnModify" disabled="true" >修改</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnStatus" disabled="true" >审核</button>
-                <button type="button" class="btn btn-primary btn-small" id="btnFix" disabled="true" >承保</button>
-                %endif
-
-            </div>
-        </div>
-    </div>
+                    <button type="button" class="btn btn-small" id="btnAdd">新增</button>
+                    % if orderid is not None:
+                    <button  type="button" class="btn btn-small" id="btnModify">修改</button>
+                    <button type="button" class="btn btn-small" id="btnStatus">审核</button>
+                    <button type="button" class="btn btn-small" id="btnFix">承保</button>
+                    % else:
+                    <button  type="button" class="btn btn-small" id="btnModify" disabled="true" >修改</button>
+                    <button type="button" class="btn btn-small" id="btnStatus" disabled="true" >审核</button>
+                    <button type="button" class="btn btn-small" id="btnFix" disabled="true" >承保</button>
+                    %endif
+   </div>
+</div>
 
     <!-- Modal Add -->
     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -605,7 +598,8 @@ import copy
     %if configPage.as_bool('hasPolicyHolder_Usr'):
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
+            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
+            <a class="accordion-toggle" data-toggle="collapse" >
                 投保人信息
             </a>
         </div>
@@ -638,7 +632,8 @@ import copy
     %if configPage.as_bool('hasInsurantUsr'):
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
+            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
+            <a class="accordion-toggle" data-toggle="collapse" >
                 被保人信息
             </a>
         </div>
@@ -751,7 +746,8 @@ import copy
     %if configPage.as_bool('hasInsurantPlan'):
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">
+            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">
+            <a class="accordion-toggle" data-toggle="collapse" >
                 保险计划
             </a>
         </div>
@@ -778,7 +774,8 @@ import copy
     %if configPage.as_bool('hasDelivery'):
     <div class="accordion-group">
         <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" href="#collapseSix">
+            <a class="accordion-toggle" data-toggle="collapse" >
+            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseSix">
                 保单配送
             </a>
         </div>

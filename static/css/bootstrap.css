@@ -790,6 +790,12 @@ a.badge:hover {
   text-decoration: none;
   cursor: pointer;
 }
+.label-normal   {
+    font-weight: normal;
+    color:#000000;
+    text-shadow: none;
+    background-color: #ffffff;
+}
 .label-important,
 .badge-important {
   background-color: #b94a48;

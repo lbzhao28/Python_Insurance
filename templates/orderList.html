@@ -18,6 +18,12 @@
                 //默认只查询第1页
                 submitSearch('1');
             });
+
+            var myDate = new Date();
+            currentDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+myDate.getDate();
+            nextDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+(myDate.getDate()+1);
+            jQuery("#idStartDT").val(currentDate);
+            jQuery("#idEndDT").val(nextDate);
         });
 
         function showFastPrev(){
@@ -86,6 +92,12 @@
             if (orderStatusText == ""){
                 orderStatus = "";
             }
+
+            if ((grpid == '')&(crusr == '')&(contactid == '')&(orderid == '')&(startDt == '')&(endDt == '')){
+                alert("请至少选择一个条件");
+                return
+            }
+
             searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt,pageIndex);
         }
 
@@ -215,7 +227,7 @@ print localURL
                     <label class="label">保单状态</label>
                 </td>
                 <%
-                    item = configPage["SingleControl"]["OrderStatus"]
+                    item = configPage["SingleControl"]["OrderStatusSearch"]
                 %>
                 <%namespace name="comp" file="components.html" />
                 <%

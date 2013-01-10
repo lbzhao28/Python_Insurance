@@ -559,6 +559,19 @@ h2 + .row {
     border-radius: 4px;
 }
 
+/* compress div class */
+.bs-docs-div-compress {
+    position: relative;
+    margin: 1px 0;
+    padding: 3px 3px 3px;
+    *padding-top: 2px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
 /* Echo out a label for the example */
 /*
 .bs-docs-div:after {
