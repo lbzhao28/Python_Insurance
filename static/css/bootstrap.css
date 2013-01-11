@@ -796,6 +796,9 @@ a.badge:hover {
     text-shadow: none;
     background-color: #ffffff;
 }
+.label-large   {
+    font-size: 14px;
+}
 .label-important,
 .badge-important {
   background-color: #b94a48;
@@ -853,7 +856,10 @@ table {
 }
 .table {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+}
+.table-normal {
+    margin-bottom: 1px;
 }
 .table th,
 .table td {

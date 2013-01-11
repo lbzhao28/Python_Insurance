@@ -474,7 +474,7 @@ import copy
 <form id="formOrder">
 
 <div class="bs-docs-div-compress">
-                <h4>保单操作</h4>
+                <label class="label label-info label-large">保单操作</label>
     <div>
                     % if orderid is not None:
                     <label class="label label-normal" >保单编号:</label>
@@ -596,16 +596,10 @@ import copy
     </div>
 
     %if configPage.as_bool('hasPolicyHolder_Usr'):
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseTwo">
-            <a class="accordion-toggle" data-toggle="collapse" >
-                投保人信息
-            </a>
-        </div>
-        <div id="collapseTwo" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                <table class="table table-condensed">
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">投保人信息</label>
+            <div>
+                <table class="table table-normal table-condensed">
                     <%
                         configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
                         configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
@@ -626,28 +620,21 @@ import copy
                 </table>
             </div>
     </div>
-    </div>
     %endif
 
     %if configPage.as_bool('hasInsurantUsr'):
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseThree">
-            <a class="accordion-toggle" data-toggle="collapse" >
-                被保人信息
-            </a>
-        </div>
-        <div id="collapseThree" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                <table class="table table-condensed">
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">被保人信息</label>
+        <div>
+                <table class="table table-normal table-condensed">
                     <tr>
                         <td>
-                            <input type="button" class="btn" id="btnAddPolicy" value="添加被保人" />
-                            <input type="button" class="btn" id="btnDecreasePolicy" value="减少被保人" />
+                            <input type="button" class="btn btn-small" id="btnAddPolicy" value="添加被保人" />
+                            <input type="button" class="btn btn-small" id="btnDecreasePolicy" value="减少被保人" />
                         </td>
                     </tr>
                 </table>
-                <table class="table table-condensed">
+                <table class="table table-normal table-condensed">
                     ##根据被保人的实际情况,决定显示多少个被保人，需要在载入的时候判断.
                     <%
                         configPageInsurantUsr = configPage['InsurantUsr']
@@ -658,8 +645,8 @@ import copy
                 </table>
 
                 <div id="divInsurantUsrA" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <table class="table table-condensed">
+                    <div class="bs-docs-div-compress">
+                        <table class="table table-normal table-condensed">
                             <%
                             configPageInsurantUsrA = configPage['InsurantUsrA']
                             configUsing =copy.deepcopy(configPageInsurantUsrA)
@@ -671,8 +658,8 @@ import copy
                 </div>
 
                 <div id="divInsurantUsrB" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <table class="table table-condensed">
+                    <div class="bs-docs-div-compress">
+                        <table class="table table-normal table-condensed">
                             <%
                             configPageInsurantUsrB = configPage['InsurantUsrB']
                             configUsing =copy.deepcopy(configPageInsurantUsrB)
@@ -684,8 +671,8 @@ import copy
                 </div>
 
                 <div id="divInsurantUsrC" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <table class="table table-condensed">
+                    <div class="bs-docs-div-compress">
+                        <table class="table table-normal table-condensed">
                             <%
                             configPageInsurantUsrC = configPage['InsurantUsrC']
                             configUsing =copy.deepcopy(configPageInsurantUsrC)
@@ -695,19 +682,15 @@ import copy
                         </table>
                     </div>
                 </div>
-
-            </div>
         </div>
     </div>
     %endif
 
     %if configPage.as_bool('hasBeneficiaryUsr'):
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse">
-                受益人信息
-            </a>
-            <table class="table table-condensed">
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">受益人信息</label>
+        <div>
+            <table class="table table-normal table-condensed">
                 <tr>
                     <td>
                         <label class="radio inline">
@@ -721,16 +704,16 @@ import copy
             </table>
         </div>
         <div id="idBeneficiary" class="accordion-body collapse">
-            <div class="accordion-inner">
-                <table class="table table-condensed">
+            <div class="bs-docs-div-compress">
+                <table class="table table-normal table-condensed">
                     <tr>
                         <td>
-                            <input type="button" class="btn" id="btnAddBeneficiary" value="添加受益人" />
-                            <input type="button" class="btn" id="btnDecreaseBeneficiary" value="减少受益人" />
+                            <input type="button" class="btn btn-small" id="btnAddBeneficiary" value="添加受益人" />
+                            <input type="button" class="btn btn-small" id="btnDecreaseBeneficiary" value="减少受益人" />
                         </td>
                     </tr>
                 </table>
-                <table class="table table-condensed">
+                <table class="table table-normal table-condensed">
                     <%
                     configBeneficiaryUsr = configPage['BeneficiaryUsr']
                     configUsing =copy.deepcopy(configBeneficiaryUsr)
@@ -744,19 +727,13 @@ import copy
     %endif
 
     %if configPage.as_bool('hasInsurantPlan'):
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseFive">
-            <a class="accordion-toggle" data-toggle="collapse" >
-                保险计划
-            </a>
-        </div>
-        <div id="collapseFive" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                <table class="table table-condensed">
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">保险计划</label>
+        <div>
+                <table class="table table-normal table-condensed">
                     <tr>
                         <td colspan="3">
-                            <button type="button" class="btn btn-primary btn-small" id="btnCal">保费试算</button>
+                            <button type="button" class="btn btn-small" id="btnCal">保费试算</button>
                         </td>
                     </tr>
                     <%
@@ -766,22 +743,15 @@ import copy
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
-            </div>
         </div>
     </div>
     %endif
 
     %if configPage.as_bool('hasDelivery'):
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" >
-            ##<a class="accordion-toggle" data-toggle="collapse" href="#collapseSix">
-                保单配送
-            </a>
-        </div>
-        <div id="collapseSix" class="accordion-body collapse in">
-            <div class="accordion-inner">
-                <table class="table table-condensed">
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">保单配送</label>
+        <div>
+                <table class="table table-normal table-condensed">
                     <%
                     configPagedelivery = configPage['delivery']
                     configUsing =copy.deepcopy(configPagedelivery)
@@ -789,7 +759,6 @@ import copy
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
-            </div>
         </div>
     </div>
     %endif

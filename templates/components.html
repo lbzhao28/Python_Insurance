@@ -62,7 +62,15 @@ j = 0
 
 <%def name="layoutControlStatic(item)">
                 <td>
-                    <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                    %if 'mustHave' in item:
+                        %if item.as_bool('mustHave'):
+                            <${item["titleType"]} class="${item["titleCss"]}"><span style="color: red">*</span>${item["titleText"]}</${item["titleType"]}>
+                        %else:
+                            <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                        %endif
+                    %else:
+                        <${item["titleType"]} class="${item["titleCss"]}">${item["titleText"]}</${item["titleType"]}>
+                    %endif
                 </td>
 </%def>
 

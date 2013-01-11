@@ -300,7 +300,7 @@ else:
                         <td>
                             <% orderid = item['OrderId'] %>
                             <% contactid = item['ContactId'] %>
-                            <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})"><i class="icon-edit"></i></button>
+                            <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})">查询</button>
                         </td>
                         ${caller.body(item=item)}
                     </tr>
