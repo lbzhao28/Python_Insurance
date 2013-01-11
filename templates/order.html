@@ -250,6 +250,9 @@
         function postOrder(inContactid){
             if (check_submit())
             {
+                //TODO: AJAX 异步提交
+                idPOLICYHOLDER_shengText = jQuery("#idPOLICYHOLDER_sheng").find("option:selected").text();
+                //jQuery("#idPOLICYHOLDER_sheng").append("<option value='"+idPOLICYHOLDER_shengText+"'><option>");
                 document.getElementById("formOrder").action = "http://${localURL}/order/"+inContactid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();

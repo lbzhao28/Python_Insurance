@@ -75,7 +75,11 @@ j = 0
 </%def>
 
 <%def name="layoutControlDynamic(item,realDataValue)">
-                <td>
+                %if 'tableColSpan' in item:
+                    <td colspan="${item['tableColSpan']}">
+                %else:
+                    <td>
+                %endif
                     %if item["dataType"] == 'input':
                         %if item["dataShowType"] == 'text':
                             %if "placeholder" in item:
