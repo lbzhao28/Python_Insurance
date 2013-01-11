@@ -14,6 +14,37 @@
     <script src="http://${localURL}/static/js/localAddressList.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
+
+            jQuery("#idDdlProduct").change(function(){
+                insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+                //alert(insurancecodeText);
+                if (insurancecodeText != '健康乐家居计划'){
+                    var selectText = function(dropdown, selectedValue) {
+                        var options = $(dropdown).find("option");
+                        var matches = $.grep(options,
+                                function(n) { return $(n).text() == selectedValue; });
+                        $(matches).attr("selected", "selected");
+                    };
+
+                    selectText("#idDdlAgePlan","60天-80岁");
+                }
+            });
+
+            //special handle for age data.
+            //TODO: how to arrange this?
+            insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+            //alert(insurancecodeText);
+            if (insurancecodeText != '健康乐家居计划'){
+                var selectText = function(dropdown, selectedValue) {
+                    var options = $(dropdown).find("option");
+                    var matches = $.grep(options,
+                            function(n) { return $(n).text() == selectedValue; });
+                    $(matches).attr("selected", "selected");
+                };
+
+                selectText("#idDdlAgePlan","60天-80岁");
+            }
+
             jQuery("#PolicyInformation1_txtPolicyRelation").change(function(){
                 //alert("change select");
                 //change the data.
@@ -61,7 +92,13 @@
                 insurancecodeid = jQuery("#idDdlProduct").val();
                 securityplanid = jQuery("#idDdlPlan").val();
                 premiumplanid = jQuery("#idDdlPlanFamily").val();
-                showOrderCal(insurancecodeid,securityplanid,premiumplanid);
+                ageplan = jQuery("#idDdlAgePlan").val();
+
+                insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+                if (insurancecodeText != '健康乐家居计划'){
+                    ageplan = null
+                }
+                showOrderCal(insurancecodeid,securityplanid,premiumplanid,ageplan);
             });
 
             jQuery("#btnConfirmAdd").click(function(){

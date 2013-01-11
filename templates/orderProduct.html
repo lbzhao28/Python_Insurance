@@ -19,17 +19,43 @@
                 ageplan = jQuery("#BePolicyHolder_txtBeHolderOldYears").val();
                 //alert(insurancecodeid);
 
-                if (insurancecodeid != '003'){
+               insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+               if (insurancecodeText != '健康乐家居计划'){
                     ageplan = null
                 }
                 showOrderCal(insurancecodeid,securityplanid,premiumplanid,ageplan);
             });
 
-            //alert('${insurancecodeid}');
-            jQuery("#idDdlProduct").val('${insurancecodeid}');
-            jQuery("#idDdlPlan").val('${securityplanid}');
-            jQuery("#idDdlPlanFamily").val('${premiumplanid}');
-            jQuery("#BePolicyHolder_txtBeHolderOldYears").val('${ageplan}');
+            jQuery("#idDdlProduct").change(function(){
+                insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+                //alert(insurancecodeText);
+                if (insurancecodeText != '健康乐家居计划'){
+                    var selectText = function(dropdown, selectedValue) {
+                        var options = $(dropdown).find("option");
+                        var matches = $.grep(options,
+                                function(n) { return $(n).text() == selectedValue; });
+                        $(matches).attr("selected", "selected");
+                    };
+
+                    selectText("#BePolicyHolder_txtBeHolderOldYears","60天-80岁");
+                }
+            });
+
+            //special handle for age data.
+            //TODO: how to arrange this?
+            insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+            //alert(insurancecodeText);
+            if (insurancecodeText != '健康乐家居计划'){
+                var selectText = function(dropdown, selectedValue) {
+                    var options = $(dropdown).find("option");
+                    var matches = $.grep(options,
+                            function(n) { return $(n).text() == selectedValue; });
+                    $(matches).attr("selected", "selected");
+                };
+
+                selectText("#BePolicyHolder_txtBeHolderOldYears","60天-80岁");
+            }
+
 
         });
 
@@ -46,13 +72,23 @@ import json
 import configData
 from configData import getConfig
 
+import configObjData
+from configObjData import getConfigPage
+
+configPage = getConfigPage()
+
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
+
 localURL = getConfig('SERVERINFO','serverIP','str')
 print localURL
 %>
 <%
 if insurancecodeid is not None:
     localOrderProductLst = OrderClient.getOrderProductInfoLst(insurancecodeid,securityplanid,premiumplanid,ageplan)
-    #print insurancecodeid+','+securityplanid+','+premiumplanid+','+ageplan
     if localOrderProductLst is not None:
         if len(localOrderProductLst) > 0:
             localTOTALPREMIUM = localOrderProductLst[0]["TOTALPREMIUM"]
@@ -80,52 +116,67 @@ else:
                 <td>
                     <label class="label">保单产品</label>
                 </td>
-                <td>
-                    <SELECT id="idDdlProduct" name="ddlProduct" class="input-large">
-                        <OPTION value="001">健行无忧意外伤害保险-A款</OPTION>
-                        <OPTION value="002">健行无忧意外伤害保险-B款</OPTION>
-                        <OPTION value="003">健康乐家居计划</OPTION>
-                    </SELECT>
-                </td>
+                <%
+                    item = configPage["SingleControl"]["product"]
+                %>
+                <%namespace name="comp" file="components.html" />
+                <%
+                    if insurancecodeid is not None:
+                        realDataValue = insurancecodeid
+                    else:
+                        ## empty value
+                        realDataValue = '0'
+                %>
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+
                 <td>
                     <label class="label">保单计划</label>
                 </td>
-                <td>
-                    <SELECT id="idDdlPlan" name="ddlPlan" class="input-large">
-                        <OPTION value="0">标准计划</OPTION>
-                        <OPTION value="1">经典计划</OPTION>
-                        <OPTION value="2">卓越计划</OPTION>
-                        <OPTION value="3">尊享计划</OPTION>
-                        <OPTION value="4">未成年人计划</OPTION>
-                    </SELECT>
-                </td>
+                <%
+                    item = configPage["SingleControl"]["plan"]
+                %>
+                <%namespace name="comp" file="components.html" />
+                <%
+                    if securityplanid is not None:
+                        realDataValue = securityplanid
+                    else:
+                        ## empty value
+                        realDataValue = '0'
+                %>
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+
                 <td>
                     <label class="label">保单家庭计划</label>
                 </td>
-                <td>
-                    <SELECT id="idDdlPlanFamily" name="ddlPlanFamily" class="input-large">
-                        <OPTION value="0">个人计划</OPTION>
-                        <OPTION value="1">双人计划</OPTION>
-                        <OPTION value="2">亲子计划</OPTION>
-                        <OPTION value="3">家庭计划</OPTION>
-                    </SELECT>
-                </td>
+                <%
+                    item = configPage["SingleControl"]["planFamily"]
+                %>
+                <%namespace name="comp" file="components.html" />
+                <%
+                    if premiumplanid is not None:
+                        realDataValue = premiumplanid
+                    else:
+                        ## empty value
+                        realDataValue = '0'
+                %>
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+
                 <td>
                     <label class="label">被保人年龄段</label>
                 </td>
-                <td>
-                    <SELECT id="BePolicyHolder_txtBeHolderOldYears" name="INSURANT_USR_AGE" class="input-medium">
-                        <OPTION value="1" selected>60天-4岁</OPTION>
-                        <OPTION value="2">5岁-15岁</OPTION>
-                        <OPTION value="3">16岁-29岁</OPTION>
-                        <OPTION value="4">30岁-39岁</OPTION>
-                        <OPTION value="5">40岁-49岁</OPTION>
-                        <OPTION value="6">50岁-65岁</OPTION>
-                        <OPTION value="7">66岁-69岁</OPTION>
-                        <OPTION value="8">70岁-75岁</OPTION>
-                        <OPTION value="9">76岁-80岁</OPTION>
-                    </SELECT>
-                </td>
+                <%
+                    item = configPage["SingleControl"]["planAge"]
+                %>
+                <%namespace name="comp" file="components.html" />
+                <%
+                    if ageplan is not None:
+                        realDataValue = ageplan
+                    else:
+                        ## empty value
+                        realDataValue = '0'
+                %>
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+
             </tr>
         </table>
     </div>
