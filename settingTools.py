@@ -3,52 +3,86 @@ __author__ = 'stone'
 #File:settingTools.py
 #this file to get the db to create js file.
 import time
+import cx_Oracle
+import string
+
+import os
+os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 
 def writeArrayCityJs():
-    f = open('./static/js/test.js','w')
+    f = open('./static/js/localAddressList.js','w')
     try:
         writeLst = []
 
-        str = '/**\n'
-        writeLst.append(str)
+        strData = '/**\n'
+        writeLst.append(strData)
 
-        str = '* Created by python tools\n'
-        writeLst.append(str)
+        strData = '* Created by python tools\n'
+        writeLst.append(strData)
 
-        str = '* User: stone\n'
-        writeLst.append(str)
+        strData = '* User: stone\n'
+        writeLst.append(strData)
 
-        str = '* Date: ' + time.strftime('%Y-%m-%d',time.localtime(time.time())) + '\n'
-        writeLst.append(str)
+        strData = '* Date: ' + time.strftime('%Y-%m-%d',time.localtime(time.time())) + '\n'
+        writeLst.append(strData)
 
-        str = '* Time: ' + time.strftime('%H-%M-%S',time.localtime(time.time())) + '\n'
-        writeLst.append(str)
+        strData = '* Time: ' + time.strftime('%H-%M-%S',time.localtime(time.time())) + '\n'
+        writeLst.append(strData)
 
-        str = '* only change the file by tools.\n'
-        writeLst.append(str)
+        strData = '* only change the file by tools.\n'
+        writeLst.append(strData)
 
-        str = '*/\n'
-        writeLst.append(str)
+        strData = '*/\n'
+        writeLst.append(strData)
 
-        str = 'function createArrayCity()\n'
-        writeLst.append(str)
+        strData = 'function createArrayCity()\n'
+        writeLst.append(strData)
 
-        str = '{\n'
-        writeLst.append(str)
+        strData = '{\n'
+        writeLst.append(strData)
 
-        str = '     var arrayCity=new Array();\n'
-        writeLst.append(str)
+        strData = '     var arrayCity=new Array();\n'
+        writeLst.append(strData)
 
         #TODO: a loop to get data from db.
+        addressList = getAddressListOracle()
+        i = 0
+        for item in addressList:
+            strData = '     arrayCity['+str(i)+']=new Array('
+            strData = strData + str(item[0])+','
+            strData = strData + str(item[1])+','
+            strData = strData + str(item[2])+','
+            strData = strData +'"'+ str(item[3])+'"'
+            strData = strData + ');\n'
+            writeLst.append(strData)
+            i = i+1
 
-        str = '}\n'
-        writeLst.append(str)
+
+        strData = '     return arrayCity;\n'
+        writeLst.append(strData)
+
+        strData = '}\n'
+        writeLst.append(strData)
 
         f.writelines(writeLst)
         pass
     finally:
         f.close()
 
+def getAddressListOracle():
+    db = cx_Oracle.connect('insurance','Rayda2012','192.168.124.130:1521/stone')
+    cursor = db.cursor()
+    sql = "select * from ADDRESS_LIST"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return result
+    #count = cursor.rowcount
+    #print db.dsn
+    #print db.version
+
 if __name__ == "__main__":
     writeArrayCityJs()
+    #getAddressListOracle()
 

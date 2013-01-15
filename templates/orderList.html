@@ -22,8 +22,12 @@
             var myDate = new Date();
             currentDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+myDate.getDate();
             nextDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+(myDate.getDate()+1);
-            jQuery("#idStartDT").val(currentDate);
-            jQuery("#idEndDT").val(nextDate);
+            %if startdt is None:
+                jQuery("#idStartDT").val(currentDate);
+            %endif
+            %if enddt is None:
+                jQuery("#idEndDT").val(nextDate);
+            %endif
         });
 
         function showFastPrev(){
@@ -237,7 +241,7 @@ print localURL
                         ## empty value
                         realDataValue = '0'
                 %>
-                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue)}
+                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue,dataItem = None)}
 
                 <td>
                     <label class="label">开始日期</label>

@@ -621,7 +621,7 @@ import copy
                     <%namespace name="comp" file="components.html" />
                     ${comp.layoutControlStatic(item=item)}
                     %if localOrderInfo is not None:
-                        ${comp.layoutControlDynamic(item=item,realDataValue = localOrderInfo["STATUS"])}
+                        ${comp.layoutControlDynamic(item=item,realDataValue = localOrderInfo["STATUS"],dataItem = None)}
                     %endif
 
                 </tr>
