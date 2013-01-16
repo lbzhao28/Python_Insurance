@@ -71,13 +71,127 @@ function changevalCityPls(targetObj,parentid,selectedid)
             newoptionI++;
         }
     }
-    if(targetObj.id=="idPOLICYHOLDER_sheng")
+    if(targetObj.id=="idINSURANT_USR_sheng")
     {
-        changevalCityPls(document.getElementById("idPOLICYHOLDER_shi"),newoptsarr[0],0)
+        changevalCityPls(document.getElementById("idINSURANT_USR_shi"),newoptsarr[0],0)
     }
-    if(targetObj.id=="idPOLICYHOLDER_shi")
+    if(targetObj.id=="idINSURANT_USR_shi")
     {
-        changevalCityPls(document.getElementById("idPOLICYHOLDER_xian"),newoptsarr[0],0)
+        changevalCityPls(document.getElementById("idINSURANT_USR_xian"),newoptsarr[0],0)
+    }
+}
+
+function changevalCityPlsA(targetObj,parentid,selectedid)
+{
+    var newoptsarr=new Array();
+    var newoptsarrval=new Array();
+    var newoptionI=0;
+    //清除现有
+    count1=targetObj.options.length;
+    while(count1!=0)
+    {
+        targetObj.options.remove(0);
+        count1=targetObj.options.length;
+    }
+    //过滤上级id=选中id
+    for(var i=0;i<arrayCity.length;i++)
+    {
+        if(arrayCity[i][2]==parentid)
+        {
+            newoptsarr[newoptionI]=arrayCity[i][0];
+            newoptsarrval[newoptionI]=arrayCity[i][3];
+            var aOption = new Option(arrayCity[i][3],arrayCity[i][0]);
+            targetObj.options[newoptionI]=aOption;
+            if(arrayCity[i][0]==selectedid)
+            {
+                targetObj.options[newoptionI].selected=true;
+            }
+            newoptionI++;
+        }
+    }
+    if(targetObj.id=="idINSURANT_USR_shengA")
+    {
+        changevalCityPlsA(document.getElementById("idINSURANT_USR_shiA"),newoptsarr[0],0)
+    }
+    if(targetObj.id=="idINSURANT_USR_shiA")
+    {
+        changevalCityPlsA(document.getElementById("idINSURANT_USR_xianA"),newoptsarr[0],0)
+    }
+}
+
+function changevalCityPlsB(targetObj,parentid,selectedid)
+{
+    var newoptsarr=new Array();
+    var newoptsarrval=new Array();
+    var newoptionI=0;
+    //清除现有
+    count1=targetObj.options.length;
+    while(count1!=0)
+    {
+        targetObj.options.remove(0);
+        count1=targetObj.options.length;
+    }
+    //过滤上级id=选中id
+    for(var i=0;i<arrayCity.length;i++)
+    {
+        if(arrayCity[i][2]==parentid)
+        {
+            newoptsarr[newoptionI]=arrayCity[i][0];
+            newoptsarrval[newoptionI]=arrayCity[i][3];
+            var aOption = new Option(arrayCity[i][3],arrayCity[i][0]);
+            targetObj.options[newoptionI]=aOption;
+            if(arrayCity[i][0]==selectedid)
+            {
+                targetObj.options[newoptionI].selected=true;
+            }
+            newoptionI++;
+        }
+    }
+    if(targetObj.id=="idINSURANT_USR_shengB")
+    {
+        changevalCityPlsB(document.getElementById("idINSURANT_USR_shiB"),newoptsarr[0],0)
+    }
+    if(targetObj.id=="idINSURANT_USR_shiB")
+    {
+        changevalCityPlsB(document.getElementById("idINSURANT_USR_xianB"),newoptsarr[0],0)
+    }
+}
+
+function changevalCityPlsC(targetObj,parentid,selectedid)
+{
+    var newoptsarr=new Array();
+    var newoptsarrval=new Array();
+    var newoptionI=0;
+    //清除现有
+    count1=targetObj.options.length;
+    while(count1!=0)
+    {
+        targetObj.options.remove(0);
+        count1=targetObj.options.length;
+    }
+    //过滤上级id=选中id
+    for(var i=0;i<arrayCity.length;i++)
+    {
+        if(arrayCity[i][2]==parentid)
+        {
+            newoptsarr[newoptionI]=arrayCity[i][0];
+            newoptsarrval[newoptionI]=arrayCity[i][3];
+            var aOption = new Option(arrayCity[i][3],arrayCity[i][0]);
+            targetObj.options[newoptionI]=aOption;
+            if(arrayCity[i][0]==selectedid)
+            {
+                targetObj.options[newoptionI].selected=true;
+            }
+            newoptionI++;
+        }
+    }
+    if(targetObj.id=="idINSURANT_USR_shengC")
+    {
+        changevalCityPlsC(document.getElementById("idINSURANT_USR_shiC"),newoptsarr[0],0)
+    }
+    if(targetObj.id=="idINSURANT_USR_shiC")
+    {
+        changevalCityPlsC(document.getElementById("idINSURANT_USR_xianC"),newoptsarr[0],0)
     }
 }
 
