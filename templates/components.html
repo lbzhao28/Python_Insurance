@@ -180,10 +180,11 @@ j = 0
                                     realDataValue = ''
                                 %>
                                 <%
-                                ##TODO: how to show the value select.
-                                if realDataValue is not None:
+                                print selectItemData["inDataID"]+' realDataValue is :'+realDataValue
+                                if (realDataValue is not None) & (realDataValue != ''):
                                     setScript = setScript + 'jQuery("#'+selectItemData["inDataID"]+'").val('+realDataValue+');'+'\r'
-                                    setScript = setScript + 'changevalCityIns(document.getElementById("'+selectItemData["inDataID"]+'"),0,'+realDataValue+');'+'\r'
+                                    if "onSetValueDataID" in selectItemData:
+                                        setScript = setScript + 'changevalCityIns(document.getElementById("'+selectItemData["onSetValueDataID"]+'"),'+realDataValue+');' + '\r'
                                 else:
                                     setScript = setScript + '\r'
                                 endif
