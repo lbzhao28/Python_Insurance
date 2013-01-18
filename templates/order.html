@@ -80,6 +80,13 @@
                 }
             });
 
+
+            jQuery("#btnClear").click(function(){
+                actionUrl ="http://${localURL}/order/"+${contactid};
+                //alert(actionUrl);
+                window.location.href=actionUrl;
+            });
+
             jQuery("#btnModify").click(function(){
                 showPutOrder();
             });
@@ -293,139 +300,8 @@
             }
         }
 
-
-        function check_submit(){
-            if(jQuery("#PolicyInformation1_txtName").val() ==""){
-                alert("投保人姓名不能为空!");
-                return false;
-            }
-            if(jQuery("#BePolicyHolder_txtBeHolderName").val() ==""){
-                alert("被保人姓名不能为空!");
-                return false;
-            }
-            if(jQuery("#PolicyInformation1_txtHolderCardNumber").val() ==""){
-                alert("投保人证件不能为空!");
-                return false;
-            }
-            if(jQuery("#BePolicyHolder_txtBeHolderCardNumber").val() ==""){
-                alert("被保人证件不能为空!");
-                return false;
-            }
-            if(jQuery("#PolicyInformation1_txtNum").val() ==""){
-                alert("购买份数不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtBirthday").val() ==""){
-                alert("投保人出生日期不能为空!");
-                return false;
-            }
-
-            if(jQuery("#BePolicyHolder_txtBeHolderBirthday").val() ==""){
-                alert("被保人出生日期不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtHolderOldYears").val() ==""){
-                alert("投保人年龄不能为空!");
-                return false;
-            }
-
-            if(jQuery("#BePolicyHolder_txtBeHolderOldYears").val() ==""){
-                alert("被保人年龄不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtHolderPhoneNumber").val() ==""){
-                alert("投保人联系电话不能为空!");
-                return false;
-            }
-
-            if(jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val() ==""){
-                alert("被保人联系电话不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtHolderDetailAddress").val() ==""){
-                alert("投保人联系地址不能为空!");
-                return false;
-            }
-
-            if(jQuery("#idINSURANT_USR_ADDRESS").val() ==""){
-                alert("被保人联系地址不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtHolderZip").val() ==""){
-                alert("投保人邮编不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtBeHolderZip").val() ==""){
-                alert("被保人邮编不能为空!");
-                return false;
-            }
-
-            var boolCheck=jQuery('input:radio[name="POLICYHOLDER_USR_SEX"]').is(":checked");
-
-            if(!boolCheck){
-                alert("投保人性别不能为空");
-                return false;
-            }
-
-            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEX"]').is(":checked");
-
-            if(!boolCheck){
-                alert("被保人性别不能为空");
-                return false;
-            }
-
-            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXA"]').is(":checked");
-
-            if(!boolCheck){
-                alert("被保人性别不能为空");
-                return false;
-            }
-
-            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXB"]').is(":checked");
-
-            if(!boolCheck){
-                alert("被保人性别不能为空");
-                return false;
-            }
-
-            var boolCheck=jQuery('input:radio[name="INSURANT_USR_SEXC"]').is(":checked");
-
-            if(!boolCheck){
-                alert("被保人性别不能为空");
-                return false;
-            }
-
-
-            var boolCheck=jQuery('input:radio[name="rbtBeneficiarySex"]').is(":checked");
-
-            if(!boolCheck){
-                alert("受益人性别不能为空");
-                return false;
-            }
-
-            if(jQuery("#PolicyInformation1_txtPayMode").val() ==""){
-                alert("首期支付方式不能为空!");
-                return false;
-            }
-
-            if(jQuery("#idPolicyDistribution_txtDistributionTime").val() ==""){
-                alert("配送时间不能为空!");
-                return false;
-            }
-
-            if(jQuery("#PolicyDistribution_txtDistribution").val() ==""){
-                alert("配送地址不能为空!");
-                return false;
-            }
-
-            return true;
-        }
+        <%namespace name="comp" file="components.html" />
+        ${comp.layoutOrderCheckSubmit(fName='check_submit')}
 
         function pickedFuncPolicyInformation1_txtHolderOldYears(){
             var myDate = new Date();
@@ -511,6 +387,8 @@ import copy
 
 <form id="formOrder">
 
+
+
 <div class="bs-docs-div-compress">
                 <label class="label label-info label-large">保单操作</label>
     <div>
@@ -529,6 +407,7 @@ import copy
                             <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
                         %endif
                     %endif
+                    <button type="button" class="btn btn-small" id="btnClear">清空</button>
                     <button type="button" class="btn btn-small" id="btnAdd">新增</button>
                     % if orderid is not None:
                     <button  type="button" class="btn btn-small" id="btnModify">修改</button>

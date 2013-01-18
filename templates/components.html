@@ -74,6 +74,120 @@ j = 0
                 </td>
 </%def>
 
+<%!
+import configObjData
+from configObjData import getConfigPage
+
+configPage = getConfigPage()
+%>
+##parameter:
+##fName -> 函数名称
+<%def name="layoutOrderCheckSubmit(fName)">
+        function ${fName}(){
+        %if configPage.as_bool('hasPolicyHolder_Usr'):
+            <%
+            configItem = configPage['PolicyHolder_Usr']
+            %>
+            %for member in configItem:
+                <%
+                itemMember=configItem[member]
+                %>
+                %if "titleType" in itemMember:
+                    <%
+                    alertText = '投保人' + itemMember["titleText"]
+                    %>
+                    ${layoutCheckSubmit(item=itemMember,alertText=alertText)}
+                %endif
+            %endfor
+        %endif
+
+        %if configPage.as_bool('hasInsurantUsr'):
+            <%
+            configItem = configPage['InsurantUsr']
+            %>
+            %for member in configItem:
+                <%
+                itemMember=configItem[member]
+                %>
+                %if "titleType" in itemMember:
+                    <%
+                    alertText = '被保人' + itemMember["titleText"]
+                    %>
+                    ${layoutCheckSubmit(item=itemMember,alertText=alertText)}
+                %endif
+            %endfor
+        %endif
+
+		%if configPage.as_bool('hasInsurantPlan'):
+            <%
+            configItem = configPage['InsurantPlan']
+            %>
+            %for member in configItem:
+                <%
+                itemMember=configItem[member]
+                %>
+                %if "titleType" in itemMember:
+                    <%
+                    alertText = '保险计划' + itemMember["titleText"]
+                    %>
+                    ${layoutCheckSubmit(item=itemMember,alertText=alertText)}
+                %endif
+            %endfor
+        %endif
+
+        %if configPage.as_bool('hasDelivery'):
+            <%
+            configItem = configPage['delivery']
+            %>
+            %for member in configItem:
+                <%
+                itemMember=configItem[member]
+                %>
+                %if "titleType" in itemMember:
+                    <%
+                    alertText = '配送的' + itemMember["titleText"]
+                    %>
+                    ${layoutCheckSubmit(item=itemMember,alertText=alertText)}
+                %endif
+            %endfor
+        %endif
+
+        
+
+
+        return true;
+        }
+</%def>
+
+##parameter:
+##item -> 配置项
+##alertText -> 警告信息
+<%def name="layoutCheckSubmit(item,alertText)">
+        <%
+        functionBody = ''
+        if 'mustHave' in item:
+            if item.as_bool('mustHave'):
+                if item["dataShowType"] == 'radio':
+                    functionBody += 'var boolCheck = jQuery(\'input:radio[name="' + item['dataName'] + '"]\').is(":checked");' + '\n'
+                    functionBody += 'if(!boolCheck){' + '\n'
+                    functionBody += 'alert("' + alertText + '不可以为空' +'");\n'
+                    functionBody += 'return false;\n'
+                    functionBody += '}\n'
+                else:
+                    if 'dataID' in item:
+                        functionBody += 'if(jQuery("#' + item['dataID'] +'").val() == ""){\n'
+                        functionBody += 'alert("' + alertText + '不可以为空' +'");\n'
+                        functionBody += 'jQuery("#' + item['dataID'] +'").focus();\n'
+                        functionBody += 'return false;\n'
+                        functionBody += '}\n'
+                    else:
+                        pass
+        else:
+                pass
+        %>
+        ${functionBody}
+</%def>
+
 ##parameter:
 ##item -> 配置项
 ##realDataValue -> 数据项,单条数据,可以传None
