@@ -118,6 +118,8 @@ configPage = getConfigPage()
             %endfor
         %endif
 
+        ##TODO:如何处理多个被保人和受益人？
+
 		%if configPage.as_bool('hasInsurantPlan'):
             <%
             configItem = configPage['InsurantPlan']
