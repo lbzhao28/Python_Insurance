@@ -376,6 +376,7 @@ class order:
                 return render.error(error = 'no contactid')
             else:
                 #get POST form data
+                #TODO: 如何处理多个被保人，当没值的时候。
                 data = web.input()
                 #call REST post data
                 retStr = OrderDomainHandler.postOrderInfoContact(contactid,data)
