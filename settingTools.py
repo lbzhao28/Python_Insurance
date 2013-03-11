@@ -3,7 +3,6 @@ __author__ = 'stone'
 #File:settingTools.py
 #this file to get the db to create js file.
 import time
-import cx_Oracle
 import string
 
 import os
@@ -69,20 +68,6 @@ def writeArrayCityJs():
     finally:
         f.close()
 
-def getAddressListOracle():
-    db = cx_Oracle.connect('insurance','Rayda2012','192.168.124.130:1521/stone')
-    cursor = db.cursor()
-    sql = "select * from ADDRESS_LIST"
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    cursor.close()
-    db.close()
-    return result
-    #count = cursor.rowcount
-    #print db.dsn
-    #print db.version
-
 if __name__ == "__main__":
     writeArrayCityJs()
-    #getAddressListOracle()
 

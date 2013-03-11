@@ -8,7 +8,6 @@ import json
 import globalDefine
 import traceback
 import configData
-import DbModule
 from configData import getConfig
 from logHelper import getLogger
 from configObjData import getConfigPage
@@ -400,7 +399,6 @@ def postOrderInfoContact(inContactid,storageData):
     finally:
         pass
 
-
 def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
     try:
         logger = getLogger()
@@ -464,38 +462,6 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
         pass
     finally:
         pass
-
-def getUsrPurview(inUsrid,inPwd):
-    try:
-        logger = getLogger()
-        logger.debug("start check user and psswod and get user purview.")
-
-        dict = {"right":False}
-        updateDict = {"log":"no log"}
-        dict.update(updateDict)
-
-        #连接db层进行验证.
-        if DbModule.IsValidUsrPwd(inUsrid,inPwd):
-            dict["right"] = True
-            dict["log"] = "login in success"
-            logger.debug(inUsrid+" user is valid user")
-            #连接db层取到权限
-        else:
-            dict["log"] = inUsrid+" user not exixts or password error"
-
-    except:
-        logger.error("exception occur, see the traceback.log")
-
-        #异常写入日志文件.
-        f = open('traceback.txt','a')
-        traceback.print_exc()
-        traceback.print_exc(file = f)
-        f.flush()
-        f.close()
-    else:
-        pass
-    finally:
-        return dict
 
 def putOrderInfoContact(inOrderid,storageData):
         try:
