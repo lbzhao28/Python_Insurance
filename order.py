@@ -380,6 +380,9 @@ class order:
                 #call REST post data
                 retStr = OrderDomainHandler.postOrderInfoContact(contactid,data)
 
+                if retStr is None:
+                    return render.error(error = 'add failure.')
+
                 #according the response
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):

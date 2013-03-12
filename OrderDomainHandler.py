@@ -206,21 +206,33 @@ def zipOrderInfoOrder(inOrderInfo):
 
         #InsurantUsr 被保人
         #a loop for multi data
-		#only save 4 Insurant
-		#TODO: every time ,save 4 data?
+		#total save 4 Insurant, the 4 Insurant DIV saved in html file.
+        #only save used Insurant.
+        if 'INSURANT_USR_NAMEA' in localOrderInfo:
+            configDict = {0:'InsurantUsr',1:'InsurantUsrA'}
+        else:
+            configDict = {0:'InsurantUsr'}
 
+        if 'INSURANT_USR_NAMEB' in localOrderInfo:
+            upDict = {2:'InsurantUsrB'}
+            configDict.update(upDict)
+        else:
+            pass
 
-        configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB',3:'InsurantUsrC'}
+        if 'INSURANT_USR_NAMEC' in localOrderInfo:
+            upDict = {3:'InsurantUsrC'}
+            configDict.update(upDict)
+        else:
+            pass
 
         localLst =[]
 
         #a dictionary list
-        step=len(configLst)
-        #TODO: how to dynamic in page?
+        step=len(configDict)
         for i in range(step):
             item = {}
 
-            configShowPage = configLst.get(i)
+            configShowPage = configDict.get(i)
 
             configPageUsing = configPage[configShowPage]
             #TODO: wrong data in relation.
@@ -251,17 +263,21 @@ def zipOrderInfoOrder(inOrderInfo):
         #a loop for multi data
         #only show 1 BeneficiaryUsr
         #TODO: every time ,save 1 data?
-        configLst = {0:'BeneficiaryUsr'}
+
+        if 'Lstbeneficiaries_NAME' in localOrderInfo:
+            configDict = {0:'BeneficiaryUsr'}
+        else:
+            configDict = {}
 
         localLst = []
 
         #a dictionary list
-        step=len(configLst)
+        step=len(configDict)
         #TODO: how to dynamic in page?
         for i in range(step):
             item = {}
 
-            configShowPage = configLst.get(i)
+            configShowPage = configDict.get(i)
 
             configPageUsing = configPage[configShowPage]
             addItemDictValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])

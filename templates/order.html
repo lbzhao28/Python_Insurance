@@ -123,12 +123,17 @@
                 putOrder('${contactid}');
             });
 
+
+            disableElements(jQuery('#idBeneficiary').children());
+
             jQuery("#idRbtBeneficiaryLaw").click(function(){
                 jQuery("#idBeneficiary").collapse('hide');
+                disableElements(jQuery('#idBeneficiary').children());
             });
 
             jQuery("#idRbtBeneficiaryJunfen").click(function(){
                 jQuery("#idBeneficiary").collapse('show');
+                enableElements(jQuery('#idBeneficiary').children());
             });
 
             jQuery("#btnConfirmFix").click(function(){
@@ -147,19 +152,45 @@
                 showStatusOrder();
             });
 
+            //at first, disable InsurantA,InsurantB,InsurantC.
+            //disable div InsurantA,InsurantB,InsurantC control
+            disableElements(jQuery('#divInsurantUsrA').children());
+            disableElements(jQuery('#divInsurantUsrB').children());
+            disableElements(jQuery('#divInsurantUsrC').children());
+
+            function disableElements(el) {
+                for (var i = 0; i < el.length; i++) {
+                    el[i].disabled = true;
+
+                    disableElements(el[i].children);
+                }
+            }
+
+            function enableElements(el) {
+                for (var i = 0; i < el.length; i++) {
+                    el[i].disabled = false;
+
+                    enableElements(el[i].children);
+                }
+            }
+
             jQuery("#btnAddPolicy").click(function(){
                 if (divInsurantUsrAStatus == 'hidden'){
                     jQuery("#divInsurantUsrA").collapse('show');
+                    //enable div control.
+                    enableElements(jQuery('#divInsurantUsrA').children());
                 }
                 else
                 {
                     if (divInsurantUsrBStatus == 'hidden'){
                         jQuery("#divInsurantUsrB").collapse('show');
+                        enableElements(jQuery('#divInsurantUsrB').children());
                     }
                     else
                     {
                         if (divInsurantUsrCStatus == 'hidden'){
                             jQuery("#divInsurantUsrC").collapse('show');
+                            enableElements(jQuery('#divInsurantUsrC').children());
                         }
                         else
                         {
@@ -172,16 +203,19 @@
             jQuery("#btnDecreasePolicy").click(function(){
                 if (divInsurantUsrCStatus == 'shown'){
                     jQuery("#divInsurantUsrC").collapse('hide');
+                    disableElements(jQuery('#divInsurantUsrC').children());
                 }
                 else
                 {
                     if (divInsurantUsrBStatus == 'shown'){
                         jQuery("#divInsurantUsrB").collapse('hide');
+                        disableElements(jQuery('#divInsurantUsrB').children());
                     }
                     else
                     {
                         if (divInsurantUsrAStatus == 'shown'){
                             jQuery("#divInsurantUsrA").collapse('hide');
+                            disableElements(jQuery('#divInsurantUsrA').children());
                         }
                         else
                         {
@@ -552,7 +586,7 @@ import copy
                     </tr>
                 </table>
                 <table class="table table-normal table-condensed">
-                    ##根据被保人的实际情况,决定显示多少个被保人，需要在载入的时候判断.
+                    ##TODO:根据被保人的实际情况,决定显示多少个被保人，需要在载入的时候判断.
                     <%
                         configPageInsurantUsr = configPage['InsurantUsr']
                         configUsing =copy.deepcopy(configPageInsurantUsr)
