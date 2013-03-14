@@ -23,8 +23,10 @@ web.config.debug = False
 urls = (
         '/login/(.*)/(.*)/(.*)','login',
         '/order/(.*)','order',
+        '/orderTemp/(.*)','orderTemp',
         '/orderProduct','orderProduct',
         '/orderUpdate/(.*)/(.*)','orderUpdate',
+        '/orderUpdateTemp/(.*)/(.*)','orderUpdateTemp',
         '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
         '/orderList','orderList'
         )
@@ -226,7 +228,57 @@ class orderUpdate:
                 #get POST form data
                 data = web.input()
                 #call REST post data
-                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data)
+                #TODO: 1 非0即可，不会保存
+                status = '1'
+                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status)
+
+                #according the response
+                retDict = json.loads(retStr)
+                if (retDict["RETURNFLAG"] == True):
+                    return render.order(contactid = contactid,orderid = orderid)
+                else:
+                    return render.error(error = 'update failure!')
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+#in JS, can not use put directly, so we use POST　to simulate it.
+class orderUpdateTemp:
+    def POST(self,contactid,orderid):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Update Temp POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            #TODO: open the auth in future.also need purview.
+            #            authreq = checkUserAuth(web)
+            #
+            #            if authreq:
+            #                web.header('WWW-Authenticate','Basic realm="Auth example"')
+            #                web.ctx.status = '401 Unauthorized'
+            #                logger.debug("no right HTTP_AUTHORIZATION")
+            #                return render.error(error = web.ctx.status)
+
+            if orderid is None:
+                return render.error(error = 'no orderid')
+            else:
+                #get POST form data
+                data = web.input()
+                #call REST post data
+                #TODO: 6 means 暂存订单
+                status = '6'
+                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status)
 
                 #according the response
                 retDict = json.loads(retStr)
@@ -354,6 +406,112 @@ class login:
         finally:
             pass
 
+class orderTemp:
+    def POST(self,contactid):
+        try:
+            logger = getLogger()
+            logger.debug("start Order Temp Page POST response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            #TODO: open the auth in future.also need purview.
+            #            authreq = checkUserAuth(web)
+            #
+            #            if authreq:
+            #                web.header('WWW-Authenticate','Basic realm="Auth example"')
+            #                web.ctx.status = '401 Unauthorized'
+            #                logger.debug("no right HTTP_AUTHORIZATION")
+            #                return render.error(error = web.ctx.status)
+
+            if contactid is None:
+                return render.error(error = 'no contactid')
+            else:
+                #get POST form data
+                #TODO: 如何处理多个被保人，当没值的时候。多个被保人会有问题,不应该每次都传多个被保人。
+                data = web.input()
+                #call REST post data
+                #TODO: 6 means 暂存订单
+                status = '6'
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status)
+
+                if retStr is None:
+                    return render.error(error = 'add failure.')
+
+                #according the response
+                retDict = json.loads(retStr)
+                if (retDict["RETURNFLAG"] == True):
+                    #refresh the order.
+                    orderidStr = retDict["OrderID"]
+                    return render.order(contactid = contactid,orderid = orderidStr)
+                else:
+                    return render.error(error = 'add failure.')
+
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+    def GET(self,contactid):
+    #must have contactid, otherwise,the data will be wrong.
+        try:
+            logger = getLogger()
+            logger.debug("start Order Temp Page GET response")
+
+            globalDefine.globalOrderInfoErrorlog = "No Error"
+
+            #TODO: open the auth in future.also need purview.
+            #            authreq = checkUserAuth(web)
+            #
+            #            if authreq:
+            #                web.header('WWW-Authenticate','Basic realm="Auth example"')
+            #                web.ctx.status = '401 Unauthorized'
+            #                logger.debug("no right HTTP_AUTHORIZATION")
+            #                return render.error(error = web.ctx.status)
+
+            if contactid is None:
+                return render.error(error = 'no contactid')
+            else:
+                #if has orderid according the orderid to get the order info.
+                #query_dict = dict(urlparse.parse_qsl(web.ctx.env['QUERY_STRING']))
+                parsed_url = urlparse.urlparse(web.ctx.fullpath)
+                query_url = parsed_url.query
+                query_url = query_url.encode('utf-8')
+                if (query_url != ''):
+                    query_dict = dict(urlparse.parse_qsl(query_url))
+                    if 'orderid' in query_dict:
+                        orderid = query_dict['orderid']
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                    else:
+                        #if no orderid, according the query_dict to show a file.
+                        orderid = None
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                else:
+                    #if no querey string.  show blank file
+                    orderid = None
+                    query_dict = None
+                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+        except :
+            logger.error("exception occur, see the traceback.log")
+            #异常写入日志文件.
+            f = open('traceback.txt','a')
+            traceback.print_exc()
+            traceback.print_exc(file = f)
+            f.flush()
+            f.close()
+        else:
+            pass
+        finally:
+            pass
+
+
 class order:
     def POST(self,contactid):
         try:
@@ -378,7 +536,9 @@ class order:
                 #TODO: 如何处理多个被保人，当没值的时候。多个被保人会有问题,不应该每次都传多个被保人。
                 data = web.input()
                 #call REST post data
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data)
+                #TODO: 1 means 待审核订单
+                status = '1'
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status)
 
                 if retStr is None:
                     return render.error(error = 'add failure.')

@@ -173,6 +173,8 @@ print localURL
 %>
 </head>
 <body>
+##TODO: 6 means 暂存订单
+%if orderstatus != '6':
 <div class="bs-docs-example">
     <form class="form-search">
 
@@ -268,6 +270,8 @@ print localURL
         <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
     </form>
 </div>
+%endif
+
 <form id="formOrderList">
     <fieldset>
 <%

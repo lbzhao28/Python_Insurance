@@ -16,16 +16,24 @@ configPage = getConfigPage()
 def addDictItemValue(srcDict,srcName,dstDict,dstName):
     """add value data from srcDict to dstDict .from item data to dic"""
 
-    localVal = srcDict.pop(srcName)
+
+    if srcName in srcDict:
+        localVal = srcDict.pop(srcName)
+    else:
+        localVal = ''
     upDict = {dstName:localVal}
     dstDict.update(upDict)
 
 def addItemDictValue(dstDict,dstName,srcDict,srcName):
     """add value data from srcDict to dstDict .from dic to item data."""
 
-    localVal = srcDict.pop(srcName)
+    if srcName in srcDict:
+        localVal = srcDict.pop(srcName)
+    else:
+        localVal = ''
     upDict = {dstName:localVal}
     dstDict.update(upDict)
+
 
 def flatOrderInfoOrder(inOrderInfo):
     """update the order info according the web page show.show the data.
@@ -347,7 +355,7 @@ def updateDictSingleValue(srcDict,dstName,dstValue):
         upDict = {dstName:dstValue}
         srcDict.update(upDict)
 
-def postOrderInfoContact(inContactid,storageData):
+def postOrderInfoContact(inContactid,storageData,inStatus):
     try:
         logger = getLogger()
         logger.debug("start POST Order Info according contact id.")
@@ -359,11 +367,15 @@ def postOrderInfoContact(inContactid,storageData):
         updateDictSingleValue(dictData,"CONTACTID",inContactid)
 
         #add addressid
+        #TODO: still need this?
         updateDictSingleValue(dictData,"ADDRESSID",'1')
 
         #TODO:the value should come from html page.
         #add grpid
         updateDictSingleValue(dictData,"GRPID",'ccbgroup1')
+
+        #update status
+        updateDictSingleValue(dictData,"STATUS",inStatus)
 
         #zip the dict
         dictData = zipOrderInfoOrder(dictData)
@@ -479,7 +491,7 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
     finally:
         pass
 
-def putOrderInfoContact(inOrderid,storageData):
+def putOrderInfoContact(inOrderid,storageData,inStatus):
         try:
             logger = getLogger()
             logger.debug("start PUT Order Info according contact id.")
@@ -489,6 +501,10 @@ def putOrderInfoContact(inOrderid,storageData):
 
             #add orderid
             updateDictSingleValue(dictData,"ORDERID",inOrderid)
+
+            #update status, only to 6, 暂存订单
+            if (inStatus == '6'):
+                updateDictSingleValue(dictData,"STATUS",inStatus)
 
             dictData = zipOrderInfoOrder(dictData)
 

@@ -87,12 +87,30 @@
                 window.location.href=actionUrl;
             });
 
-            jQuery("#btnModify").click(function(){
-                showPutOrder();
+            jQuery("#btnSave").click(function(){
+                if ('${orderid}' != 'None')
+                {
+                    //have orderid, modify data.
+                    showPutOrder();
+                }
+                else
+                {
+                    //no orderid, add data.
+                    showPostOrder();
+                }
             });
 
-            jQuery("#btnAdd").click(function(){
-                showPostOrder();
+            jQuery("#btnTempSave").click(function(){
+                if ('${orderid}' != 'None')
+                {
+                    //have orderid, modify data.
+                    showTempPutOrder();
+                }
+                else
+                {
+                    //no orderid, add data.
+                    showTempPostOrder();
+                }
             });
 
             jQuery("#btnCal").click(function(){
@@ -118,11 +136,20 @@
                 postOrder('${contactid}');
             });
 
+            jQuery("#btnConfirmTempSave").click(function(){
+                postTempSaveOrder('${contactid}');
+            });
+
+
             jQuery("#btnConfirmModify").click(function(){
                 //TODO: add button change status .
                 putOrder('${contactid}');
             });
 
+            jQuery("#btnConfirmTempModify").click(function(){
+                //TODO: add button change status .
+                putTempOrder('${contactid}');
+            });
 
             disableElements(jQuery('#idBeneficiary').children());
 
@@ -267,12 +294,21 @@
             }
         }
 
+        function showTempPostOrder(){
+            jQuery("#myModalTempSave").modal("show");
+        }
+
         function showPutOrder(){
             if (check_submit())
             {
                 jQuery("#myModalModify").modal("show");
             }
         }
+
+        function showTempPutOrder(){
+            jQuery("#myModalTempModify").modal("show");
+        }
+
 
         function showFixOrder(){
             if (check_submit())
@@ -298,25 +334,37 @@
             }
         }
 
+        function postTempSaveOrder(inContactid){
+            //TODO: AJAX 异步提交
+            document.getElementById("formOrder").action = "http://${localURL}/orderTemp/"+inContactid;
+            document.getElementById("formOrder").method = "POST";
+            document.getElementById("formOrder").submit();
+        }
+
         function putOrder(inContactid){
             if (check_submit())
             {
                 var inOrderid = jQuery("#lblOrderid").text();
-                //alert(inOrderid);
                 document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
         }
 
+        function putTempOrder(inContactid){
+            var inOrderid = jQuery("#lblOrderid").text();
+            document.getElementById("formOrder").action = "http://${localURL}/orderUpdateTemp/"+inContactid+"/"+inOrderid;
+            document.getElementById("formOrder").method = "POST";
+            document.getElementById("formOrder").submit();
+        }
+
+
         function putFixOrder(inContactid){
             if (check_submit())
             {
                 var inOrderid = jQuery("#lblOrderid").text();
-                //alert(inOrderid);
-                //TODO: we need get the status from config.
-                // '1' status means fix order.
-                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+'1';
+                var status = jQuery("#idDDLORDERSTATUS").val();
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
             }
@@ -327,7 +375,6 @@
             {
                 var inOrderid = jQuery("#lblOrderid").text();
                 var status = jQuery("#idDDLORDERSTATUS").val();
-                //alert(status);
                 document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
                 document.getElementById("formOrder").method = "POST";
                 document.getElementById("formOrder").submit();
@@ -442,13 +489,12 @@ import copy
                         %endif
                     %endif
                     <button type="button" class="btn btn-small" id="btnClear">清空</button>
-                    <button type="button" class="btn btn-small" id="btnAdd">新增</button>
+                    <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
+                    <button type="button" class="btn btn-small" id="btnSave">保存</button>
                     % if orderid is not None:
-                    <button  type="button" class="btn btn-small" id="btnModify">修改</button>
                     <button type="button" class="btn btn-small" id="btnStatus">审核</button>
                     <button type="button" class="btn btn-small" id="btnFix">承保</button>
                     % else:
-                    <button  type="button" class="btn btn-small" id="btnModify" disabled="true" >修改</button>
                     <button type="button" class="btn btn-small" id="btnStatus" disabled="true" >审核</button>
                     <button type="button" class="btn btn-small" id="btnFix" disabled="true" >承保</button>
                     %endif
@@ -470,6 +516,21 @@ import copy
         </div>
     </div>
 
+    <!-- Modal Temp Save -->
+    <div id="myModalTempSave" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalTempSaveLabel">确认操作?</h3>
+        </div>
+        <div class="modal-body">
+            <p>点击确认后数据将暂时保存！</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+            <button class="btn btn-primary" id="btnConfirmTempSave" >确认</button>
+        </div>
+    </div>
+
     <!-- Modal Modify -->
     <div id="myModalModify" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalModifyLabel" aria-hidden="true">
         <div class="modal-header">
@@ -482,6 +543,22 @@ import copy
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
             <button class="btn btn-primary" id="btnConfirmModify" >确认</button>
+        </div>
+    </div>
+
+
+    <!-- Modal Temp Modify -->
+    <div id="myModalTempModify" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalModifyLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalTempModifyLabel">确认操作?</h3>
+        </div>
+        <div class="modal-body">
+            <p>点击确认后数据将暂时保存！</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+            <button class="btn btn-primary" id="btnConfirmTempModify" >确认</button>
         </div>
     </div>
 
