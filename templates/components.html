@@ -271,6 +271,14 @@ configPage = getConfigPage()
                                 %endif
                             %endfor
                             </${item["dataType"]}>
+                            %if "defaultValue" in item:
+                                <script type="text/javascript" language="javascript">
+                                    ##TODO: it can not worked.
+                                    ##selectText('#PolicyInformation1_ddlProfessional','职员');
+                                    ##alert('${item["dataID"]');
+                                </script>
+                                ##selectText(${item["dataID"],${item["defaultValue"]);
+                            %endif
                         %elif item["dataShowType"] == 'selectBriefAddress':
                             <%
                             setScript = ''

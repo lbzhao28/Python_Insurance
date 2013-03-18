@@ -19,6 +19,12 @@
                 submitSearch('1');
             });
 
+            jQuery("#btnNew").click(function(){
+                //跳到新页面
+                showNewOrder('${contactid}');
+            });
+
+
             var myDate = new Date();
             currentDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+myDate.getDate();
             nextDate = myDate.getFullYear() + "-" + (myDate.getMonth()+1)+"-"+(myDate.getDate()+1);
@@ -145,6 +151,12 @@
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
+
+        function showNewOrder(inContactid){
+            actionUrl ="http://${localURL}/order/"+inContactid;
+            window.location.href=actionUrl;
+        }
+
 
         //prepare group,user.
         var arrayGrpUsr= createGrpUsrList();
@@ -286,6 +298,16 @@ else:
 %>
 <%def name="layoutdata(inOrderInfoLst)">
         <div class="bs-docs-div">
+
+            %if orderstatus == '6':
+            <table class="table table-hover table-condensed">
+                <tr>
+                    <td>
+                        <button id = "btnNew" type="button" class="btn">新建</button>
+                    </td>
+                </tr>
+            </table>
+            %endif
     <table class="table table-hover table-condensed">
         % if inOrderInfoLst is not None:
         <tr>
