@@ -337,7 +337,8 @@
                 //TODO: AJAX 异步提交
                 document.getElementById("formOrder").action = "http://${localURL}/order/"+inContactid;
                 document.getElementById("formOrder").method = "POST";
-                document.getElementById("formOrder").submit();
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
             }
         }
 
@@ -345,7 +346,9 @@
             //TODO: AJAX 异步提交
             document.getElementById("formOrder").action = "http://${localURL}/orderTemp/"+inContactid;
             document.getElementById("formOrder").method = "POST";
-            document.getElementById("formOrder").submit();
+            alert(document.getElementById("formOrder").action);
+            //TODO: 不能这样提交,会造成多次提交
+            //document.getElementById("formOrder").submit();
         }
 
         function putOrder(inContactid){
@@ -354,7 +357,8 @@
                 var inOrderid = jQuery("#lblOrderid").text();
                 document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
                 document.getElementById("formOrder").method = "POST";
-                document.getElementById("formOrder").submit();
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
             }
         }
 
@@ -362,7 +366,8 @@
             var inOrderid = jQuery("#lblOrderid").text();
             document.getElementById("formOrder").action = "http://${localURL}/orderUpdateTemp/"+inContactid+"/"+inOrderid;
             document.getElementById("formOrder").method = "POST";
-            document.getElementById("formOrder").submit();
+            //TODO: 不能这样提交,会造成多次提交
+            //document.getElementById("formOrder").submit();
         }
 
 
@@ -373,7 +378,8 @@
                 var status = jQuery("#idDDLORDERSTATUS").val();
                 document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
                 document.getElementById("formOrder").method = "POST";
-                document.getElementById("formOrder").submit();
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
             }
         }
 
@@ -384,7 +390,8 @@
                 var status = jQuery("#idDDLORDERSTATUS").val();
                 document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
                 document.getElementById("formOrder").method = "POST";
-                document.getElementById("formOrder").submit();
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
             }
         }
 
