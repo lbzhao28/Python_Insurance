@@ -228,7 +228,7 @@ class orderUpdate:
                 #get POST form data
                 data = web.input()
                 #call REST post data
-                #TODO: 1 非0即可，不会保存
+                #TODO: 1 待审核订单
                 status = '1'
                 retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status)
 

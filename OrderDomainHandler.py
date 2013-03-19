@@ -502,9 +502,7 @@ def putOrderInfoContact(inOrderid,storageData,inStatus):
             #add orderid
             updateDictSingleValue(dictData,"ORDERID",inOrderid)
 
-            #update status, only to 6, 暂存订单
-            if (inStatus == '6'):
-                updateDictSingleValue(dictData,"STATUS",inStatus)
+            updateDictSingleValue(dictData,"STATUS",inStatus)
 
             dictData = zipOrderInfoOrder(dictData)
 
