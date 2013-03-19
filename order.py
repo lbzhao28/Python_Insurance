@@ -33,7 +33,7 @@ urls = (
 
 app = web.application(urls,globals(),autoreload=True)
 session = web.session.Session(app,web.session.DiskStore('sessions'),
-initializer={'usrid':'','pwd':''})
+initializer={'grpid':'','usrid':'','loginned':'','pwd':''})
 
 def session_hook():
     web.ctx.session = session
@@ -382,8 +382,8 @@ class login:
 
             if (retDict["right"] is True):
                 #保存用户信息到session里面
-                session.loginned = True
-                session.usrid = usrid
+                web.ctx.session.loginned = True
+                web.ctx.session.usrid = usrid
                 return retDict
                 pass
             else:
@@ -432,7 +432,7 @@ class orderTemp:
                 #call REST post data
                 #TODO: 6 means 暂存订单
                 status = '6'
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status)
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.usrid,web.ctx.session.grpid)
 
                 if retStr is None:
                     return render.error(error = 'add failure.')
@@ -486,6 +486,16 @@ class orderTemp:
                 query_url = query_url.encode('utf-8')
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
+
+                    if 'crusr' in query_dict:
+                        web.ctx.session.usrid =  query_dict['crusr']
+                    else:
+                        return render.error(error = 'no crusr')
+                    if 'GRPID' in query_dict:
+                        web.ctx.session.grpid =  query_dict['grpid']
+                    else:
+                        return render.error(error = 'no grpid')
+
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
                         return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
@@ -497,7 +507,7 @@ class orderTemp:
                     #if no querey string.  show blank file
                     orderid = None
                     query_dict = None
-                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                    return render.error(error = 'no query string')
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -538,7 +548,7 @@ class order:
                 #call REST post data
                 #TODO: 1 means 待审核订单
                 status = '1'
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status)
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.usrid,web.ctx.session.grpid)
 
                 if retStr is None:
                     return render.error(error = 'add failure.')
@@ -592,6 +602,16 @@ class order:
                 query_url = query_url.encode('utf-8')
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
+
+                    if 'crusr' in query_dict:
+                        web.ctx.session.usrid =  query_dict['crusr']
+                    else:
+                        return render.error(error = 'no crusr')
+                    if 'grpid' in query_dict:
+                        web.ctx.session.grpid =  query_dict['grpid']
+                    else:
+                        return render.error(error = 'no grpid')
+
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
                         return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)

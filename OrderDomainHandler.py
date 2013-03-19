@@ -355,7 +355,7 @@ def updateDictSingleValue(srcDict,dstName,dstValue):
         upDict = {dstName:dstValue}
         srcDict.update(upDict)
 
-def postOrderInfoContact(inContactid,storageData,inStatus):
+def postOrderInfoContact(inContactid,storageData,inStatus,inCrusr,inGrpid):
     try:
         logger = getLogger()
         logger.debug("start POST Order Info according contact id.")
@@ -370,9 +370,11 @@ def postOrderInfoContact(inContactid,storageData,inStatus):
         #TODO: still need this?
         updateDictSingleValue(dictData,"ADDRESSID",'1')
 
-        #TODO:the value should come from html page.
+        #add crusr
+        updateDictSingleValue(dictData,"CRUSR",inCrusr)
+
         #add grpid
-        updateDictSingleValue(dictData,"GRPID",'ccbgroup1')
+        updateDictSingleValue(dictData,"GRPID",inGrpid)
 
         #update status
         updateDictSingleValue(dictData,"STATUS",inStatus)

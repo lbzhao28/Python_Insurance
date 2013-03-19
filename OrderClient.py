@@ -275,6 +275,7 @@ def getUsrInfoSource(inQueryDict):
     """get insurant user info from query string.
 
         we need get the data from out usr info.
+        but now ,the function do nothing.
     """
     try:
         logger = getLogger()
