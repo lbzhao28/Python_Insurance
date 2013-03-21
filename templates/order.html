@@ -486,9 +486,6 @@ import copy
 <div class="bs-docs-div-compress">
                 <label class="label label-info label-large">保单操作</label>
     <div>
-                    % if orderid is not None:
-                    <label class="label label-normal" >保单编号:</label>
-                    <label class="label label-info" id='lblOrderid'>${orderid}</label>
                     <%
                         if localOrderInfo is not None:
                             statusDsc = localOrderInfo["STATUSDSC"]
@@ -496,20 +493,30 @@ import copy
                             statusDsc = None
                         #TODO: we need get the status dsc.from the config data.
                     %>
+                    % if orderid is not None:
+                        <label class="label label-normal" >保单编号:</label>
+                        <label class="label label-info" id='lblOrderid'>${orderid}</label>
                         % if statusDsc is not None:
                             <label class="label label-normal">保单状态:</label>
                             <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
                         %endif
-                    %endif
-                    <button type="button" class="btn btn-small" id="btnClear">清空</button>
-                    <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
-                    <button type="button" class="btn btn-small" id="btnSave">保存</button>
-                    % if orderid is not None:
-                    <button type="button" class="btn btn-small" id="btnStatus">审核</button>
-                    <button type="button" class="btn btn-small" id="btnFix">承保</button>
+                        % if statusDsc == '待审核':
+                            <button type="button" class="btn btn-small" id="btnClear" disabled="true" >清空</button>
+                            <button type="button" class="btn btn-small" id="btnTempSave" disabled="true" >暂存</button>
+                            <button type="button" class="btn btn-small" id="btnSave" disabled="true" >保存</button>
+                        %else:
+                            <button type="button" class="btn btn-small" id="btnClear">清空</button>
+                            <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
+                            <button type="button" class="btn btn-small" id="btnSave">保存</button>
+                        %endif
+                        <button type="button" class="btn btn-small" id="btnStatus">审核</button>
+                        <button type="button" class="btn btn-small" id="btnFix">承保</button>
                     % else:
-                    <button type="button" class="btn btn-small" id="btnStatus" disabled="true" >审核</button>
-                    <button type="button" class="btn btn-small" id="btnFix" disabled="true" >承保</button>
+                        <button type="button" class="btn btn-small" id="btnClear">清空</button>
+                        <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
+                        <button type="button" class="btn btn-small" id="btnSave">保存</button>
+                        <button type="button" class="btn btn-small" id="btnStatus" disabled="true" >审核</button>
+                        <button type="button" class="btn btn-small" id="btnFix" disabled="true" >承保</button>
                     %endif
    </div>
 </div>
