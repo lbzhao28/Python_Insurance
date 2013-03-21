@@ -28,7 +28,7 @@ urls = (
         '/orderUpdate/(.*)/(.*)','orderUpdate',
         '/orderUpdateTemp/(.*)/(.*)','orderUpdateTemp',
         '/orderStatusUpdate/(.*)/(.*)/(.*)','orderStatusUpdate',
-        '/orderList','orderList'
+        '/orderList/(.*)/(.*)','orderList'
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -55,10 +55,13 @@ render = render_mako(
         )
 
 class orderList:
-    def GET(self):
+    def GET(self,session_usr,session_grpid):
         try:
             logger = getLogger()
             logger.debug("start OrderList Page GET response")
+
+            web.ctx.session.session_usrid =  session_usr
+            web.ctx.session.session_grpid =  session_grpid
 
             globalDefine.globalOrderInfoErrorlog = "No Error"
 
@@ -75,16 +78,6 @@ class orderList:
             query_url = parsed_url.query
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
-
-                if 'SESSION_CRUSR' in query_dict:
-                    web.ctx.session.session_usrid =  query_dict['SESSION_CRUSR']
-                else:
-                    return render.error(error = 'no session crusr')
-                if 'SESSION_GRPID' in query_dict:
-                    web.ctx.session.session_grpid =  query_dict['SESSION_GRPID']
-                else:
-                    return render.error(error = 'no session grpid')
-
 
                 if 'GRPID' in query_dict:
                     grpid = query_dict['GRPID']
@@ -129,7 +122,7 @@ class orderList:
                 else:
                     pageindex = None
 
-                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
+                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
             else:
                 grpid = None
                 crusr = None
@@ -138,7 +131,7 @@ class orderList:
                 startdt = None
                 enddt = None
                 orderstatus = None
-                return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
+                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
         except:
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.

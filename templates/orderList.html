@@ -142,7 +142,7 @@
 
         function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT,inPAGEINDEX){
             //alert(inGRPID);
-            actionUrl ="http://${localURL}/orderList"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX;
+            actionUrl ="http://${localURL}/orderList/"+"${session_usr}/"+"${session_grpid}"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
