@@ -35,10 +35,15 @@
             selectText('#PolicyInformation1_sHolderCardType','身份证');
             selectText('#BePolicyHolder_selectBeHolderCardType','身份证');
 
+			selectText('#PolicyInformation1_txtPolicyRelation','本人');
+			
             selectText('#PolicyInformation1_txtPayMode','刷卡');
             selectText('#PolicyInformation1_txtPayContinuationPayMode','刷卡');
 
+			selectText('#idDdlPlan','经典计划');
             selectText('#idDdlPlanFamily','个人计划');
+			
+			selectText('#PolicyInformation1_txtPayBank','建设银行');
 
             selectText('#PolicyInformation1_txtContinuationYears','1');
             selectText('#PolicyInformation1_txtPayType','月缴');
@@ -500,7 +505,7 @@ import copy
                             <label class="label label-normal">保单状态:</label>
                             <label class="label label-info" id='lblOrderStatus'>${statusDsc}</label>
                         %endif
-                        % if statusDsc == '待审核':
+                        % if statusDsc == '未审核':
                             <button type="button" class="btn btn-small" id="btnClear" disabled="true" >清空</button>
                             <button type="button" class="btn btn-small" id="btnTempSave" disabled="true" >暂存</button>
                             <button type="button" class="btn btn-small" id="btnSave" disabled="true" >保存</button>
@@ -509,8 +514,8 @@ import copy
                             <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
                             <button type="button" class="btn btn-small" id="btnSave">保存</button>
                         %endif
-                        <button type="button" class="btn btn-small" id="btnStatus">审核</button>
-                        <button type="button" class="btn btn-small" id="btnFix">承保</button>
+                        <button type="button" class="btn btn-small" id="btnStatus" disabled="true">审核</button>
+                        <button type="button" class="btn btn-small" id="btnFix" disabled="true">承保</button>
                     % else:
                         <button type="button" class="btn btn-small" id="btnClear">清空</button>
                         <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
