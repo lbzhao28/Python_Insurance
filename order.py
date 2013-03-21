@@ -33,7 +33,7 @@ urls = (
 
 app = web.application(urls,globals(),autoreload=True)
 session = web.session.Session(app,web.session.DiskStore('sessions'),
-initializer={'grpid':'','usrid':'','loginned':'','pwd':''})
+initializer={'session_grpid':'','session_usrid':'','session_loginned':'','session_pwd':''})
 
 def session_hook():
     web.ctx.session = session
@@ -75,6 +75,16 @@ class orderList:
             query_url = parsed_url.query
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
+
+                if 'SESSION_CRUSR' in query_dict:
+                    web.ctx.session.session_usrid =  query_dict['SESSION_CRUSR']
+                else:
+                    return render.error(error = 'no session crusr')
+                if 'SESSION_GRPID' in query_dict:
+                    web.ctx.session.session_grpid =  query_dict['SESSION_GRPID']
+                else:
+                    return render.error(error = 'no session grpid')
+
 
                 if 'GRPID' in query_dict:
                     grpid = query_dict['GRPID']
@@ -129,7 +139,7 @@ class orderList:
                 enddt = None
                 orderstatus = None
                 return render.orderList(grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt)
-        except :
+        except:
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
             f = open('traceback.txt','a')
@@ -382,8 +392,8 @@ class login:
 
             if (retDict["right"] is True):
                 #保存用户信息到session里面
-                web.ctx.session.loginned = True
-                web.ctx.session.usrid = usrid
+                web.ctx.session.session_loginned = True
+                web.ctx.session.session_usrid = usrid
                 return retDict
                 pass
             else:
@@ -432,7 +442,7 @@ class orderTemp:
                 #call REST post data
                 #TODO: 6 means 暂存订单
                 status = '6'
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.usrid,web.ctx.session.grpid)
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.session_usrid,web.ctx.session.session_grpid)
 
                 if retStr is None:
                     return render.error(error = 'add failure.')
@@ -603,14 +613,6 @@ class order:
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
 
-                    if 'crusr' in query_dict:
-                        web.ctx.session.usrid =  query_dict['crusr']
-                    else:
-                        return render.error(error = 'no crusr')
-                    if 'grpid' in query_dict:
-                        web.ctx.session.grpid =  query_dict['grpid']
-                    else:
-                        return render.error(error = 'no grpid')
 
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
