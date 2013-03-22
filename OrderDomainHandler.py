@@ -468,7 +468,6 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
         c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
         c.perform()
 
-
         #TODO: how to show succes code? 200 or OK?
         http_code = c.getinfo(pycurl.HTTP_CODE)
         #judge put success.
