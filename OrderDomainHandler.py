@@ -360,6 +360,14 @@ def postOrderInfoContact(inContactid,storageData,inStatus,inCrusr,inGrpid):
         logger = getLogger()
         logger.debug("start POST Order Info according contact id.")
 
+        if inCrusr == '':
+            logger.debug("no input crusr.")
+            return None
+
+        if inGrpid == '':
+            logger.debug("no input group.")
+            return None
+
         jsonData = json.dumps(storageData)
         dictData = json.loads(jsonData)
 

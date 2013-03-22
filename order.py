@@ -490,15 +490,6 @@ class orderTemp:
                 if (query_url != ''):
                     query_dict = dict(urlparse.parse_qsl(query_url))
 
-                    if 'crusr' in query_dict:
-                        web.ctx.session.usrid =  query_dict['crusr']
-                    else:
-                        return render.error(error = 'no crusr')
-                    if 'GRPID' in query_dict:
-                        web.ctx.session.grpid =  query_dict['grpid']
-                    else:
-                        return render.error(error = 'no grpid')
-
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
                         return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
@@ -510,7 +501,7 @@ class orderTemp:
                     #if no querey string.  show blank file
                     orderid = None
                     query_dict = None
-                    return render.error(error = 'no query string')
+                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -551,7 +542,8 @@ class order:
                 #call REST post data
                 #TODO: 1 means 待审核订单
                 status = '1'
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.usrid,web.ctx.session.grpid)
+
+                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.session_usrid,web.ctx.session.session_grpid)
 
                 if retStr is None:
                     return render.error(error = 'add failure.')
