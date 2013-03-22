@@ -255,10 +255,10 @@ def zipOrderInfoOrder(inOrderInfo):
             addItemDictValue(item,"IDCARDNO",localOrderInfo,configPageUsing['idcardno']['dataName'])
             addItemDictValue(item,"HEIGHT",localOrderInfo,configPageUsing['height']['dataName'])
             addItemDictValue(item,"WEIGHT",localOrderInfo,configPageUsing['weight']['dataName'])
-            #TODO:省市区的保存和显示还有问题.
-            #addItemDictValue(item,'PROVINCE',localOrderInfo,configPageUsing['briefAddress']['select']['select1']['inDataName'])
-            #addItemDictValue(item,'CITY',localOrderInfo,configPageUsing['briefAddress']['select']['select2']['inDataName'])
-            #addItemDictValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
+            #TODO:多个被保人省市区的保存和显示还有问题.
+            addItemDictValue(item,'PROVINCE',localOrderInfo,configPageUsing['briefAddress']['select']['select1']['inDataName'])
+            addItemDictValue(item,'CITY',localOrderInfo,configPageUsing['briefAddress']['select']['select2']['inDataName'])
+            addItemDictValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
             addItemDictValue(item,"ADDRESS",localOrderInfo,configPageUsing['detailAddress']['dataName'])
             addItemDictValue(item,"ZIPCODE",localOrderInfo,configPageUsing['postcode']['dataName'])
 
