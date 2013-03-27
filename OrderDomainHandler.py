@@ -243,7 +243,8 @@ def zipOrderInfoOrder(inOrderInfo):
             configShowPage = configDict.get(i)
 
             configPageUsing = configPage[configShowPage]
-            #TODO: wrong data in relation.
+            #TODO: wrong data in relation.现在关系是储存在投保人的BENEFICIARIESRELATION里面。
+            #要先修改WCF的服务，应该是每个被保人都储存一份。
             addItemDictValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
             addItemDictValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
             addItemDictValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
@@ -281,7 +282,7 @@ def zipOrderInfoOrder(inOrderInfo):
 
         #a dictionary list
         step=len(configDict)
-        #TODO: how to dynamic in page?
+        #TODO: how to dynamic in page?多个受益人还没有实现，参考多个被保人.
         for i in range(step):
             item = {}
 

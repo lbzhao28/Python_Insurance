@@ -430,7 +430,6 @@ class orderTemp:
                 return render.error(error = 'no contactid')
             else:
                 #get POST form data
-                #TODO: 如何处理多个被保人，当没值的时候。多个被保人会有问题,不应该每次都传多个被保人。
                 data = web.input()
                 #call REST post data
                 #TODO: 6 means 暂存订单
@@ -537,7 +536,6 @@ class order:
                 return render.error(error = 'no contactid')
             else:
                 #get POST form data
-                #TODO: 如何处理多个被保人，当没值的时候。多个被保人会有问题,不应该每次都传多个被保人。
                 data = web.input()
                 #call REST post data
                 #TODO: 1 means 待审核订单
