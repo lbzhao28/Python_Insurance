@@ -4,6 +4,7 @@ __author__ = 'stone'
 import pycurl
 import cStringIO
 import json
+import time
 
 import globalDefine
 import traceback
@@ -188,6 +189,8 @@ def zipOrderInfoOrder(inOrderInfo):
         #change the flat to list data.
         localOrderInfo = inOrderInfo
 
+        localCrdt = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+
         #PolicyHolder_Usr 投保人
         configPageUsing = configPage['PolicyHolder_Usr']
 
@@ -208,6 +211,12 @@ def zipOrderInfoOrder(inOrderInfo):
         addItemDictValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
         addItemDictValue(item,'ADDRESS',localOrderInfo,configPageUsing['detailAddress']['dataName'])
         addItemDictValue(item,'ZIPCODE',localOrderInfo,configPageUsing['postcode']['dataName'])
+
+        #创建人和创建时间
+        upDict = {'CRUSR':inOrderInfo['CRUSR']}
+        item.update(upDict)
+        upDict = {'CRDT':localCrdt}
+        item.update(upDict)
 
         upDict = {'POLICYHOLDER_USR':item}
         localOrderInfo.update(upDict)
@@ -263,6 +272,12 @@ def zipOrderInfoOrder(inOrderInfo):
             addItemDictValue(item,"ADDRESS",localOrderInfo,configPageUsing['detailAddress']['dataName'])
             addItemDictValue(item,"ZIPCODE",localOrderInfo,configPageUsing['postcode']['dataName'])
 
+            #创建人和创建时间
+            upDict = {'CRUSR':inOrderInfo['CRUSR']}
+            item.update(upDict)
+            upDict = {'CRDT':localCrdt}
+            item.update(upDict)
+
             localLst.append(item)
 
         upDict = {'LstINSURANT_USR':localLst}
@@ -297,6 +312,13 @@ def zipOrderInfoOrder(inOrderInfo):
             addItemDictValue(item,"PHONE",localOrderInfo,configPageUsing['phone']['dataName'])
             addItemDictValue(item,"IDCARDTYPE",localOrderInfo,configPageUsing['idcardtype']['dataName'])
             addItemDictValue(item,"IDCARDNO",localOrderInfo,configPageUsing['idcardno']['dataName'])
+
+            #创建人和创建时间
+            upDict = {'CRUSR':inOrderInfo['CRUSR']}
+            item.update(upDict)
+            upDict = {'CRDT':localCrdt}
+            item.update(upDict)
+
             localLst.append(item)
 
         upDict = {'Lstbeneficiaries':localLst}
@@ -438,7 +460,7 @@ def postOrderInfoContact(inContactid,storageData,inStatus,inCrusr,inGrpid):
     finally:
         pass
 
-def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
+def putOrderStatusInfoContact(inOrderid,inStatus,storageData,inCrusr):
     try:
         logger = getLogger()
         logger.debug("start PUT Order Status Info according contact id.")
@@ -451,6 +473,9 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
 
         #add orderid
         updateDictSingleValue(dictData,"ORDERID",inOrderid)
+
+        #add crusr
+        updateDictSingleValue(dictData,"CRUSR",inCrusr)
 
         dictData = zipOrderInfoOrder(dictData)
 
@@ -501,7 +526,7 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData):
     finally:
         pass
 
-def putOrderInfoContact(inOrderid,storageData,inStatus):
+def putOrderInfoContact(inOrderid,storageData,inStatus,inCrusr):
         try:
             logger = getLogger()
             logger.debug("start PUT Order Info according contact id.")
@@ -513,6 +538,9 @@ def putOrderInfoContact(inOrderid,storageData,inStatus):
             updateDictSingleValue(dictData,"ORDERID",inOrderid)
 
             updateDictSingleValue(dictData,"STATUS",inStatus)
+
+            #add crusr
+            updateDictSingleValue(dictData,"CRUSR",inCrusr)
 
             dictData = zipOrderInfoOrder(dictData)
 

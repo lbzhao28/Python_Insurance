@@ -233,9 +233,13 @@ class orderUpdate:
                 #call REST post data
                 #TODO: 1 待审核订单
                 status = '1'
-                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status)
+                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status,web.ctx.session.session_usrid)
 
                 #according the response
+
+                if retStr is None:
+                    return render.error(error = 'update failure!')
+
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
                     return render.order(contactid = contactid,orderid = orderid)
@@ -281,9 +285,12 @@ class orderUpdateTemp:
                 #call REST post data
                 #TODO: 6 means 暂存订单
                 status = '6'
-                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status)
+                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status,web.ctx.session.session_usrid)
 
                 #according the response
+                if retStr is None:
+                    return render.error(error = 'update failure!')
+
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
                     return render.order(contactid = contactid,orderid = orderid)
@@ -327,9 +334,12 @@ class orderStatusUpdate:
                 #get POST form data
                 data = web.input()
                 #call REST post data
-                retStr = OrderDomainHandler.putOrderStatusInfoContact(orderid,status,data)
+                retStr = OrderDomainHandler.putOrderStatusInfoContact(orderid,status,data,web.ctx.session.session_usrid)
 
                 #according the response
+                if retStr is None:
+                    return render.error(error = 'update failure!')
+
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
                     return render.order(contactid = contactid,orderid = orderid)
