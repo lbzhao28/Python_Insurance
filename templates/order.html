@@ -29,26 +29,6 @@
                 selectText("#idDdlAgePlan","60天-80岁");
             }
 
-            selectText('#PolicyInformation1_ddlProfessional','职员');
-            selectText('#BePolicyHolder_ddlBeHolderProfessional','职员');
-
-            //selectText('#PolicyInformation1_sHolderCardType','身份证');
-            //selectText('#BePolicyHolder_selectBeHolderCardType','身份证');
-
-			selectText('#PolicyInformation1_txtPolicyRelation','本人');
-			
-            selectText('#PolicyInformation1_txtPayMode','刷卡');
-            selectText('#PolicyInformation1_txtPayContinuationPayMode','刷卡');
-
-			selectText('#idDdlPlan','经典计划');
-            selectText('#idDdlPlanFamily','个人计划');
-			
-			selectText('#PolicyInformation1_txtPayBank','建设银行');
-
-            selectText('#PolicyInformation1_txtContinuationYears','1');
-            selectText('#PolicyInformation1_txtPayType','月缴');
-            selectText('#PolicyInformation1_txtPolicyDates','1年');
-
             jQuery("#idDdlProduct").change(function(){
                 insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
                 if (insurancecodeText != '健康乐家居计划'){
