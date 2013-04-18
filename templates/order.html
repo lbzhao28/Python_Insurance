@@ -1,6 +1,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head id="Head1">
+
+<%doc>
+    ##using Mako to create html file.
+</%doc>
+
+##prepare the order info
+##if has orderid ,show the data.
+##if no orderid, show a blank file.
+<%!
+import OrderClient
+import json
+
+import configObjData
+from configObjData import getConfigPage
+
+import staticDbModule
+from staticDbModule import getDictStatic
+
+import configData
+from configData import getConfig
+#print getConfig.__doc__
+
+configPage = getConfigPage()
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
+
+import copy
+%>
+<%
+localOrderInfo = None
+localPolicyHolder_UsrInfo = None
+
+if queryDict is None:
+    localOrderInfo = None
+else:
+    if orderid is not None:
+        localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
+
+        showINSURANT_USR_A = 'hide'
+        showINSURANT_USR_B = 'hide'
+        showINSURANT_USR_C = 'hide'
+
+        if 'INSURANT_USR_NAMEA' in localOrderInfo:
+            showINSURANT_USR_A = 'show'
+        if 'INSURANT_USR_NAMEB' in localOrderInfo:
+            showINSURANT_USR_B = 'show'
+        if 'INSURANT_USR_NAMEC' in localOrderInfo:
+            showINSURANT_USR_C = 'show'
+    else:
+        localPolicyHolder_UsrInfo = OrderClient.getUsrInfoSource(queryDict)
+        localOrderInfo = None
+%>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
@@ -173,9 +231,32 @@
 
             //at first, disable InsurantA,InsurantB,InsurantC.
             //disable div InsurantA,InsurantB,InsurantC control
-            disableElements(jQuery('#divInsurantUsrA').children());
-            disableElements(jQuery('#divInsurantUsrB').children());
-            disableElements(jQuery('#divInsurantUsrC').children());
+            //TODO:全部disable是不对的，要根据实际值的情况,有值就要先enable,而且有多少保存多少.
+
+            if ( '${showINSURANT_USR_A}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrA').children());
+            }
+            else{
+                jQuery("#divInsurantUsrA").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrA').children());
+            }
+            if ( '${showINSURANT_USR_B}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrB').children());
+            }
+            else{
+                jQuery("#divInsurantUsrB").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrB').children());
+            }
+            if ( '${showINSURANT_USR_C}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrC').children());
+            }
+            else{
+                jQuery("#divInsurantUsrC").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrC').children());
+            }
 
             function disableElements(el) {
                 for (var i = 0; i < el.length; i++) {
@@ -416,50 +497,7 @@
 		var arrayCity= createArrayCity();
 
     </script>
-<%doc>
-    ##using Mako to create html file.
-</%doc>
 
-##prepare the order info
-##if has orderid ,show the data.
-##if no orderid, show a blank file.
-<%!
-import OrderClient
-import json
-
-import configObjData
-from configObjData import getConfigPage
-
-import staticDbModule
-from staticDbModule import getDictStatic
-
-import configData
-from configData import getConfig
-#print getConfig.__doc__
-
-configPage = getConfigPage()
-
-localURL = getConfig('SERVERINFO','serverIP','str')
-
-import sys
-reload(sys)
-#convert the show code.
-sys.setdefaultencoding('utf8')
-
-import copy
-%>
-<%
-    localOrderInfo = None
-    localPolicyHolder_UsrInfo = None
-    if queryDict is None:
-        localOrderInfo = None
-    else:
-        if orderid is not None:
-            localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
-        else:
-            localPolicyHolder_UsrInfo = OrderClient.getUsrInfoSource(queryDict)
-            localOrderInfo = None
-%>
 </head>
 
 <body>
@@ -662,8 +700,8 @@ import copy
                 <table class="table table-normal table-condensed">
                     <tr>
                         <td>
-                            <input type="button" class="btn btn-small" id="btnAddPolicy" value="添加被保人" disabled='true'/>
-                            <input type="button" class="btn btn-small" id="btnDecreasePolicy" value="减少被保人" disabled='true'/>
+                            <input type="button" class="btn btn-small" id="btnAddPolicy" value="添加被保人"/>
+                            <input type="button" class="btn btn-small" id="btnDecreasePolicy" value="减少被保人"/>
                         </td>
                     </tr>
                 </table>

@@ -74,18 +74,31 @@ def flatOrderInfoOrder(inOrderInfo):
         #InsurantUsr 被保人
         #a loop for multi data
         i=0
-        for item in localOrderInfo["LstINSURANT_USR"]:
+        #数据库的REST Service里面出来的就是按照顺序的,是按照创建时间排序的.
+
+        if len(localOrderInfo["LstINSURANT_USR"]) == 0:
+            configLst = {}
+
+        if len(localOrderInfo["LstINSURANT_USR"]) == 1:
+            configLst = {0:'InsurantUsr'}
+
+        if len(localOrderInfo["LstINSURANT_USR"]) == 2:
+            configLst = {0:'InsurantUsr',1:'InsurantUsrA'}
+
+        if len(localOrderInfo["LstINSURANT_USR"]) == 3:
+            configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB'}
+
+        if len(localOrderInfo["LstINSURANT_USR"]) == 4:
             configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB',3:'InsurantUsrC'}
 
-            #only show 4 Insurant
-            #TODO: how to dynamic in page?
+        for item in localOrderInfo["LstINSURANT_USR"]:
+
             if i==len(configLst) :
                 break
 
             configShowPage = configLst.get(i)
 
             configPageUsing = configPage[configShowPage]
-            #TODO: wrong data in relation.
             addDictItemValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
             addDictItemValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
             addDictItemValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
@@ -252,8 +265,6 @@ def zipOrderInfoOrder(inOrderInfo):
             configShowPage = configDict.get(i)
 
             configPageUsing = configPage[configShowPage]
-            #TODO: wrong data in relation.现在关系是储存在投保人的BENEFICIARIESRELATION里面。
-            #要先修改WCF的服务，应该是每个被保人都储存一份。
             addItemDictValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
             addItemDictValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
             addItemDictValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
@@ -265,7 +276,6 @@ def zipOrderInfoOrder(inOrderInfo):
             addItemDictValue(item,"IDCARDNO",localOrderInfo,configPageUsing['idcardno']['dataName'])
             addItemDictValue(item,"HEIGHT",localOrderInfo,configPageUsing['height']['dataName'])
             addItemDictValue(item,"WEIGHT",localOrderInfo,configPageUsing['weight']['dataName'])
-            #TODO:多个被保人省市区的保存和显示还有问题.
             addItemDictValue(item,'PROVINCE',localOrderInfo,configPageUsing['briefAddress']['select']['select1']['inDataName'])
             addItemDictValue(item,'CITY',localOrderInfo,configPageUsing['briefAddress']['select']['select2']['inDataName'])
             addItemDictValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
