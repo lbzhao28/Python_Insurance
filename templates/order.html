@@ -38,15 +38,16 @@ import copy
 localOrderInfo = None
 localPolicyHolder_UsrInfo = None
 
+showINSURANT_USR_A = 'hide'
+showINSURANT_USR_B = 'hide'
+showINSURANT_USR_C = 'hide'
+
 if queryDict is None:
     localOrderInfo = None
 else:
     if orderid is not None:
         localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
 
-        showINSURANT_USR_A = 'hide'
-        showINSURANT_USR_B = 'hide'
-        showINSURANT_USR_C = 'hide'
 
         if 'INSURANT_USR_NAMEA' in localOrderInfo:
             showINSURANT_USR_A = 'show'
