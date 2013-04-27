@@ -316,8 +316,8 @@ else:
             <th>保单编号</th>
             <th>创建人</th>
             <th>创建日期</th>
-            <th>反馈备注</th>
             <th>保单状态</th>
+            <th>反馈备注</th>
         </tr>
             <%
         orderInfoLst = inOrderInfoLst["OrderInfoLst"]
@@ -347,8 +347,8 @@ else:
     <td>${item["OrderId"]}</td>
     <td>${item["Crusr"]}</td>
     <td>${item["Crdt"]}</td>
-    <td>${item["Remark"]}</td>
     <td>${item["StatusDsc"]}</td>
+    <td>${item["Remark"]}</td>
 </%call>
 %if localOrderInfoLst is not None:
     %if len(localOrderInfoLst['PageManager']) > 0:
