@@ -131,6 +131,7 @@ class orderList:
                 startdt = None
                 enddt = None
                 orderstatus = None
+                pageindex  = None
                 return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
         except:
             logger.error("exception occur, see the traceback.log")
