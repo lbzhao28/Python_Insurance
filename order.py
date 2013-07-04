@@ -79,6 +79,12 @@ class orderList:
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
 
+                if 'ROLE' in query_dict:
+                    role = str(query_dict['ROLE'])
+                else:
+                    role = None
+                web.ctx.session.session_role =  role
+
                 if 'GRPID' in query_dict:
                     grpid = query_dict['GRPID']
                 else:
@@ -122,7 +128,7 @@ class orderList:
                 else:
                     pageindex = None
 
-                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
+                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex,outrole=role)
             else:
                 grpid = None
                 crusr = None
@@ -132,7 +138,8 @@ class orderList:
                 enddt = None
                 orderstatus = None
                 pageindex  = None
-                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex)
+                role = None
+                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex,outrole=role)
         except:
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -243,7 +250,8 @@ class orderUpdate:
 
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
-                    return render.order(contactid = contactid,orderid = orderid)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderid,outrole = role)
                 else:
                     return render.error(error = 'update failure!')
 
@@ -294,7 +302,8 @@ class orderUpdateTemp:
 
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
-                    return render.order(contactid = contactid,orderid = orderid)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderid,outrole = role)
                 else:
                     return render.error(error = 'update failure!')
 
@@ -343,7 +352,8 @@ class orderStatusUpdate:
 
                 retDict = json.loads(retStr)
                 if (retDict["RETURNFLAG"] == True):
-                    return render.order(contactid = contactid,orderid = orderid)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderid,outrole=role)
                 else:
                     return render.error(error = 'update failure!')
 
@@ -455,7 +465,8 @@ class orderTemp:
                 if (retDict["RETURNFLAG"] == True):
                     #refresh the order.
                     orderidStr = retDict["OrderID"]
-                    return render.order(contactid = contactid,orderid = orderidStr)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderidStr,outrole = role)
                 else:
                     return render.error(error = 'add failure.')
 
@@ -502,16 +513,19 @@ class orderTemp:
 
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
-                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                        role = web.ctx.session.session_role;
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole = role)
                     else:
                         #if no orderid, according the query_dict to show a file.
                         orderid = None
-                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                        role = web.ctx.session.session_role;
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole = role)
                 else:
                     #if no querey string.  show blank file
                     orderid = None
                     query_dict = None
-                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole = role)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -562,7 +576,8 @@ class order:
                 if (retDict["RETURNFLAG"] == True):
                     #refresh the order.
                     orderidStr = retDict["OrderID"]
-                    return render.order(contactid = contactid,orderid = orderidStr)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderidStr,outrole = role)
                 else:
                     return render.error(error = 'add failure.')
 
@@ -610,16 +625,19 @@ class order:
 
                     if 'orderid' in query_dict:
                         orderid = query_dict['orderid']
-                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                        role = web.ctx.session.session_role;
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole =role)
                     else:
                         #if no orderid, according the query_dict to show a file.
                         orderid = None
-                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                        role = web.ctx.session.session_role;
+                        return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole = role)
                 else:
                     #if no querey string.  show blank file
                     orderid = None
                     query_dict = None
-                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict)
+                    role = web.ctx.session.session_role;
+                    return render.order(contactid = contactid,orderid = orderid,queryDict = query_dict,outrole =role)
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.

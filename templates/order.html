@@ -78,8 +78,8 @@ else:
                 var matches = $.grep(options,
                         function(n) { return $(n).text() == selectedValue; });
                 $(matches).attr("selected", "selected");
-            };
 
+            };
             //Do these when start page.
             //special handle for age data.
             //TODO: how to arrange this?
@@ -184,6 +184,7 @@ else:
 
                 //prepare radio button data:
                 //jQuery("#PolicyInformation_txtSexMan").checked
+                jQuery("#btnConfirmAdd").hide();
                 postOrder('${contactid}');
             });
 
@@ -355,6 +356,8 @@ else:
             });
         });
 
+
+
         function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
             actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
             //window.location.href=actionUrl;
@@ -366,6 +369,7 @@ else:
             {
                 jQuery("#myModal").modal("show");
             }
+
         }
 
         function showTempPostOrder(){
@@ -407,6 +411,7 @@ else:
                 //TODO: 不能这样提交,会造成多次提交
                 //document.getElementById("formOrder").submit();
             }
+             //jQuery("#btnConfirmAdd").show();
         }
 
         function postTempSaveOrder(inContactid){
@@ -516,6 +521,7 @@ else:
                         else:
                             statusDsc = None
                         #TODO: we need get the status dsc.from the config data.
+                        role = outrole
                     %>
                     % if orderid is not None:
                         <label class="label label-normal" >保单编号:</label>
@@ -533,14 +539,32 @@ else:
                             <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
                             <button type="button" class="btn btn-small" id="btnSave">保存</button>
                         %endif
-                        <button type="button" class="btn btn-small" id="btnStatus" disabled="true">审核</button>
+
+                        % if role =='dazhong':
+                            <button type="button" class="btn btn-small" id="btnStatus" >审核</button>
+                        %else:
+
+                              <button type="button" class="btn btn-small" id="btnStatus" disabled="true">审核</button>
+                        %endif
+
+
                         <button type="button" class="btn btn-small" id="btnFix" disabled="true">承保</button>
                     % else:
                         <button type="button" class="btn btn-small" id="btnClear">清空</button>
                         <button type="button" class="btn btn-small" id="btnTempSave">暂存</button>
                         <button type="button" class="btn btn-small" id="btnSave">保存</button>
-                        <button type="button" class="btn btn-small" id="btnStatus" disabled="true" >审核</button>
+
+                        % if role =='dazhong':
+
+                        <button type="button" class="btn btn-small" id="btnStatus" >审核</button>
+                        %else:
+
+                        <button type="button" class="btn btn-small" id="btnStatus" disabled="true">审核</button>
+                        %endif
+
+
                         <button type="button" class="btn btn-small" id="btnFix" disabled="true" >承保</button>
+
                     %endif
    </div>
 </div>

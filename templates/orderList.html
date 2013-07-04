@@ -108,7 +108,8 @@
                 return
             }
 
-            searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt,pageIndex);
+            var role ='${outrole}';
+            searchOrder(grpid,crusr,contactid,orderid,orderStatus,startDt,endDt,pageIndex,role);
         }
 
         function setGrpid(inGrpid){
@@ -140,14 +141,14 @@
             inUsrVal = selectText("#idUsrValue",inCrusr);
         }
 
-        function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT,inPAGEINDEX){
+        function searchOrder(inGRPID,inCRUSR,inCONTACTID,inORDERID,inORDERSTATUS,inSTARTDT,inENDDT,inPAGEINDEX,inRole){
             //alert(inGRPID);
-            actionUrl ="http://${localURL}/orderList/"+"${session_usr}/"+"${session_grpid}"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX;
+            actionUrl ="http://${localURL}/orderList/"+"${session_usr}/"+"${session_grpid}"+'?GRPID='+inGRPID+'&CRUSR='+inCRUSR+'&CONTACTID='+inCONTACTID+"&ORDERID="+inORDERID+"&ORDERSTATUS="+inORDERSTATUS+"&STARTDT="+inSTARTDT+"&ENDDT="+inENDDT+"&PAGEINDEX="+inPAGEINDEX+'&ROLE='+inRole;;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
-        function showOrder(inContactid,inOrderid){
-            actionUrl ="http://${localURL}/order/"+inContactid+'?orderid='+inOrderid;
+        function showOrder(inContactid,inOrderid,inRole){
+            actionUrl ="http://${localURL}/order/"+inContactid+'?orderid='+inOrderid+'&role='+inRole;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
@@ -261,21 +262,13 @@ print localURL
                     <label class="label">开始日期</label>
                 </td>
                 <td>
-                    %if startdt is not None:
-                        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${startdt}"/>
-                    %else:
-                        <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-                    %endif
+                    <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
                 </td>
                 <td>
                     <label class="label">结束日期</label>
                 </td>
                 <td>
-                    %if enddt is not None:
-                        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="${enddt}"/>
-                    %else:
-                        <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-                    %endif
+                    <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
                 </td>
             </tr>
         </table>
@@ -322,6 +315,7 @@ else:
             <%
         orderInfoLst = inOrderInfoLst["OrderInfoLst"]
 
+
         if len(orderInfoLst) == 0:
             orderInfoLst = None
             %>
@@ -331,7 +325,8 @@ else:
                         <td>
                             <% orderid = item['OrderId'] %>
                             <% contactid = item['ContactId'] %>
-                            <button type="button" class="btn" onclick="showOrder(${contactid},${orderid})">查询</button>
+                            <% role = outrole %>
+                            <button type="button" class="btn" onclick="showOrder(${contactid},${orderid},'${role}')">查询</button>
                         </td>
                         ${caller.body(item=item)}
                     </tr>
