@@ -254,7 +254,6 @@ class thirdeval:
 
                 if 'orderid' in query_dict:
                     orderid = query_dict['orderid']
-                    role = web.ctx.session.session_role;
                     return render.thirdeval(orderid = orderid,queryDict = query_dict)
                 else:
                     #if no orderid, according the query_dict to show a file.
