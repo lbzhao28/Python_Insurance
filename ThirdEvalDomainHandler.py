@@ -37,14 +37,14 @@ def addItemDictValue(dstDict,dstName,srcDict,srcName):
     dstDict.update(upDict)
 
 
-def flatOrderInfoOrder(inOrderInfo):
-    """update the order info according the web page show.show the data.
+def flatThirdEvaqlInfo(inOrderInfo):
+    """update the third eval info according the web page show.show the data.
 
         so we need pull all data in list ,make them flat to show in the page.so in the page, the show will be easy.
     """
+    logger = getLogger()
     try:
-        logger = getLogger()
-        logger.debug("start flat Order Info .")
+        logger.debug("start flat third Info .")
 
         if inOrderInfo is None:
             return None
@@ -118,58 +118,6 @@ def flatOrderInfoOrder(inOrderInfo):
             addDictItemValue(item,"ZIPCODE",localOrderInfo,configPageUsing['postcode']['dataName'])
             i=i+1
 
-        #Lstbeneficiaries 受益人
-        #a loop for multi data
-        i=0
-        for item in localOrderInfo["Lstbeneficiaries"]:
-            configLst = {0:'BeneficiaryUsr'}
-
-            #only show 1 BeneficiaryUsr
-            #TODO: how to dynamic in page?
-            if i==len(configLst) :
-                break
-
-            configShowPage = configLst.get(i)
-
-            configPageUsing = configPage[configShowPage]
-            addDictItemValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
-            addDictItemValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
-            addDictItemValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
-            addDictItemValue(item,"BIRTHDAY",localOrderInfo,configPageUsing['birthday']['dataName'])
-            addDictItemValue(item,"AGE",localOrderInfo,configPageUsing['age']['dataName'])
-            addDictItemValue(item,"PHONE",localOrderInfo,configPageUsing['phone']['dataName'])
-            addDictItemValue(item,"IDCARDTYPE",localOrderInfo,configPageUsing['idcardtype']['dataName'])
-            addDictItemValue(item,"IDCARDNO",localOrderInfo,configPageUsing['idcardno']['dataName'])
-            i=i+1
-
-        #InsurantPlan 保险计划
-        configPageUsing = configPage['InsurantPlan']
-        item = localOrderInfo
-        addDictItemValue(item,'INSURANCECODE',localOrderInfo,configPageUsing['product']['dataName'])
-        addDictItemValue(item,'SECURITYPLAN',localOrderInfo,configPageUsing['plan']['dataName'])
-        addDictItemValue(item,'PREMIUMPLAN',localOrderInfo,configPageUsing['planFamily']['dataName'])
-        addDictItemValue(item,'PAYMENTSTATUS',localOrderInfo,configPageUsing['paymentstatus']['dataName'])
-        addDictItemValue(item,'DMPAYMODE',localOrderInfo,configPageUsing['dmpaymode']['dataName'])
-        addDictItemValue(item,'DMPAYBANK',localOrderInfo,configPageUsing['paybank']['dataName'])
-        addDictItemValue(item,'CARDID',localOrderInfo,configPageUsing['cardid']['dataName'])
-
-        #TODO: right 续期帐号
-        addDictItemValue(item,'DMPAYCOMPANY',localOrderInfo,configPageUsing['dmpaybankext']['dataName'])
-        addDictItemValue(item,'PURCHASECOUNT',localOrderInfo,configPageUsing['purchasecount']['dataName'])
-        addDictItemValue(item,'DMCONTINUATIONYEARS',localOrderInfo,configPageUsing['dmcontinuationyears']['dataName'])
-        addDictItemValue(item,'DMPAYTYPE',localOrderInfo,configPageUsing['dmpaytype']['dataName'])
-        addDictItemValue(item,'DMPOLICYDATES',localOrderInfo,configPageUsing['dmpolicydates']['dataName'])
-        addDictItemValue(item,'NOTE',localOrderInfo,configPageUsing['note']['dataName'])
-
-        #delivery 保单配送
-        configPageUsing = configPage['delivery']
-        item = localOrderInfo
-        addDictItemValue(item,'DELIVERYDATE',localOrderInfo,configPageUsing['dateTime']['dataName'])
-        addDictItemValue(item,'PROVINCE',localOrderInfo,configPageUsing['deliveryAddress']['select']['select1']['inDataName'])
-        addDictItemValue(item,'CITY',localOrderInfo,configPageUsing['deliveryAddress']['select']['select2']['inDataName'])
-        addDictItemValue(item,'AREA',localOrderInfo,configPageUsing['deliveryAddress']['select']['select3']['inDataName'])
-        addDictItemValue(item,'DELIVERYADDRESS',localOrderInfo,configPageUsing['detailAddress']['dataName'])
-
         logger.debug("update localOrderInfo success.")
 
         return localOrderInfo
@@ -182,8 +130,6 @@ def flatOrderInfoOrder(inOrderInfo):
         traceback.print_exc(file = f)
         f.flush()
         f.close()
-    else:
-        pass
     finally:
         pass
 
@@ -389,69 +335,17 @@ def updateDictSingleValue(srcDict,dstName,dstValue):
         upDict = {dstName:dstValue}
         srcDict.update(upDict)
 
-def postOrderInfoContact(inContactid,storageData,inStatus,inCrusr,inGrpid):
+def postThirdEvalInfo(storageData):
+    logger = getLogger()
     try:
-        logger = getLogger()
-        logger.debug("start POST Order Info according contact id.")
-
-        if inCrusr == '':
-            logger.debug("no input crusr.")
-            return None
-
-        if inGrpid == '':
-            logger.debug("no input group.")
-            return None
+        logger.debug("start PUT Order Info according contact id.")
 
         jsonData = json.dumps(storageData)
         dictData = json.loads(jsonData)
 
-        #add contactid
-        updateDictSingleValue(dictData,"CONTACTID",inContactid)
+        retStr = {"RETURNFLAG":True,"OrderID":1}
 
-        #add addressid
-        #TODO: still need this?
-        updateDictSingleValue(dictData,"ADDRESSID",'1')
-
-        #add crusr
-        updateDictSingleValue(dictData,"CRUSR",inCrusr)
-
-        #add grpid
-        updateDictSingleValue(dictData,"GRPID",inGrpid)
-
-        #update status
-        updateDictSingleValue(dictData,"STATUS",inStatus)
-
-        #zip the dict
-        dictData = zipOrderInfoOrder(dictData)
-
-        jsonData =  json.dumps(dictData)
-
-        buf = cStringIO.StringIO()
-        c = pycurl.Curl()
-        localURL = getConfig('RESTService','orderInfoUrl','str')
-        localURL = str(localURL)
-        c.setopt(pycurl.URL,localURL)
-        c.setopt(pycurl.HTTPHEADER,['Content-Type: application/json','Content-Length: '+str(len(jsonData))])
-        c.setopt(c.VERBOSE, True)
-        c.setopt(pycurl.CUSTOMREQUEST,"POST")
-        c.setopt(pycurl.POSTFIELDS,jsonData)
-        c.setopt(c.WRITEFUNCTION,buf.write)
-        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
-        c.perform()
-
-        #TODO: how to show succes code? 200 or OK?
-        http_code = c.getinfo(pycurl.HTTP_CODE)
-        #judge post success.
-        if http_code != 201:
-            return None
-
-        logger.debug(buf.getvalue())
-        retStr = buf.getvalue()
-
-        buf.close()
-        c.close()
-
-        logger.debug("post OrderInfo success.")
+        logger.debug("put OrderInfo success.")
         return retStr
 
     except pycurl.error, error:
@@ -466,8 +360,6 @@ def postOrderInfoContact(inContactid,storageData,inStatus,inCrusr,inGrpid):
 
         errno, errstr = error
         print 'An error occurred: ', errstr
-    else:
-        pass
     finally:
         pass
 
@@ -538,51 +430,14 @@ def putOrderStatusInfoContact(inOrderid,inStatus,storageData,inCrusr):
         pass
 
 def putOrderInfoContact(inOrderid,storageData,inStatus,inCrusr):
+        logger = getLogger()
         try:
-            logger = getLogger()
             logger.debug("start PUT Order Info according contact id.")
 
             jsonData = json.dumps(storageData)
             dictData = json.loads(jsonData)
 
-            #add orderid
-            updateDictSingleValue(dictData,"ORDERID",inOrderid)
-
-            updateDictSingleValue(dictData,"STATUS",inStatus)
-
-            #add crusr
-            updateDictSingleValue(dictData,"CRUSR",inCrusr)
-
-            dictData = zipOrderInfoOrder(dictData)
-
-            jsonData =  json.dumps(dictData)
-
-            buf = cStringIO.StringIO()
-            c = pycurl.Curl()
-            localURL = getConfig('RESTService','orderInfoUrl','str')
-            localURL = str(localURL)
-            c.setopt(pycurl.URL,localURL)
-            c.setopt(pycurl.HTTPHEADER,['Content-Type: application/json','Content-Length: '+str(len(jsonData))])
-            c.setopt(c.VERBOSE, True)
-            c.setopt(pycurl.CUSTOMREQUEST,"PUT")
-            c.setopt(pycurl.POSTFIELDS,jsonData)
-            c.setopt(c.WRITEFUNCTION,buf.write)
-            c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
-            c.perform()
-
-
-            #TODO: how to show succes code? 200 or OK?
-            http_code = c.getinfo(pycurl.HTTP_CODE)
-            #judge put success.
-            if http_code != 201:
-                return None
-
-
-            logger.debug(buf.getvalue())
-            retStr = buf.getvalue()
-
-            buf.close()
-            c.close()
+            retStr = {"RETURNFLAG":True,"OrderID":1}
 
             logger.debug("put OrderInfo success.")
             return retStr
@@ -599,8 +454,6 @@ def putOrderInfoContact(inOrderid,storageData,inStatus,inCrusr):
 
             errno, errstr = error
             print 'An error occurred: ', errstr
-        else:
-            pass
         finally:
             pass
 

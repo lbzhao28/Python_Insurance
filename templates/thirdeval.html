@@ -38,7 +38,7 @@ if queryDict is None:
     localOrderInfo = None
 else:
     if orderid is not None:
-        localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
+        localOrderInfo = ThirdEvalClient.getThirdEvalInfo(orderid)
     else:
         localThirdEval_Info = OrderClient.getUsrInfoSource(queryDict)
         localOrderInfo = None
@@ -68,22 +68,14 @@ else:
 
             //点击“清空”按钮.
             jQuery("#btnClear").click(function(){
-                actionUrl ="http://${localURL}/order";
+                actionUrl ="http://${localURL}/thirdeval";
                 //alert(actionUrl);
                 window.location.href=actionUrl;
             });
 
             jQuery("#btnSave").click(function(){
-                if ('${orderid}' != 'None')
-                {
-                    //have orderid, modify data.TODO:modify the logic.
-                    postOrder();
-                }
-                else
-                {
-                    //no orderid, add data.
-                    postOrder();
-                }
+                //alert("post order");
+                postOrder();
             });
 
             function disableElements(el) {
@@ -108,10 +100,10 @@ else:
             if (check_submit())
             {
                 //TODO: AJAX 异步提交
-                document.getElementById("formOrder").action = "http://${localURL}/order/"+inContactid;
+                document.getElementById("formOrder").action = "http://${localURL}/thirdeval";
                 document.getElementById("formOrder").method = "POST";
-                //TODO: 不能这样提交,会造成多次提交
-                //document.getElementById("formOrder").submit();
+                //TODO: 不能这样提交,会造成多次提交,2017.10.29.  又改回这么提交了.
+                document.getElementById("formOrder").submit();
             }
              //jQuery("#btnConfirmAdd").show();
         }
@@ -172,25 +164,12 @@ else:
         <div>
                 <table class="table table-normal table-condensed">
                     <%
-                        configPageInsurantUsr = configPage['InsurantUsr']
-                        configUsing =copy.deepcopy(configPageInsurantUsr)
+                        configPageLeerPage = configPage['leer_page']
+                        configUsing =copy.deepcopy(configPageLeerPage)
                     %>
                     <%namespace name="comp" file="componentsThirdEval.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
-
-                <div id="divInsurantUsrA" class="accordion-body collapse">
-                    <div class="bs-docs-div-compress">
-                        <table class="table table-normal table-condensed">
-                            <%
-                            configPageInsurantUsrA = configPage['InsurantUsrA']
-                            configUsing =copy.deepcopy(configPageInsurantUsrA)
-                            %>
-                            <%namespace name="comp" file="componentsThirdEval.html" />
-                            ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
-                        </table>
-                    </div>
-                </div>
         </div>
     </div>
     %endif

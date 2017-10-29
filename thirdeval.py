@@ -197,21 +197,19 @@ class thirdeval:
 
             #get POST form data
             data = web.input()
-            #call REST post data
-            #TODO: 1 means 待审核订单
-            status = '1'
 
-            retStr = ThirdEvalDomainHandler.postOrderInfoContact(data,status)
+            retStr = ThirdEvalDomainHandler.postThirdEvalInfo(data)
 
             if retStr is None:
                 return render.error(error = 'add failure.')
 
             #according the response
-            retDict = json.loads(retStr)
+            #retDict = json.loads(retStr)
+            retDict = retStr
             if (retDict["RETURNFLAG"] == True):
                 #refresh the order.
                 orderidStr = retDict["OrderID"]
-                return render.order(orderid = orderidStr)
+                return render.thirdeval(orderid = orderidStr)
             else:
                 return render.error(error = 'add failure.')
         except :

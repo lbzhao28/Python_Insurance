@@ -8,15 +8,15 @@ import json
 import traceback
 from configData import getConfig
 from logHelper import getLogger
-from OrderDomainHandler import flatOrderInfoOrder
+from ThirdEvalDomainHandler import flatThirdInfo
 
 from configObjData import getConfigPage
 
 configPage = getConfigPage()
 
-def getOrderInfoOrder(inOrderid):
+def getThirdEvalInfoOrder(inOrderid):
     """
-        get the order info from DB
+        get the third eval info from DB
         now, we simulate some json data.
     """
     logger = getLogger()
