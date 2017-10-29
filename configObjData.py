@@ -12,7 +12,8 @@ def getConfigPage():
     #os.chdir('D:\Stone\Python\Python_Insurance')
     #print os.getcwd()
 
-    configPage = ConfigObj('pagesConf.conf')
+    #configPage = ConfigObj('pagesConf.conf')
+    configPage = ConfigObj('thirdevalConf.conf')
 
     #configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
     #dictFirst = configPagePolicyHolder_Usr.dict()

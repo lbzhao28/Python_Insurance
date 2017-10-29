@@ -1,5 +1,6 @@
+#!/usr/bin/env python
+# coding=utf8
 __author__ = 'stone'
-#coding=UTF-8
 
 import pycurl
 import cStringIO

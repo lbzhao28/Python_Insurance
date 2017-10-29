@@ -1,0 +1,577 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head id="Head1">
+
+<%doc>
+    ##using Mako to create html file.
+</%doc>
+
+##prepare the thirdeval info
+##if has orderid ,show the data.
+##if no orderid, show a blank file.
+<%!
+import json
+
+import configObjData
+from configObjData import getConfigPage
+
+import configData
+from configData import getConfig
+#print getConfig.__doc__
+
+configPage = getConfigPage()
+
+localURL = getConfig('SERVERINFO','serverIP','str')
+
+import sys
+reload(sys)
+#convert the show code.
+sys.setdefaultencoding('utf8')
+
+import copy
+%>
+<%
+localOrderInfo = None
+localPolicyHolder_UsrInfo = None
+
+if queryDict is None:
+    localOrderInfo = None
+else:
+    if orderid is not None:
+        localOrderInfo = OrderClient.getOrderInfoOrder(orderid)
+
+
+        if 'INSURANT_USR_NAMEA' in localOrderInfo:
+            showINSURANT_USR_A = 'show'
+        if 'INSURANT_USR_NAMEB' in localOrderInfo:
+            showINSURANT_USR_B = 'show'
+        if 'INSURANT_USR_NAMEC' in localOrderInfo:
+            showINSURANT_USR_C = 'show'
+    else:
+        localPolicyHolder_UsrInfo = OrderClient.getUsrInfoSource(queryDict)
+        localOrderInfo = None
+%>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="http://${localURL}/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="http://${localURL}/static/css/docs.css" rel="stylesheet" media="screen">
+    <title>
+        投保单
+    </title>
+    <script src="http://${localURL}/static/js/jquery.js"></script>
+    <script src="http://${localURL}/static/js/bootstrap.js"></script>
+    <script src="http://${localURL}/static/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://${localURL}/static/js/util.js"></script>
+    <script src="http://${localURL}/static/js/localAddressList.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var selectText = function(dropdown, selectedValue) {
+                var options = $(dropdown).find("option");
+                var matches = $.grep(options,
+                        function(n) { return $(n).text() == selectedValue; });
+                $(matches).attr("selected", "selected");
+
+            };
+            //Do these when start page.
+            //special handle for age data.
+            //TODO: how to arrange this?
+            insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+            if (insurancecodeText != '健康乐家居计划'){
+                selectText("#idDdlAgePlan","60天-80岁");
+            }
+
+            jQuery("#idDdlProduct").change(function(){
+                insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+                if (insurancecodeText != '健康乐家居计划'){
+                    selectText("#idDdlAgePlan","60天-80岁");
+                }
+            });
+
+
+            jQuery("#PolicyInformation1_txtPolicyRelation").change(function(){
+                //alert("change select");
+                //change the data.
+                //本人,和投保人一样;其它选项,清空
+                if (jQuery("#PolicyInformation1_txtPolicyRelation").val() == '1')
+                {
+                    //TODO:性别如何带过来?省市区如何带过来?
+                    jQuery("#BePolicyHolder_txtBeHolderName").val(jQuery("#PolicyInformation1_txtName").val());
+                    jQuery("#BePolicyHolder_txtBeHolderBirthday").val(jQuery("#PolicyInformation1_txtBirthday").val());
+                    jQuery("#BePolicyHolder_txtBeHolderOldYears").val(jQuery("#PolicyInformation1_txtHolderOldYears").val());
+                    jQuery("#BePolicyHolder_ddlBeHolderProfessional").val(jQuery("#PolicyInformation1_ddlProfessional").val());
+                    jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val(jQuery("#PolicyInformation1_txtHolderPhoneNumber").val());
+                    jQuery("#BePolicyHolder_selectBeHolderCardType").val(jQuery("#PolicyInformation1_sHolderCardType").val());
+                    jQuery("#BePolicyHolder_txtBeHolderCardNumber").val(jQuery("#PolicyInformation1_txtHolderCardNumber").val());
+                    jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val(jQuery("#PolicyInformation1_txtHolderUsrHeight").val());
+                    jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val(jQuery("#PolicyInformation1_txtHolderUsrWeight").val());
+                    jQuery("#idINSURANT_USR_ADDRESS").val(jQuery("#PolicyInformation1_txtHolderDetailAddress").val());
+                    jQuery("#PolicyInformation1_txtBeHolderZip").val(jQuery("#PolicyInformation1_txtHolderZip").val());
+                }
+                else
+                {
+                    jQuery("#BePolicyHolder_txtBeHolderName").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderBirthday").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderOldYears").val("");
+                    jQuery("#BePolicyHolder_ddlBeHolderProfessional").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderPhoneNumber").val("");
+                    jQuery("#BePolicyHolder_selectBeHolderCardType").val("");
+                    jQuery("#BePolicyHolder_txtBeHolderCardNumber").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderUsrHeight").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderUsrWeight").val("");
+                    jQuery("#idINSURANT_USR_ADDRESS").val("");
+                    jQuery("#PolicyInformation1_txtBeHolderZip").val("");
+                }
+            });
+
+
+            jQuery("#btnClear").click(function(){
+                actionUrl ="http://${localURL}/order/"+${contactid};
+                //alert(actionUrl);
+                window.location.href=actionUrl;
+            });
+
+            jQuery("#btnSave").click(function(){
+                if ('${orderid}' != 'None')
+                {
+                    //have orderid, modify data.
+                    showPutOrder();
+                }
+                else
+                {
+                    //no orderid, add data.
+                    showPostOrder();
+                }
+            });
+
+            jQuery("#btnTempSave").click(function(){
+                if ('${orderid}' != 'None')
+                {
+                    //have orderid, modify data.
+                    showTempPutOrder();
+                }
+                else
+                {
+                    //no orderid, add data.
+                    showTempPostOrder();
+                }
+            });
+
+            jQuery("#btnCal").click(function(){
+                insurancecodeid = jQuery("#idDdlProduct").val();
+                securityplanid = jQuery("#idDdlPlan").val();
+                premiumplanid = jQuery("#idDdlPlanFamily").val();
+                ageplan = jQuery("#idDdlAgePlan").val();
+
+                insurancecodeText = jQuery("#idDdlProduct").find("option:selected").text();
+                if (insurancecodeText != '健康乐家居计划'){
+                    ageplan = null
+                }
+                showOrderCal(insurancecodeid,securityplanid,premiumplanid,ageplan);
+            });
+
+            jQuery("#btnConfirmAdd").click(function(){
+                //TODO: add button change status .
+                //jQuery("#myModal").modal("hide");
+                //prepare some data.
+
+                //prepare radio button data:
+                //jQuery("#PolicyInformation_txtSexMan").checked
+                jQuery("#btnConfirmAdd").hide();
+                postOrder('${contactid}');
+            });
+
+            jQuery("#btnConfirmTempSave").click(function(){
+                postTempSaveOrder('${contactid}');
+            });
+
+
+            jQuery("#btnConfirmModify").click(function(){
+                //TODO: add button change status .
+                putOrder('${contactid}');
+            });
+
+            jQuery("#btnConfirmTempModify").click(function(){
+                //TODO: add button change status .
+                putTempOrder('${contactid}');
+            });
+
+            disableElements(jQuery('#idBeneficiary').children());
+
+            jQuery("#idRbtBeneficiaryLaw").click(function(){
+                jQuery("#idBeneficiary").collapse('hide');
+                disableElements(jQuery('#idBeneficiary').children());
+            });
+
+            jQuery("#idRbtBeneficiaryJunfen").click(function(){
+                jQuery("#idBeneficiary").collapse('show');
+                enableElements(jQuery('#idBeneficiary').children());
+            });
+
+            jQuery("#btnConfirmFix").click(function(){
+                putFixOrder('${contactid}');
+            });
+
+            jQuery("#btnConfirmStatus").click(function(){
+                putStatusOrder('${contactid}');
+            });
+
+            jQuery("#btnFix").click(function(){
+                showFixOrder();
+            });
+
+            jQuery("#btnStatus").click(function(){
+                showStatusOrder();
+            });
+
+            //at first, disable InsurantA,InsurantB,InsurantC.
+            //disable div InsurantA,InsurantB,InsurantC control
+            //TODO:全部disable是不对的，要根据实际值的情况,有值就要先enable,而且有多少保存多少.
+
+            if ( '${showINSURANT_USR_A}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrA').children());
+            }
+            else{
+                jQuery("#divInsurantUsrA").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrA').children());
+            }
+            if ( '${showINSURANT_USR_B}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrB').children());
+            }
+            else{
+                jQuery("#divInsurantUsrB").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrB').children());
+            }
+            if ( '${showINSURANT_USR_C}' != 'show') {
+                disableElements(jQuery('#divInsurantUsrC').children());
+            }
+            else{
+                jQuery("#divInsurantUsrC").collapse('show');
+                //enable div control.
+                enableElements(jQuery('#divInsurantUsrC').children());
+            }
+
+            function disableElements(el) {
+                for (var i = 0; i < el.length; i++) {
+                    el[i].disabled = true;
+
+                    disableElements(el[i].children);
+                }
+            }
+
+            function enableElements(el) {
+                for (var i = 0; i < el.length; i++) {
+                    el[i].disabled = false;
+
+                    enableElements(el[i].children);
+                }
+            }
+
+            jQuery("#btnAddPolicy").click(function(){
+                if (divInsurantUsrAStatus == 'hidden'){
+                    jQuery("#divInsurantUsrA").collapse('show');
+                    //enable div control.
+                    enableElements(jQuery('#divInsurantUsrA').children());
+                }
+                else
+                {
+                    if (divInsurantUsrBStatus == 'hidden'){
+                        jQuery("#divInsurantUsrB").collapse('show');
+                        enableElements(jQuery('#divInsurantUsrB').children());
+                    }
+                    else
+                    {
+                        if (divInsurantUsrCStatus == 'hidden'){
+                            jQuery("#divInsurantUsrC").collapse('show');
+                            enableElements(jQuery('#divInsurantUsrC').children());
+                        }
+                        else
+                        {
+                            alert("被保人不能再增加了!");
+                        }
+                    }
+                }
+            });
+
+            jQuery("#btnDecreasePolicy").click(function(){
+                if (divInsurantUsrCStatus == 'shown'){
+                    jQuery("#divInsurantUsrC").collapse('hide');
+                    disableElements(jQuery('#divInsurantUsrC').children());
+                }
+                else
+                {
+                    if (divInsurantUsrBStatus == 'shown'){
+                        jQuery("#divInsurantUsrB").collapse('hide');
+                        disableElements(jQuery('#divInsurantUsrB').children());
+                    }
+                    else
+                    {
+                        if (divInsurantUsrAStatus == 'shown'){
+                            jQuery("#divInsurantUsrA").collapse('hide');
+                            disableElements(jQuery('#divInsurantUsrA').children());
+                        }
+                        else
+                        {
+                            alert('被保人不能再减少了!');
+                        }
+                    }
+                }
+            });
+
+            var divInsurantUsrAStatus = 'hidden';
+            var divInsurantUsrBStatus = 'hidden';
+            var divInsurantUsrCStatus = 'hidden';
+
+            jQuery("#divInsurantUsrA").on('shown',function(){
+                divInsurantUsrAStatus = 'shown';
+            });
+
+            jQuery("#divInsurantUsrA").on('hidden',function(){
+                divInsurantUsrAStatus = 'hidden';
+            });
+
+            jQuery("#divInsurantUsrB").on('shown',function(){
+                divInsurantUsrBStatus = 'shown';
+            });
+
+            jQuery("#divInsurantUsrB").on('hidden',function(){
+                divInsurantUsrBStatus = 'hidden';
+            });
+
+            jQuery("#divInsurantUsrC").on('shown',function(){
+                divInsurantUsrCStatus = 'shown';
+            });
+
+            jQuery("#divInsurantUsrC").on('hidden',function(){
+                divInsurantUsrCStatus = 'hidden';
+            });
+        });
+
+
+
+        function showOrderCal(inINSURANCECODE,inSECURITYPLAN,inPREMIUMPLAN){
+            actionUrl ="http://${localURL}/orderProduct"+'?INSURANCECODE='+inINSURANCECODE+"&SECURITYPLAN="+inSECURITYPLAN+"&PREMIUMPLAN="+inPREMIUMPLAN;
+            //window.location.href=actionUrl;
+            window.open(actionUrl);
+        }
+
+        function showPostOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModal").modal("show");
+            }
+
+        }
+
+        function showTempPostOrder(){
+            jQuery("#myModalTempSave").modal("show");
+        }
+
+        function showPutOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModalModify").modal("show");
+            }
+        }
+
+        function showTempPutOrder(){
+            jQuery("#myModalTempModify").modal("show");
+        }
+
+
+        function showFixOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModalFix").modal("show");
+            }
+        }
+
+        function showStatusOrder(){
+            if (check_submit())
+            {
+                jQuery("#myModalStatus").modal("show");
+            }
+        }
+
+        function postOrder(inContactid){
+            if (check_submit())
+            {
+                //TODO: AJAX 异步提交
+                document.getElementById("formOrder").action = "http://${localURL}/order/"+inContactid;
+                document.getElementById("formOrder").method = "POST";
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
+            }
+             //jQuery("#btnConfirmAdd").show();
+        }
+
+        function postTempSaveOrder(inContactid){
+            //TODO: AJAX 异步提交
+            document.getElementById("formOrder").action = "http://${localURL}/orderTemp/"+inContactid;
+            document.getElementById("formOrder").method = "POST";
+            //TODO: 不能这样提交,会造成多次提交
+            //document.getElementById("formOrder").submit();
+        }
+
+        function putOrder(inContactid){
+            if (check_submit())
+            {
+                var inOrderid = jQuery("#lblOrderid").text();
+                document.getElementById("formOrder").action = "http://${localURL}/orderUpdate/"+inContactid+"/"+inOrderid;
+                document.getElementById("formOrder").method = "POST";
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
+            }
+        }
+
+        function putTempOrder(inContactid){
+            var inOrderid = jQuery("#lblOrderid").text();
+            document.getElementById("formOrder").action = "http://${localURL}/orderUpdateTemp/"+inContactid+"/"+inOrderid;
+            document.getElementById("formOrder").method = "POST";
+            //TODO: 不能这样提交,会造成多次提交
+            //document.getElementById("formOrder").submit();
+        }
+
+
+        function putFixOrder(inContactid){
+            if (check_submit())
+            {
+                var inOrderid = jQuery("#lblOrderid").text();
+                var status = jQuery("#idDDLORDERSTATUS").val();
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
+                document.getElementById("formOrder").method = "POST";
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
+            }
+        }
+
+        function putStatusOrder(inContactid){
+            if (check_submit())
+            {
+                var inOrderid = jQuery("#lblOrderid").text();
+                var status = jQuery("#idDDLORDERSTATUS").val();
+                document.getElementById("formOrder").action = "http://${localURL}/orderStatusUpdate/"+inContactid+"/"+inOrderid+"/"+status;
+                document.getElementById("formOrder").method = "POST";
+                //TODO: 不能这样提交,会造成多次提交
+                //document.getElementById("formOrder").submit();
+            }
+        }
+
+        <%namespace name="comp" file="components.html" />
+        ${comp.layoutOrderCheckSubmit(fName='check_submit')}
+
+        function pickedFuncPolicyInformation1_txtHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#PolicyInformation1_txtHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsA(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsA").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsB(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsB").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncBePolicyHolder_txtBeHolderOldYearsC(){
+            var myDate = new Date();
+            jQuery("#BePolicyHolder_txtBeHolderOldYearsC").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        function pickedFuncLstbeneficiaries_txtBeHolderOldYears(){
+            var myDate = new Date();
+            jQuery("#Lstbeneficiaries_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
+        }
+
+        //prepare province,city,area
+		var arrayCity= createArrayCity();
+
+    </script>
+
+</head>
+
+<body>
+
+<form id="formOrder">
+
+<div class="bs-docs-div-compress">
+                <label class="label label-info label-large">第三方评估与乐尔之家评估等级登记表</label>
+    <div>
+                    % if orderid is not None:
+                        <label class="label label-normal" >评估编号:</label>
+                    % else:
+                        <button type="button" class="btn btn-small" id="btnClear">清空</button>
+                        <button type="button" class="btn btn-small" id="btnSave">保存</button>
+                        <button type="button" class="btn btn-small" id="btnFix">提交</button>
+                    %endif
+   </div>
+</div>
+
+    %if configPage.as_bool('hasThird'):
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">第三方评估维度</label>
+            <div>
+                <table class="table table-normal table-condensed">
+                    <%
+                        configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
+                        configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
+                    %>
+                    <%namespace name="comp" file="components.html" />
+                    %if localPolicyHolder_UsrInfo is not None:
+                        <%
+                            print localPolicyHolder_UsrInfo
+                        %>
+                        ${comp.layoutControlList(configItem=configUsing,dataItem = localPolicyHolder_UsrInfo)}
+                    %else:
+                        <%
+                            print localOrderInfo
+                        %>
+                        ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
+                    %endif
+
+                </table>
+            </div>
+    </div>
+    %endif
+
+    %if configPage.as_bool('hasLeer'):
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">乐尔之家评估维度</label>
+        <div>
+                <table class="table table-normal table-condensed">
+                    <%
+                        configPageInsurantUsr = configPage['InsurantUsr']
+                        configUsing =copy.deepcopy(configPageInsurantUsr)
+                    %>
+                    <%namespace name="comp" file="components.html" />
+                    ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
+                </table>
+
+                <div id="divInsurantUsrA" class="accordion-body collapse">
+                    <div class="bs-docs-div-compress">
+                        <table class="table table-normal table-condensed">
+                            <%
+                            configPageInsurantUsrA = configPage['InsurantUsrA']
+                            configUsing =copy.deepcopy(configPageInsurantUsrA)
+                            %>
+                            <%namespace name="comp" file="components.html" />
+                            ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
+                        </table>
+                    </div>
+                </div>
+        </div>
+    </div>
+    %endif
+
+</form>
+</body>
+</html>
+

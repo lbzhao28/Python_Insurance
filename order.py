@@ -1,6 +1,6 @@
+#!/usr/bin/env python
+# coding=utf8
 __author__ = 'stone'
-#encoding:utf-8
-#File:order.py
 import web
 from web.contrib.template import render_mako
 
