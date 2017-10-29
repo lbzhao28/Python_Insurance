@@ -116,41 +116,8 @@ else:
              //jQuery("#btnConfirmAdd").show();
         }
 
-        <%namespace name="comp" file="components.html" />
+        <%namespace name="comp" file="componentsThirdEval.html" />
         ${comp.layoutOrderCheckSubmit(fName='check_submit')}
-
-        function pickedFuncPolicyInformation1_txtHolderOldYears(){
-            var myDate = new Date();
-            jQuery("#PolicyInformation1_txtHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        function pickedFuncBePolicyHolder_txtBeHolderOldYears(){
-            var myDate = new Date();
-            jQuery("#BePolicyHolder_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        function pickedFuncBePolicyHolder_txtBeHolderOldYearsA(){
-            var myDate = new Date();
-            jQuery("#BePolicyHolder_txtBeHolderOldYearsA").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        function pickedFuncBePolicyHolder_txtBeHolderOldYearsB(){
-            var myDate = new Date();
-            jQuery("#BePolicyHolder_txtBeHolderOldYearsB").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        function pickedFuncBePolicyHolder_txtBeHolderOldYearsC(){
-            var myDate = new Date();
-            jQuery("#BePolicyHolder_txtBeHolderOldYearsC").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        function pickedFuncLstbeneficiaries_txtBeHolderOldYears(){
-            var myDate = new Date();
-            jQuery("#Lstbeneficiaries_txtBeHolderOldYears").val(myDate.getFullYear()-$dp.cal.getP('y'));
-        }
-
-        //prepare province,city,area
-		var arrayCity= createArrayCity();
 
     </script>
 
@@ -168,7 +135,6 @@ else:
                     % else:
                         <button type="button" class="btn btn-small" id="btnClear">清空</button>
                         <button type="button" class="btn btn-small" id="btnSave">保存</button>
-                        <button type="button" class="btn btn-small" id="btnFix">提交</button>
                     %endif
    </div>
 </div>
@@ -179,10 +145,10 @@ else:
             <div>
                 <table class="table table-normal table-condensed">
                     <%
-                        configPagePolicyHolder_Usr = configPage['PolicyHolder_Usr']
-                        configUsing =copy.deepcopy(configPagePolicyHolder_Usr)
+                        configPageThirdPage = configPage['third_page']
+                        configUsing =copy.deepcopy(configPageThirdPage)
                     %>
-                    <%namespace name="comp" file="components.html" />
+                    <%namespace name="comp" file="componentsThirdEval.html" />
                     %if localThirdEval_Info is not None:
                         <%
                             print localThirdEval_Info
@@ -209,7 +175,7 @@ else:
                         configPageInsurantUsr = configPage['InsurantUsr']
                         configUsing =copy.deepcopy(configPageInsurantUsr)
                     %>
-                    <%namespace name="comp" file="components.html" />
+                    <%namespace name="comp" file="componentsThirdEval.html" />
                     ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                 </table>
 
@@ -220,7 +186,7 @@ else:
                             configPageInsurantUsrA = configPage['InsurantUsrA']
                             configUsing =copy.deepcopy(configPageInsurantUsrA)
                             %>
-                            <%namespace name="comp" file="components.html" />
+                            <%namespace name="comp" file="componentsThirdEval.html" />
                             ${comp.layoutControlList(configItem=configUsing,dataItem = localOrderInfo)}
                         </table>
                     </div>
