@@ -53,70 +53,20 @@ def flatThirdEvaqlInfo(inOrderInfo):
         #change the list to flat data.
         localOrderInfo = inOrderInfo
 
-        #PolicyHolder_Usr 投保人
-        configPageUsing = configPage['PolicyHolder_Usr']
-        item = localOrderInfo["POLICYHOLDER_USR"]
+        localOrderInfo = {"third":1}
+
+        #third_page 第三方评估
+        configPageUsing = configPage['third_page']
+        item = localOrderInfo["third"]
         addDictItemValue(item,'NAME',localOrderInfo,configPageUsing['name']['dataName'])
         addDictItemValue(item,'SEX',localOrderInfo,configPageUsing['sex']['dataName'])
         addDictItemValue(item,'BIRTHDAY',localOrderInfo,configPageUsing['birthday']['dataName'])
         addDictItemValue(item,'AGE',localOrderInfo,configPageUsing['age']['dataName'])
-        addDictItemValue(item,'PROFESSION',localOrderInfo,configPageUsing['profession']['dataName'])
-        addDictItemValue(item,'PHONE',localOrderInfo,configPageUsing['phone']['dataName'])
-        addDictItemValue(item,'IDCARDTYPE',localOrderInfo,configPageUsing['idcardtype']['dataName'])
-        addDictItemValue(item,'IDCARDNO',localOrderInfo,configPageUsing['idcardno']['dataName'])
-        addDictItemValue(item,'HEIGHT',localOrderInfo,configPageUsing['height']['dataName'])
-        addDictItemValue(item,'WEIGHT',localOrderInfo,configPageUsing['weight']['dataName'])
-        addDictItemValue(item,'PROVINCE',localOrderInfo,configPageUsing['briefAddress']['select']['select1']['inDataName'])
-        addDictItemValue(item,'CITY',localOrderInfo,configPageUsing['briefAddress']['select']['select2']['inDataName'])
-        addDictItemValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
-        addDictItemValue(item,'ADDRESS',localOrderInfo,configPageUsing['detailAddress']['dataName'])
-        addDictItemValue(item,'ZIPCODE',localOrderInfo,configPageUsing['postcode']['dataName'])
 
-        #InsurantUsr 被保人
-        #a loop for multi data
-        i=0
-        #数据库的REST Service里面出来的就是按照顺序的,是按照创建时间排序的.
+        #leer_page 乐尔之家评估
 
-        if len(localOrderInfo["LstINSURANT_USR"]) == 0:
-            configLst = {}
-
-        if len(localOrderInfo["LstINSURANT_USR"]) == 1:
-            configLst = {0:'InsurantUsr'}
-
-        if len(localOrderInfo["LstINSURANT_USR"]) == 2:
-            configLst = {0:'InsurantUsr',1:'InsurantUsrA'}
-
-        if len(localOrderInfo["LstINSURANT_USR"]) == 3:
-            configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB'}
-
-        if len(localOrderInfo["LstINSURANT_USR"]) == 4:
-            configLst = {0:'InsurantUsr',1:'InsurantUsrA',2:'InsurantUsrB',3:'InsurantUsrC'}
-
-        for item in localOrderInfo["LstINSURANT_USR"]:
-
-            if i==len(configLst) :
-                break
-
-            configShowPage = configLst.get(i)
-
-            configPageUsing = configPage[configShowPage]
-            addDictItemValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
-            addDictItemValue(item,"NAME",localOrderInfo,configPageUsing['name']['dataName'])
-            addDictItemValue(item,"SEX",localOrderInfo,configPageUsing['sex']['dataName'])
-            addDictItemValue(item,"BIRTHDAY",localOrderInfo,configPageUsing['birthday']['dataName'])
-            addDictItemValue(item,"AGE",localOrderInfo,configPageUsing['age']['dataName'])
-            addDictItemValue(item,"PROFESSION",localOrderInfo,configPageUsing['profession']['dataName'])
-            addDictItemValue(item,"PHONE",localOrderInfo,configPageUsing['phone']['dataName'])
-            addDictItemValue(item,"IDCARDTYPE",localOrderInfo,configPageUsing['idcardtype']['dataName'])
-            addDictItemValue(item,"IDCARDNO",localOrderInfo,configPageUsing['idcardno']['dataName'])
-            addDictItemValue(item,"HEIGHT",localOrderInfo,configPageUsing['height']['dataName'])
-            addDictItemValue(item,"WEIGHT",localOrderInfo,configPageUsing['weight']['dataName'])
-            addDictItemValue(item,'PROVINCE',localOrderInfo,configPageUsing['briefAddress']['select']['select1']['inDataName'])
-            addDictItemValue(item,'CITY',localOrderInfo,configPageUsing['briefAddress']['select']['select2']['inDataName'])
-            addDictItemValue(item,'AREA',localOrderInfo,configPageUsing['briefAddress']['select']['select3']['inDataName'])
-            addDictItemValue(item,"ADDRESS",localOrderInfo,configPageUsing['detailAddress']['dataName'])
-            addDictItemValue(item,"ZIPCODE",localOrderInfo,configPageUsing['postcode']['dataName'])
-            i=i+1
+        configPageUsing = configPage['leer_page']
+        addDictItemValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
 
         logger.debug("update localOrderInfo success.")
 
