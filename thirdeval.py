@@ -195,41 +195,25 @@ class thirdeval:
         try:
             logger.debug("start Order Page POST response")
 
-            globalDefine.globalOrderInfoErrorlog = "No Error"
+            #get POST form data
+            data = web.input()
+            #call REST post data
+            #TODO: 1 means 待审核订单
+            status = '1'
 
-            #TODO: open the auth in future.also need purview.
-#            authreq = checkUserAuth(web)
-#
-#            if authreq:
-#                web.header('WWW-Authenticate','Basic realm="Auth example"')
-#                web.ctx.status = '401 Unauthorized'
-#                logger.debug("no right HTTP_AUTHORIZATION")
-#                return render.error(error = web.ctx.status)
+            retStr = ThirdEvalDomainHandler.postOrderInfoContact(data,status)
 
-            if contactid is None:
-                return render.error(error = 'no contactid')
+            if retStr is None:
+                return render.error(error = 'add failure.')
+
+            #according the response
+            retDict = json.loads(retStr)
+            if (retDict["RETURNFLAG"] == True):
+                #refresh the order.
+                orderidStr = retDict["OrderID"]
+                return render.order(orderid = orderidStr)
             else:
-                #get POST form data
-                data = web.input()
-                #call REST post data
-                #TODO: 1 means 待审核订单
-                status = '1'
-
-                retStr = OrderDomainHandler.postOrderInfoContact(contactid,data,status,web.ctx.session.session_usrid,web.ctx.session.session_grpid)
-
-                if retStr is None:
-                    return render.error(error = 'add failure.')
-
-                #according the response
-                retDict = json.loads(retStr)
-                if (retDict["RETURNFLAG"] == True):
-                    #refresh the order.
-                    orderidStr = retDict["OrderID"]
-                    role = web.ctx.session.session_role;
-                    return render.order(contactid = contactid,orderid = orderidStr,outrole = role)
-                else:
-                    return render.error(error = 'add failure.')
-
+                return render.error(error = 'add failure.')
         except :
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -277,3 +261,4 @@ class thirdeval:
 
 if __name__ == "__main__":
     app.run()
+
