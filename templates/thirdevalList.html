@@ -94,13 +94,13 @@
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
-        function showOrder(inContactid,inOrderid,inRole){
+        function showOrder(inOrderid){
             actionUrl ="http://${localURL}/thirdeval"+"?orderid="+inOrderid;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
 
-        function showNewOrder(inContactid){
+        function showNewOrder(){
             actionUrl ="http://${localURL}/thirdeval";
             window.location.href=actionUrl;
         }
@@ -162,7 +162,7 @@ if (orderid is not None):
     if len(localThirdEvalInfoLst["ThirdEvalInfoLst"])==0:
         localThirdEvalInfoLst = None
 else:
-    localThirdEvalInfoLst = None
+    localThirdEvalInfoLst = ThirdEvalClient.getThirdEvalInfoLst(None,None)
     print 'none query condition'
 %>
 
@@ -180,8 +180,13 @@ else:
     <table class="table table-hover table-condensed">
         % if inThirdEvalInfoLst is not None:
         <tr>
-            <th>操作</th>
+            <th>评估编号</th>
             <th>客户姓名</th>
+            <th>第三方ADL</th>
+            <th>第三方等级</th>
+            <th>乐尔之家ADL</th>
+            <th>乐尔之家等级</th>
+            <th>操作</th>
         </tr>
 
         <%
@@ -193,11 +198,16 @@ else:
             %if ThirdEvalInfoLst is not None:
                 % for item in ThirdEvalInfoLst:
                     <tr>
-                        <td>
-                            <% orderid = item['orderid'] %>
-                            <button type="button" class="btn" onclick="showOrder('${orderid}')">查询</button>
-                        </td>
                         ${caller.body(item=item)}
+                        <td>
+                            <%
+                                orderid = item['orderid']
+                                print('showOrder')
+                                print(orderid)
+                            %>
+
+                            <button type="button" class="btn" onclick="showOrder('${orderid}')">查询明细</button>
+                        </td>
                     </tr>
                 % endfor
             %endif
@@ -207,7 +217,12 @@ else:
 </%def>
 
 <%call expr="layoutdata(localThirdEvalInfoLst)" args="item">
+    <td>${item["orderid"]}</td>
     <td>${item["name"]}</td>
+    <td>${item["normal_adl"]}</td>
+    <td>${item["thirdeval_class"]}</td>
+    <td>${item["leer_normal_adl"]}</td>
+    <td>${item["leer_class"]}</td>
 </%call>
 
 %if localThirdEvalInfoLst is not None:

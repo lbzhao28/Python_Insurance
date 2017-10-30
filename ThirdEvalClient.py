@@ -80,25 +80,47 @@ def getThirdEvalInfoLst(inOrderid,inPageIndex):
 
         localURL = ''
 
+        #from db to get the data.
+        import web
+        import sqlite3
+        dbSqlite = web.database(dbn='sqlite',db='thirdeval.s3db')
+
         if inOrderid is None:
+            results = dbSqlite.select('thirdeval_detail')
             inOrderid = ''
+            for item in results:
+               localThirdEvalInfoLst = {"ThirdEvalInfoLst":[{'orderid':item['id'],
+                                                              'name':item['basic_name'],
+                                                              'normal_adl':item['third_normal_adl'],
+                                                              'thirdeval_class':item['thirdeval_class'],
+                                                              'leer_normal_adl':item['leer_normal_adl'],
+                                                              'leer_class':item['leer_class']}],
+                             "PageManager":{
+                                 "DataCount":5,
+                                 "PageSize":5,
+                                 "PageCount":1,
+                                 "PageIndex":1,
+                             }
+                             }
+
         if inOrderid != '':
-            localURL = localURL+'&orderid='+ inOrderid
+            myvar = dict(id=inOrderid)
+            results = dbSqlite.select('thirdeval_detail', myvar, where="id = $id")
 
-        if inPageIndex  is None:
-            inPageIndex = ''
-        if inPageIndex != '':
-            localURL = localURL+'&pageindex='+ inPageIndex
-
-       #get the data from json.
-        localThirdEvalInfoLst = {"ThirdEvalInfoLst":[{'orderid':1,'name':'stone'}],
-                                 "PageManager":{
-                                     "DataCount":1,
-                                     "PageSize":5,
-                                     "PageCount":1,
-                                     "PageIndex":1,
-                                 },
-                                 }
+            for item in results:
+               localThirdEvalInfoLst = {"ThirdEvalInfoLst":[{'orderid':inOrderid,
+                                                              'name':item['basic_name'],
+                                                              'normal_adl':item['third_normal_adl'],
+                                                              'thirdeval_class':item['thirdeval_class'],
+                                                              'leer_normal_adl':item['leer_normal_adl'],
+                                                              'leer_class':item['leer_class']}],
+                             "PageManager":{
+                                 "DataCount":5,
+                                 "PageSize":5,
+                                 "PageCount":1,
+                                 "PageIndex":1,
+                             }
+                             }
 
         logger.debug("get localThirdEvalInfoLst List success.")
 
