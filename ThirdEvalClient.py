@@ -56,83 +56,37 @@ def getThirdEvalInfo(inOrderid):
     finally:
         pass
 
-def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOrderStatus,inPageIndex):
+def getThirdEvalInfoLst(inOrderid,inPageIndex):
+    logger = getLogger()
     try:
-        logger = getLogger()
-        logger.debug("start GET Order Info according query condition.")
+        logger.debug("start GET ThirdEval Info according query condition.")
 
         localURL = ''
-
-
-        if inGrpid is None:
-            inGrpid = ''
-        if inGrpid != '':
-            localURL = localURL+'&Grpid='+inGrpid
-
-        if inCrusr is None:
-            inCrusr = ''
-        if inCrusr != '':
-            localURL = localURL+'&Crusr='+inCrusr
-
-
-        if inContactid is None:
-            inContactid = ''
-        if inContactid != '':
-            localURL = localURL+'&Contactid='+inContactid
 
         if inOrderid is None:
             inOrderid = ''
         if inOrderid != '':
-            localURL = localURL+'&Orderid='+ inOrderid
-
-        if inStartDt is None:
-            inStartDt = ''
-        if inStartDt != '':
-            localURL = localURL+'&Scrdt='+ inStartDt
-
-        if inEndDt is None:
-            inEndDt = ''
-        if inEndDt != '':
-            localURL = localURL+'&Ecrdt='+ inEndDt
-
-        if inOrderStatus  is None:
-            inOrderStatus = ''
-        if inOrderStatus != '':
-            localURL = localURL+'&Status='+ inOrderStatus
+            localURL = localURL+'&orderid='+ inOrderid
 
         if inPageIndex  is None:
             inPageIndex = ''
         if inPageIndex != '':
-            localURL = localURL+'&PageIndex='+ inPageIndex
+            localURL = localURL+'&pageindex='+ inPageIndex
 
-        buf = cStringIO.StringIO() #define in function.
-        c = pycurl.Curl()
-        if localURL != '':
-            #use 1=1 to use all condition.
-            localURL = getConfig('RESTService','orderInfoSearchUrl','str') + '?1=1' + localURL
-        else:
-            localURL = getConfig('RESTService','orderInfoSearchUrl','str')
-        localURL = str(localURL)
-        c.setopt(pycurl.URL,localURL)
-        c.setopt(c.WRITEFUNCTION,buf.write)
-        c.setopt(c.VERBOSE, True)
-        c.setopt(pycurl.USERPWD,getConfig('allowedUser1','UserName','str')+':'+getConfig('allowedUser1','Password','str'))
-        c.perform()
+       #get the data from json.
+        localThirdEvalInfoLst = {"ThirdEvalInfoLst":[{'orderid':1,'name':'stone'}],
+                                 "PageManager":{
+                                     "DataCount":1,
+                                     "PageSize":5,
+                                     "PageCount":1,
+                                     "PageIndex":1,
+                                 },
+                                 }
 
-        http_code = c.getinfo(pycurl.HTTP_CODE)
-        #judge get success.
-        if http_code != 200:
-            return None
+        logger.debug("get localThirdEvalInfoLst List success.")
 
-        #get the data from json.
-        localOrderInfoLst = json.loads(buf.getvalue())
-        buf.close()
-        c.close()
-
-        logger.debug("get localOrderInfo List success.")
-
-        return localOrderInfoLst
-    except pycurl.error, error:
+        return localThirdEvalInfoLst
+    except :
         logger.error("exception occur, see the traceback.log")
 
         #异常写入日志文件.
@@ -142,10 +96,6 @@ def getOrderInfoLst(inGrpid,inCrusr,inContactid,inOrderid,inStartDt,inEndDt,inOr
         f.flush()
         f.close()
 
-        errno, errstr = error
-        print 'An error occurred: ', errstr
-    else:
-        pass
     finally:
         pass
 

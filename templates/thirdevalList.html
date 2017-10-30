@@ -21,7 +21,7 @@
 
             jQuery("#btnNew").click(function(){
                 //跳到新页面
-                showNewOrder('${contactid}');
+                showNewOrder('${orderid}');
             });
 
         });
@@ -90,18 +90,19 @@
         }
 
         function searchOrder(inORDERID,inPAGEINDEX){
-            actionUrl ="http://${localURL}/orderList"+"?ORDERID="+inORDERID+"&PAGEINDEX="+inPAGEINDEX;
+            //actionUrl ="http://${localURL}/orderList"+"?orderid="+inORDERID+"&PAGEINDEX="+inPAGEINDEX;
+            actionUrl ="http://${localURL}/thirdevalList"+"?orderid="+inORDERID;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
         function showOrder(inContactid,inOrderid,inRole){
-            actionUrl ="http://${localURL}/order"'?orderid='+inOrderid;
+            actionUrl ="http://${localURL}/thirdeval"+"?orderid="+inOrderid;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
 
         function showNewOrder(inContactid){
-            actionUrl ="http://${localURL}/order";
+            actionUrl ="http://${localURL}/thirdeval";
             window.location.href=actionUrl;
         }
 
@@ -136,45 +137,7 @@ print localURL
         <table>
             <tr>
                 <td>
-                    <label class="label">团队</label>
-                </td>
-                <td>
-                    <select id="idGrpValue" name="grpValue" class="input-medium" onchange="changevalGrpUsrIns(document.getElementById('idUsrValue'),this.value);//alert(options[this.value-1].text);"></select>
-
-                </td>
-                <td>
-                    <label class="label" >TSR工号</label>
-                </td>
-                <td>
-                    <select id="idUsrValue" name="usrValue" class="input-small" ></select>
-                </td>
-                <script type="text/javascript" language="javascript">
-                    changevalGrpUsrIns(document.getElementById("idGrpValue"),0,1);
-                </script>
-                %if grpid is not None:
-                <script type="text/javascript">
-                    setGrpid("${grpid}");
-                </script>
-                %endif
-                %if crusr is not None:
-                <script type="text/javascript">
-                    setCrusr("${crusr}");
-                </script>
-                %endif
-            </tr>
-            <tr>
-                <td>
-                    <label class="label">客户编号</label>
-                </td>
-                <td>
-                   %if contactid is not None:
-                        <input id="idContactid" type="text" class="input-small search-query" value="${contactid}"/>
-                    %else:
-                        <input id="idContactid" type="text" class="input-small search-query" />
-                    %endif
-                </td>
-                <td>
-                    <label class="label">保单编号</label>
+                    <label class="label">评估单编号</label>
                 </td>
                 <td>
                     %if orderid is not None:
@@ -183,35 +146,6 @@ print localURL
                         <input id="idOrderid" type="text" class="input-small search-query" />
                     %endif
                 </td>
-
-                <td>
-                    <label class="label">保单状态</label>
-                </td>
-                <%
-                    item = configPage["SingleControl"]["OrderStatusSearch"]
-                %>
-                <%namespace name="comp" file="components.html" />
-                <%
-                    if orderstatus is not None:
-                        realDataValue = orderstatus
-                    else:
-                        ## empty value
-                        realDataValue = '0'
-                %>
-                ${comp.layoutControlDynamic(item=item,realDataValue = realDataValue,dataItem = None)}
-
-                <td>
-                    <label class="label">开始日期</label>
-                </td>
-                <td>
-                    <input id="idStartDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-                </td>
-                <td>
-                    <label class="label">结束日期</label>
-                </td>
-                <td>
-                    <input id="idEndDT" type="text" class="Wdate input-small search-query" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
-                </td>
             </tr>
         </table>
         <button id = "btnSearch" type="button" class="btn"><i class="icon-search"></i></button>
@@ -219,10 +153,13 @@ print localURL
 </div>
 
 <form id="formOrderList">
-    <fieldset>
+<fieldset>
 <%
 if (orderid is not None):
-    localThirdEvalInfoLst = ThirdEvalClient.getOrderInfoLst(orderid,pageindex)
+    print 'orderid'
+    localThirdEvalInfoLst = ThirdEvalClient.getThirdEvalInfoLst(orderid,pageindex)
+    print 'localThirdEvalInfoLst'
+    print localThirdEvalInfoLst
     #如果没有评估信息,直接无视
     if len(localThirdEvalInfoLst["ThirdEvalInfoLst"])==0:
         localThirdEvalInfoLst = None
@@ -252,16 +189,15 @@ else:
         <%
         ThirdEvalInfoLst = inThirdEvalInfoLst["ThirdEvalInfoLst"]
 
-
         if len(ThirdEvalInfoLst) == 0:
             ThirdEvalInfoLst = None
-            %>
+        %>
             %if ThirdEvalInfoLst is not None:
                 % for item in ThirdEvalInfoLst:
                     <tr>
                         <td>
-                            <% orderid = item['OrderId'] %>
-                            <button type="button" class="btn" onclick="showOrder(${orderid}')">查询</button>
+                            <% orderid = item['orderid'] %>
+                            <button type="button" class="btn" onclick="showOrder('${orderid}')">查询</button>
                         </td>
                         ${caller.body(item=item)}
                     </tr>
@@ -273,7 +209,7 @@ else:
 </%def>
 
 <%call expr="layoutdata(localThirdEvalInfoLst)" args="item">
-    <td>${item["OrderId"]}</td>
+    <td>${item["name"]}</td>
 </%call>
 
 %if localThirdEvalInfoLst is not None:
@@ -291,13 +227,14 @@ else:
                 <button id = "btnForward" type="button" class="btn" onclick="showNext(${localThirdEvalInfoLst['PageManager']['PageIndex']},${localThirdEvalInfoLst['PageManager']['PageCount']})"><i class="icon-forward"></i></button>
                 <button id = "btnFastForward" type="button" class="btn" onclick="showFastNext(${localThirdEvalInfoLst['PageManager']['PageCount']})"><i class="icon-fast-forward"></i></button>
                 <input id="idPageIndex" type="text" class="input-small" placeholder="去往页"/>
-                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(document.getElementById('idPageIndex').value,${localOrderInfoLstlocalThirdEvalInfoLst['PageManager']['PageCount']})"><i class="icon-arrow-right"></i></button>
+                <button id = "btnCurrent" type="button" class="btn" onclick="showCurrent(document.getElementById('idPageIndex').value,${localThirdEvalInfoLst['PageManager']['PageCount']})"><i class="icon-arrow-right"></i></button>
             </td>
         </tr>
     </table>
     </div>
     %endif
 %endif
+
 </fieldset>
 </form>
 </body>

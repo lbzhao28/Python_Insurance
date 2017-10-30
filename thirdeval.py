@@ -47,13 +47,13 @@ class thirdevalList:
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
 
-                if 'ORDERID' in query_dict:
-                    orderid = query_dict['ORDERID']
+                if 'orderid' in query_dict:
+                    orderid = query_dict['orderid']
                 else:
                     orderid = None
 
-                if 'PAGEINDEX' in query_dict:
-                    pageindex = query_dict['PAGEINDEX']
+                if 'pageindex' in query_dict:
+                    pageindex = query_dict['pageindex']
                 else:
                     pageindex = None
 
