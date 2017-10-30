@@ -293,6 +293,11 @@ def postThirdEvalInfo(storageData):
         jsonData = json.dumps(storageData)
         dictData = json.loads(jsonData)
 
+        # save data to sqlite db.
+        import web
+        import sqlite3
+        dbSqlite = web.database(dbn='sqlite',db='thirdeval')
+
         retStr = {"RETURNFLAG":True,"OrderID":1}
 
         logger.debug("put OrderInfo success.")
