@@ -8,13 +8,13 @@ import json
 import traceback
 from configData import getConfig
 from logHelper import getLogger
-from ThirdEvalDomainHandler import flatThirdInfo
+from ThirdEvalDomainHandler import flatThirdEvalInfo
 
 from configObjData import getConfigPage
 
 configPage = getConfigPage()
 
-def getThirdEvalInfoOrder(inOrderid):
+def getThirdEvalInfo(inOrderid):
     """
         get the third eval info from DB
         now, we simulate some json data.
@@ -26,13 +26,22 @@ def getThirdEvalInfoOrder(inOrderid):
         if inOrderid is None:
             return None
 
-        localOrderInfo = {}
+        localOrderInfo = {"third":{
+            "NORMAL_ADL":10,
+            "NORMAL_IADL":20,
+            "NORMAL_RECOGNIZE":30,
+            "THIRDEVAL_CLASS":1
+        },
+                          "leer":{
+                              "NORMAL_ADL":22
+                          }
+                          }
 
         logger.debug("get localOrderInfo success.")
 
         #we need change the data structure, so the html show simple.
         if localOrderInfo is not None:
-            localOrderInfo = flatOrderInfoOrder(localOrderInfo)
+            localOrderInfo = flatThirdEvalInfo(localOrderInfo)
 
         return localOrderInfo
     except:

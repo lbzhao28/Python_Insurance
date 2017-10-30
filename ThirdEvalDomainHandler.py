@@ -37,40 +37,40 @@ def addItemDictValue(dstDict,dstName,srcDict,srcName):
     dstDict.update(upDict)
 
 
-def flatThirdEvaqlInfo(inOrderInfo):
+def flatThirdEvalInfo(inThirdEvalInfo):
     """update the third eval info according the web page show.show the data.
 
         so we need pull all data in list ,make them flat to show in the page.so in the page, the show will be easy.
+        TODO: in future, we need create the function according the config data.
     """
     logger = getLogger()
     try:
-        logger.debug("start flat third Info .")
+        logger.debug("start flat third eval Info .")
 
-        if inOrderInfo is None:
+        if inThirdEvalInfo is None:
             return None
 
         # we only get the message we needed:
         #change the list to flat data.
-        localOrderInfo = inOrderInfo
-
-        localOrderInfo = {"third":1}
+        localThirdEvalInfo = inThirdEvalInfo
 
         #third_page 第三方评估
         configPageUsing = configPage['third_page']
-        item = localOrderInfo["third"]
-        addDictItemValue(item,'NAME',localOrderInfo,configPageUsing['name']['dataName'])
-        addDictItemValue(item,'SEX',localOrderInfo,configPageUsing['sex']['dataName'])
-        addDictItemValue(item,'BIRTHDAY',localOrderInfo,configPageUsing['birthday']['dataName'])
-        addDictItemValue(item,'AGE',localOrderInfo,configPageUsing['age']['dataName'])
+        item = localThirdEvalInfo["third"]
+        addDictItemValue(item,'NORMAL_ADL',localThirdEvalInfo,configPageUsing['normal_adl']['dataName'])
+        addDictItemValue(item,'NORMAL_IADL',localThirdEvalInfo,configPageUsing['normal_iadl']['dataName'])
+        addDictItemValue(item,'NORMAL_RECOGNIZE',localThirdEvalInfo,configPageUsing['normal_recognize']['dataName'])
+        addDictItemValue(item,'THIRDEVAL_CLASS',localThirdEvalInfo,configPageUsing['thirdeval_class']['dataName'])
 
         #leer_page 乐尔之家评估
 
         configPageUsing = configPage['leer_page']
-        addDictItemValue(item,"BENEFICIARIESRELATION",localOrderInfo,configPageUsing['relation']['dataName'])
+        item = localThirdEvalInfo["leer"]
+        addDictItemValue(item,"NORMAL_ADL",localThirdEvalInfo,configPageUsing['normal_adl']['dataName'])
 
         logger.debug("update localOrderInfo success.")
 
-        return localOrderInfo
+        return localThirdEvalInfo
     except:
         logger.error("exception occur, see the traceback.log")
 

@@ -22,8 +22,7 @@ web.config.debug = False
 
 urls = (
         '/thirdeval','thirdeval',
-        '/thirdevalUpdate/(.*)/(.*)','thirdevalUpdate',
-        '/thirdevalList/(.*)/(.*)','thirdevalList'
+        '/thirdevalList','thirdevalList'
         )
 
 app = web.application(urls,globals(),autoreload=True)
@@ -38,68 +37,15 @@ render = render_mako(
         )
 
 class thirdevalList:
-    def GET(self,session_usr,session_grpid):
+    def GET(self):
+        logger = getLogger()
         try:
-            logger = getLogger()
-            logger.debug("start OrderList Page GET response")
-
-            web.ctx.session.session_usrid =  session_usr
-            web.ctx.session.session_grpid =  session_grpid
-
-            globalDefine.globalOrderInfoErrorlog = "No Error"
-
-            #TODO: open the auth in future.also need purview.
-#            authreq = checkUserAuth(web)
-#
-#            if authreq:
-#                web.header('WWW-Authenticate','Basic realm="Auth example"')
-#                web.ctx.status = '401 Unauthorized'
-#                logger.debug("no right HTTP_AUTHORIZATION")
-#                return render.error(error = web.ctx.status)
+            logger.debug("start thirdevalList Page GET response")
 
             parsed_url = urlparse.urlparse(web.ctx.fullpath)
             query_url = parsed_url.query
             if (query_url != ''):
                 query_dict = dict(urlparse.parse_qsl(query_url))
-
-                if 'ROLE' in query_dict:
-                    role = str(query_dict['ROLE'])
-                else:
-                    role = None
-                web.ctx.session.session_role =  role
-
-                if 'GRPID' in query_dict:
-                    grpid = query_dict['GRPID']
-                else:
-                    grpid = None
-
-                if 'CRUSR' in query_dict:
-                    crusr = query_dict['CRUSR']
-                else:
-                    crusr = None
-
-                if 'STARTDT' in query_dict:
-                    startdt = query_dict['STARTDT']
-                else:
-                    startdt = None
-
-                if 'ENDDT' in query_dict:
-                    enddt = query_dict['ENDDT']
-                else:
-                    enddt = None
-
-                if 'ORDERSTATUS' in query_dict:
-                    orderstatus = query_dict['ORDERSTATUS']
-                    #special for show all ,do not judge orderstatus.
-                    if orderstatus == 'SHOWALL':
-                        orderstatus = None
-                else:
-                    orderstatus = None
-
-                if 'CONTACTID' in query_dict:
-                    contactid = query_dict['CONTACTID']
-                else:
-                    contactid = None
 
                 if 'ORDERID' in query_dict:
                     orderid = query_dict['ORDERID']
@@ -111,18 +57,11 @@ class thirdevalList:
                 else:
                     pageindex = None
 
-                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex,outrole=role)
+                return render.thirdevalList(orderid=orderid,pageindex=pageindex)
             else:
-                grpid = None
-                crusr = None
-                contactid = None
                 orderid = None
-                startdt = None
-                enddt = None
-                orderstatus = None
                 pageindex  = None
-                role = None
-                return render.orderList(session_usr=session_usr,session_grpid =  session_grpid,grpid=grpid,crusr=crusr,contactid = contactid,orderid=orderid,orderstatus=orderstatus,startdt=startdt,enddt=enddt,pageindex=pageindex,outrole=role)
+                return render.thirdevalList(orderid=orderid,pageindex=pageindex)
         except:
             logger.error("exception occur, see the traceback.log")
             #异常写入日志文件.
@@ -131,61 +70,6 @@ class thirdevalList:
             traceback.print_exc(file = f)
             f.flush()
             f.close()
-        else:
-            pass
-        finally:
-            pass
-
-#in JS, can not use put directly, so we use POST　to simulate it.
-class thirdevalUpdate:
-    def POST(self,contactid,orderid):
-        try:
-            logger = getLogger()
-            logger.debug("start Order Update POST response")
-
-            globalDefine.globalOrderInfoErrorlog = "No Error"
-
-            #TODO: open the auth in future.also need purview.
-#            authreq = checkUserAuth(web)
-#
-#            if authreq:
-#                web.header('WWW-Authenticate','Basic realm="Auth example"')
-#                web.ctx.status = '401 Unauthorized'
-#                logger.debug("no right HTTP_AUTHORIZATION")
-#                return render.error(error = web.ctx.status)
-
-            if orderid is None:
-                return render.error(error = 'no orderid')
-            else:
-                #get POST form data
-                data = web.input()
-                #call REST post data
-                #TODO: 1 待审核订单
-                status = '1'
-                retStr = OrderDomainHandler.putOrderInfoContact(orderid,data,status,web.ctx.session.session_usrid)
-
-                #according the response
-
-                if retStr is None:
-                    return render.error(error = 'update failure!')
-
-                retDict = json.loads(retStr)
-                if (retDict["RETURNFLAG"] == True):
-                    role = web.ctx.session.session_role;
-                    return render.order(contactid = contactid,orderid = orderid,outrole = role)
-                else:
-                    return render.error(error = 'update failure!')
-
-        except :
-            logger.error("exception occur, see the traceback.log")
-            #异常写入日志文件.
-            f = open('traceback.txt','a')
-            traceback.print_exc()
-            traceback.print_exc(file = f)
-            f.flush()
-            f.close()
-        else:
-            pass
         finally:
             pass
 
