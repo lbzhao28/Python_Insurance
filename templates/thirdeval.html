@@ -122,13 +122,31 @@ else:
                 <label class="label label-info label-large">第三方评估与乐尔之家评估等级登记表</label>
     <div>
                     % if orderid is not None:
-                        <label class="label label-normal" >评估编号:</label>
+                        <label class="label label-normal" >评估编号:${orderid}</label>
                     % else:
                         <button type="button" class="btn btn-small" id="btnClear">清空</button>
                         <button type="button" class="btn btn-small" id="btnSave">保存</button>
                     %endif
    </div>
 </div>
+
+    %if configPage.as_bool('hasBasic'):
+    <div class="bs-docs-div-compress">
+                <label class="label label-info label-large">客户基本信息</label>
+            <div>
+                <table class="table table-normal table-condensed">
+                    <%
+                        configPageBasicPage = configPage['basic_page']
+                        configUsing =copy.deepcopy(configPageBasicPage)
+                    %>
+                    <%namespace name="comp" file="componentsThirdEval.html" />
+                    ${comp.layoutControlList(configItem=configUsing,dataItem = localThirdEval_Info)}
+
+                </table>
+            </div>
+    </div>
+    %endif
+
 
     %if configPage.as_bool('hasThird'):
     <div class="bs-docs-div-compress">

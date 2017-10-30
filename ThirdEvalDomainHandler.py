@@ -41,7 +41,7 @@ def flatThirdEvalInfo(inThirdEvalInfo):
     """update the third eval info according the web page show.show the data.
 
         so we need pull all data in list ,make them flat to show in the page.so in the page, the show will be easy.
-        TODO: in future, we need create the function according the config data.
+        TODO: in future, we need create the function according the config data.2017.10.30.  这个函数感觉也有点多余，要简化.
     """
     logger = getLogger()
     try:
@@ -54,6 +54,12 @@ def flatThirdEvalInfo(inThirdEvalInfo):
         #change the list to flat data.
         localThirdEvalInfo = inThirdEvalInfo
 
+        #basic_page 基本信息
+        configPageUsing = configPage['basic_page']
+        item = localThirdEvalInfo["basic"]
+        addDictItemValue(item,'BASIC_NAME',localThirdEvalInfo,configPageUsing['name']['dataName'])
+        addDictItemValue(item,'BASIC_SEX',localThirdEvalInfo,configPageUsing['sex']['dataName'])
+
         #third_page 第三方评估
         configPageUsing = configPage['third_page']
         item = localThirdEvalInfo["third"]
@@ -63,10 +69,12 @@ def flatThirdEvalInfo(inThirdEvalInfo):
         addDictItemValue(item,'THIRDEVAL_CLASS',localThirdEvalInfo,configPageUsing['thirdeval_class']['dataName'])
 
         #leer_page 乐尔之家评估
-
         configPageUsing = configPage['leer_page']
         item = localThirdEvalInfo["leer"]
-        addDictItemValue(item,"NORMAL_ADL",localThirdEvalInfo,configPageUsing['normal_adl']['dataName'])
+        addDictItemValue(item,"LEER_NORMAL_ADL",localThirdEvalInfo,configPageUsing['normal_adl']['dataName'])
+        addDictItemValue(item,"LEER_SPIRIT_DEPRESS",localThirdEvalInfo,configPageUsing['spirit_depress']['dataName'])
+        addDictItemValue(item,"LEER_FEEL_SOUL",localThirdEvalInfo,configPageUsing['feel_soul']['dataName'])
+        addDictItemValue(item,"LEER_CLASS",localThirdEvalInfo,configPageUsing['leer_class']['dataName'])
 
         logger.debug("update localOrderInfo success.")
 
@@ -87,6 +95,7 @@ def zipOrderInfoOrder(inOrderInfo):
     """update the order info according the web page show.post the data.
 
         so we need pull all data in form ,make them zip to post in the page.
+        2017.10.30. 这个函数感觉有点多余啊。
     """
     try:
         logger = getLogger()
@@ -296,9 +305,33 @@ def postThirdEvalInfo(storageData):
         # save data to sqlite db.
         import web
         import sqlite3
-        dbSqlite = web.database(dbn='sqlite',db='thirdeval')
+        dbSqlite = web.database(dbn='sqlite',db='thirdeval.s3db')
 
-        retStr = {"RETURNFLAG":True,"OrderID":1}
+        thirdevalid = 0
+        if dictData is not None:
+            thirdevalid = dbSqlite.insert('thirdeval_detail',
+                                 basic_name=dictData['BASIC_NAME'],
+                                 basic_sex=dictData['BASIC_SEX'],
+                                 third_normal_adl=dictData['NORMAL_ADL'],
+                                 third_normal_iadl=dictData['NORMAL_IADL'],
+                                 third_normal_recognize=dictData['NORMAL_RECOGNIZE'],
+                                 thirdeval_class=dictData['THIRDEVAL_CLASS'],
+                                 leer_normal_adl=dictData['LEER_NORMAL_ADL'],
+                                 leer_spirit_depress=dictData['LEER_SPIRIT_DEPRESS'],
+                                 leer_feel_soul=dictData['LEER_FEEL_SOUL'],
+                                 leer_class=dictData['LEER_CLASS']
+                                 )
+        else:
+            pass
+
+        if thirdevalid is 0:
+            pass
+        else:
+            logger.debug("save the third eval info success.")
+
+
+
+        retStr = {"RETURNFLAG":True,"OrderID":thirdevalid}
 
         logger.debug("put OrderInfo success.")
         return retStr

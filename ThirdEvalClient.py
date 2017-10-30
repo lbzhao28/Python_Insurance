@@ -26,16 +26,33 @@ def getThirdEvalInfo(inOrderid):
         if inOrderid is None:
             return None
 
-        localOrderInfo = {"third":{
-            "NORMAL_ADL":10,
-            "NORMAL_IADL":20,
-            "NORMAL_RECOGNIZE":30,
-            "THIRDEVAL_CLASS":1
-        },
-                          "leer":{
-                              "NORMAL_ADL":22
-                          }
-                          }
+        #from db to get the data.
+        import web
+        import sqlite3
+        dbSqlite = web.database(dbn='sqlite',db='thirdeval.s3db')
+
+        myvar = dict(id=inOrderid)
+        results = dbSqlite.select('thirdeval_detail', myvar, where="id = $id")
+
+        for item in results:
+            localOrderInfo = {
+                "basic":{
+                 "BASIC_NAME":item['basic_name'],
+                 "BASIC_SEX":item['basic_sex'],
+                },
+                "third":{
+                "NORMAL_ADL":item['third_normal_adl'],
+                "NORMAL_IADL":item['third_normal_iadl'],
+                "NORMAL_RECOGNIZE":item['third_normal_recognize'],
+                "THIRDEVAL_CLASS":item['thirdeval_class']
+            },
+                              "leer":{
+                                  "LEER_NORMAL_ADL":item['leer_normal_adl'],
+                                  "LEER_SPIRIT_DEPRESS":item['leer_spirit_depress'],
+                                  "LEER_FEEL_SOUL":item['leer_feel_soul'],
+                                  "LEER_CLASS":item['leer_class']
+                              }
+                              }
 
         logger.debug("get localOrderInfo success.")
 
