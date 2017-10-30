@@ -90,8 +90,7 @@
         }
 
         function searchOrder(inORDERID,inPAGEINDEX){
-            //actionUrl ="http://${localURL}/orderList"+"?orderid="+inORDERID+"&PAGEINDEX="+inPAGEINDEX;
-            actionUrl ="http://${localURL}/thirdevalList"+"?orderid="+inORDERID;
+            actionUrl ="http://${localURL}/thirdevalList"+"?orderid="+inORDERID+"&pageindex="+inPAGEINDEX;
             //alert(actionUrl);
             window.location.href=actionUrl;
         }
@@ -153,7 +152,6 @@ print localURL
 </div>
 
 <form id="formOrderList">
-<fieldset>
 <%
 if (orderid is not None):
     print 'orderid'
@@ -174,7 +172,7 @@ else:
             <table class="table table-hover table-condensed">
                 <tr>
                     <td>
-                        <button id = "btnNew" type="button" class="btn">新建</button>
+                        <button id = "btnNew" type="button" class="btn">新建评估单</button>
                     </td>
                 </tr>
             </table>
@@ -235,7 +233,6 @@ else:
     %endif
 %endif
 
-</fieldset>
 </form>
 </body>
 </html>
